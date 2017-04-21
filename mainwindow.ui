@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Модуль активной нагрузки 2</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+      <widget class="InputParameters" name="tabInputParameters">
+       <attribute name="title">
+        <string>Ввод параметров</string>
+       </attribute>
+      </widget>
+      <widget class="AutomaticMeasurements" name="tabAutomaticMeasurements">
+       <attribute name="title">
+        <string>Автоматические измерения</string>
+       </attribute>
+      </widget>
+      <widget class="Measurements" name="tabMeasurements">
+       <attribute name="title">
+        <string>Ручное измерение</string>
+       </attribute>
+      </widget>
+      <widget class="Communications" name="tabCommunications">
+       <attribute name="title">
+        <string>Связь</string>
+       </attribute>
+      </widget>
+      <widget class="Graduation" name="tabGraduation">
+       <attribute name="title">
+        <string>Градуировка</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>InputParameters</class>
+   <extends>QWidget</extends>
+   <header>inputparameters.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Graduation</class>
+   <extends>QWidget</extends>
+   <header>graduation.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Measurements</class>
+   <extends>QWidget</extends>
+   <header>measurements.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Communications</class>
+   <extends>QWidget</extends>
+   <header>communications.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AutomaticMeasurements</class>
+   <extends>QWidget</extends>
+   <header>automaticmeasurements.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
