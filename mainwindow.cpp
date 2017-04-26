@@ -4,7 +4,6 @@
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
-    , m_man(new ManInterface)
     , m_statusBarTimer(0)
     , statusBarTime(new QLineEdit(this))
 {
@@ -92,16 +91,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     tabAutomaticMeasurements->connect(tabAutomaticMeasurements, &AutomaticMeasurements::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
 
-    m_man->moveToThread(&m_manThread);
-    connect(&m_manThread, &QThread::finished, m_man, &QObject::deleteLater);
-    m_manThread.start(QThread::NormalPriority);
-
     readSettings();
-
-    tabGraduation->setMan(m_man);
-    tabMeasurements->setMan(m_man);
-    tabAutomaticMeasurements->setMan(m_man);
-    tabCommunications->setMan(m_man);
     m_statusBarTimer = startTimer(1000);
 }
 

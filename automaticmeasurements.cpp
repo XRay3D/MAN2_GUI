@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <QDate>
 #include <QDir>
+#include <measuringinterface/measuringinterface.h>
 
 const ScanSettings AutomaticMeasurements::m_scanSettings;
 
@@ -49,11 +50,6 @@ AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
 AutomaticMeasurements::~AutomaticMeasurements()
 {
     qDebug() << "~AutomaticMeasurements()";
-}
-
-void AutomaticMeasurements::setMan(ManInterface* man)
-{
-    m_man = man;
 }
 
 void AutomaticMeasurements::ScanSettingsSlot(const ScanSettings* scanSettings)
@@ -677,7 +673,7 @@ void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
             cb->setChecked(false);
         }
         pbStartStop->setText("Остановить измерения");
-        m_worker = new Worker(m_doNotSkip, m_result, &m_scanSettings, m_man);
+        m_worker = new Worker(m_doNotSkip, m_result, &m_scanSettings);
         connect(m_worker, &QThread::finished, [this]() { qDebug() << "QThread::finished"; on_pbStartStop_clicked(false); });
         connect(m_worker, &QThread::finished, m_worker, &QObject::deleteLater);
         connect(m_worker, &Worker::ShowMessage, this, &AutomaticMeasurements::ShowMessage);
@@ -714,12 +710,9 @@ void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
 
 void AutomaticMeasurements::showEvent(QShowEvent* event)
 {
-
     Q_UNUSED(event);
-    if (m_man != nullptr) {
-        if (m_man->IsConnected()) {
-            return;
-        }
+    if (MI::man()->IsConnected()) {
+        return;
     }
     setEnabled(false);
 }
@@ -731,12 +724,11 @@ void AutomaticMeasurements::showEvent(QShowEvent* event)
 /// \param man
 /// \param parent
 ///
-Worker::Worker(bool* doNotSkip, Result_t* result, const ScanSettings* scanSettings, ManInterface* man, QObject* parent)
+Worker::Worker(bool* doNotSkip, Result_t* result, const ScanSettings* scanSettings, QObject* parent)
     : QThread(parent)
     , m_doNotSkip(doNotSkip)
     , m_result(result)
     , m_pScanSettings(scanSettings)
-    , m_man(man)
 {
 }
 
@@ -754,13 +746,13 @@ void Worker::Continue()
 
 void Worker::FinishMeasurements()
 {
-    if (m_man->SwitchCurrent(0)) {
+    if (MI::man()->SwitchCurrent(0)) {
         //emit ShowMessage(3); //Нет связи с МАНом
     }
-    if (!m_man->SetCurrent(0)) {
+    if (!MI::man()->SetCurrent(0)) {
         //emit ShowMessage(3); //Нет связи с МАНом
     }
-    if (!m_man->Oscilloscope(0)) {
+    if (!MI::man()->Oscilloscope(0)) {
         //emit ShowMessage(3); //Нет связи с МАНом
     }
     //quit();
@@ -770,13 +762,13 @@ void Worker::FinishMeasurements()
 void Worker::Quit()
 {
     //quit();
-    if (m_man->SwitchCurrent(0)) {
+    if (MI::man()->SwitchCurrent(0)) {
         //emit ShowMessage(3); //Нет связи с МАНом
     }
-    if (!m_man->SetCurrent(0)) {
+    if (!MI::man()->SetCurrent(0)) {
         //emit ShowMessage(3); //Нет связи с МАНом
     }
-    if (!m_man->Oscilloscope(0)) {
+    if (!MI::man()->Oscilloscope(0)) {
         //emit ShowMessage(3); //Нет связи с МАНом
     }
 }
@@ -786,14 +778,14 @@ void Worker::run()
     m_counter = 0;
     setTerminationEnabled();
     m_semaphore.acquire(m_semaphore.available());
-    if (!m_man->SetCurrent(0)) {
+    if (!MI::man()->SetCurrent(0)) {
         emit ShowMessage(3);
         terminate();
         qDebug() << "terminate()"; //Нет связи с МАНом
         //quit();
         return;
     }
-    if (!m_man->SwitchCurrent(1)) {
+    if (!MI::man()->SwitchCurrent(1)) {
         emit ShowMessage(3);
         terminate();
         qDebug() << "terminate()"; //Нет связи с МАНом
@@ -857,17 +849,17 @@ bool Worker::Finished()
         qDebug() << "Finished";
         m_semaphore.acquire(m_semaphore.available());
         //quit();
-        if (!m_man->SwitchCurrent(0)) {
+        if (!MI::man()->SwitchCurrent(0)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом
         }
-        if (!m_man->SetCurrent(0)) {
+        if (!MI::man()->SetCurrent(0)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом
         }
-        if (!m_man->Oscilloscope(0)) {
+        if (!MI::man()->Oscilloscope(0)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом
@@ -894,7 +886,7 @@ bool Worker::Test1()
     do {
         Msleep(500);
 
-        if (!m_man->GetMeasuredValue(list)) {
+        if (!MI::man()->GetMeasuredValue(list)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом
@@ -921,13 +913,13 @@ bool Worker::Test2()
     qDebug() << "Test2";
     for (int i = 0; i < 8; ++i) {
         if (m_doNotSkip[i]) {
-            if (!m_man->Oscilloscope(0)) {
+            if (!MI::man()->Oscilloscope(0)) {
                 emit ShowMessage(3);
                 terminate();
                 qDebug() << "terminate()"; //Нет связи с МАНом
                 return false;
             }
-            if (!m_man->Oscilloscope(i + 1)) {
+            if (!MI::man()->Oscilloscope(i + 1)) {
                 emit ShowMessage(3);
                 terminate();
                 qDebug() << "terminate()"; //Нет связи с МАНом
@@ -939,7 +931,7 @@ bool Worker::Test2()
             }
         }
     }
-    if (!m_man->Oscilloscope(0)) {
+    if (!MI::man()->Oscilloscope(0)) {
         emit ShowMessage(3);
         terminate();
         qDebug() << "terminate()"; //Нет связи с МАНом
@@ -957,7 +949,7 @@ bool Worker::Test3()
     do {
         Msleep(500);
 
-        if (!m_man->GetMeasuredValue(list)) {
+        if (!MI::man()->GetMeasuredValue(list)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом
@@ -981,7 +973,7 @@ bool Worker::Test3()
 bool Worker::Test4()
 {
     qDebug() << "Test4";
-    if (!m_man->SetCurrent(m_pScanSettings->RatedCurrent)) {
+    if (!MI::man()->SetCurrent(m_pScanSettings->RatedCurrent)) {
         emit ShowMessage(3);
         terminate();
         qDebug() << "terminate()"; //Нет связи с МАНом
@@ -991,7 +983,7 @@ bool Worker::Test4()
     QList<MeasuredValue_t> list;
     do {
         Msleep(500);
-        if (!m_man->GetMeasuredValue(list)) {
+        if (!MI::man()->GetMeasuredValue(list)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом
@@ -1015,7 +1007,7 @@ bool Worker::Test4()
 bool Worker::Test5()
 {
     qDebug() << "Test5";
-    if (!m_man->SetCurrent(0)) {
+    if (!MI::man()->SetCurrent(0)) {
         emit ShowMessage(3);
         terminate();
         qDebug() << "terminate()"; //Нет связи с МАНом
@@ -1025,7 +1017,7 @@ bool Worker::Test5()
     QList<MeasuredValue_t> list;
     do {
         Msleep(500);
-        if (!m_man->GetMeasuredValue(list)) {
+        if (!MI::man()->GetMeasuredValue(list)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом
@@ -1050,7 +1042,7 @@ bool Worker::Test6()
 {
     qDebug() << "Test6";
     MeasuredValue_t value;
-    if (!m_man->SetCurrent(0)) {
+    if (!MI::man()->SetCurrent(0)) {
         emit ShowMessage(3);
         terminate();
         qDebug() << "terminate()"; //Нет связи с МАНом
@@ -1060,9 +1052,9 @@ bool Worker::Test6()
     for (uint8_t i = 1; i <= 8; ++i) {
         if (m_doNotSkip[i - 1]) {
             peak.append(-1.0);
-            if (!m_man->SetCurrent(m_pScanSettings->RestrictionsTest7Min, i)) {
+            if (!MI::man()->SetCurrent(m_pScanSettings->RestrictionsTest7Min, i)) {
                 Msleep(50);
-                if (!m_man->SetCurrent(m_pScanSettings->RestrictionsTest7Min, i)) {
+                if (!MI::man()->SetCurrent(m_pScanSettings->RestrictionsTest7Min, i)) {
                     emit ShowMessage(3);
                     terminate();
                     qDebug() << "terminate()"; //Нет связи с МАНом
@@ -1074,9 +1066,9 @@ bool Worker::Test6()
                  current <= m_pScanSettings->RestrictionsTest7Max * 1.1;
                  current += (m_pScanSettings->RestrictionsTest7Max - m_pScanSettings->RestrictionsTest7Min) / 20.0) {
                 Msleep(50);
-                if (!m_man->SetCurrent(current, i)) {
+                if (!MI::man()->SetCurrent(current, i)) {
                     Msleep(50);
-                    if (!m_man->SetCurrent(current, i)) {
+                    if (!MI::man()->SetCurrent(current, i)) {
                         emit ShowMessage(3);
                         terminate();
                         qDebug() << "terminate()"; //Нет связи с МАНом
@@ -1084,9 +1076,9 @@ bool Worker::Test6()
                     };
                 };
                 Msleep(50);
-                if (!m_man->GetMeasuredValue(value, i)) {
+                if (!MI::man()->GetMeasuredValue(value, i)) {
                     Msleep(50);
-                    if (!m_man->GetMeasuredValue(value, i)) {
+                    if (!MI::man()->GetMeasuredValue(value, i)) {
                         emit ShowMessage(3);
                         terminate();
                         qDebug() << "terminate()"; //Нет связи с МАНом
@@ -1102,7 +1094,7 @@ bool Worker::Test6()
                     return false;
                 }
             }
-            if (!m_man->SetCurrent(0, i)) {
+            if (!MI::man()->SetCurrent(0, i)) {
                 emit ShowMessage(3);
                 terminate();
                 qDebug() << "terminate()"; //Нет связи с МАНом
@@ -1119,7 +1111,7 @@ bool Worker::Test6()
 bool Worker::Test7()
 {
     qDebug() << "Test7";
-    if (!m_man->SetCurrent(m_pScanSettings->RatedCurrent)) {
+    if (!MI::man()->SetCurrent(m_pScanSettings->RatedCurrent)) {
         emit ShowMessage(3);
         terminate();
         qDebug() << "terminate()"; //Нет связи с МАНом
@@ -1129,21 +1121,21 @@ bool Worker::Test7()
     QList<MeasuredValue_t> list;
     do {
         Msleep(500);
-        if (!m_man->ShortCircuitTest(1)) {
+        if (!MI::man()->ShortCircuitTest(1)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом
             return false;
         }
         Msleep(2000);
-        if (!m_man->ShortCircuitTest(0)) {
+        if (!MI::man()->ShortCircuitTest(0)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом
             return false;
         }
         Msleep(100);
-        if (!m_man->GetMeasuredValue(list)) {
+        if (!MI::man()->GetMeasuredValue(list)) {
             emit ShowMessage(3);
             terminate();
             qDebug() << "terminate()"; //Нет связи с МАНом

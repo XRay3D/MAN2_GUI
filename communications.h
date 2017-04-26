@@ -3,7 +3,7 @@
 
 #include "ui_communications.h"
 
-class ManInterface;
+class MAN;
 class MainWindow;
 class Communications : public QWidget, private Ui::Communications {
     Q_OBJECT
@@ -14,7 +14,6 @@ public:
     explicit Communications(QWidget* parent = 0);
     ~Communications();
 
-    void setMan(ManInterface* man);
 signals:
     void CurrentTabIndex(int);
     void SetTabBarEnabled(bool);
@@ -24,7 +23,7 @@ private slots:
     void on_pbIrtCheckConnection_clicked();
 
 private:
-    ManInterface* m_man;
+    MAN* m_man;
 };
 
 #endif // COMMUNICATIONS_H

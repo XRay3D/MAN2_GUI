@@ -17,7 +17,6 @@ TEMPLATE = app
 SOURCES += \
     measuringinterface/elemer.cpp \
     measuringinterface/irt59xx.cpp \
-    measuringinterface/maninterface.cpp \
     measuringinterface/measuringinterface.cpp \
     measuringinterface/myprotokol.cpp \
     measuringinterface/scpi.cpp \
@@ -28,14 +27,16 @@ SOURCES += \
     inputparameters.cpp \
     main.cpp \
     mainwindow.cpp \
-    man2.cpp \
     measurements.cpp \
-    shdocvw.cpp
+    shdocvw.cpp \
+    man.cpp \
+    measuringinterface/common_interfaces.cpp \
+    measuringinterface/common_interfaces.cpp \
+    measuringinterface/man2.cpp
 
 HEADERS  += \
     measuringinterface/elemer.h \
     measuringinterface/irt59xx.h \
-    measuringinterface/maninterface.h \
     measuringinterface/measuringinterface.h \
     measuringinterface/myprotokol.h \
     measuringinterface/scpi.h \
@@ -45,9 +46,12 @@ HEADERS  += \
     graduation.h \
     inputparameters.h \
     mainwindow.h \
-    man2.h \
     measurements.h \
-    shdocvw.h
+    shdocvw.h \
+    man.h \
+    measuringinterface/common_interfaces.h \
+    measuringinterface/common_interfaces.h \
+    measuringinterface/man2.h
 
 FORMS    += \
     inputparameters.ui \
@@ -56,7 +60,7 @@ FORMS    += \
     measurements.ui \
     automaticmeasurements.ui \
     mainwindow.ui \
-    man2.ui
+    man.ui
 
 DISTFILES +=
 

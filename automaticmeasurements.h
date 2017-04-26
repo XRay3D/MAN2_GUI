@@ -1,7 +1,7 @@
 #ifndef AUTOMATICMEASUREMENTS_H
 #define AUTOMATICMEASUREMENTS_H
 
-#include "measuringinterface/maninterface.h"
+#include "measuringinterface/man2.h"
 #include "ui_automaticmeasurements.h"
 #include "inputparameters.h"
 #include <QAxWidget>
@@ -91,7 +91,7 @@ protected:
 class Worker : public QThread {
     Q_OBJECT
 public:
-    Worker(bool* doNotSkip, Result_t* result, const ScanSettings* scanSettings, ManInterface* man, QObject* parent = Q_NULLPTR);
+    Worker(bool* doNotSkip, Result_t* result, const ScanSettings* scanSettings, QObject* parent = Q_NULLPTR);
     ~Worker();
     void SetMan();
     void Continue();
@@ -121,7 +121,6 @@ private:
     const bool* m_doNotSkip;
     Result_t* m_result;
     const ScanSettings* m_pScanSettings;
-    ManInterface* m_man;
     QSemaphore m_semaphore;
     int m_counter;
 };
@@ -132,7 +131,6 @@ class AutomaticMeasurements : public QWidget, private Ui::AutomaticMeasurements 
 public:
     explicit AutomaticMeasurements(QWidget* parent = 0);
     ~AutomaticMeasurements();
-    void setMan(ManInterface* man);
     void ScanSettingsSlot(const ScanSettings* scanSettings);
     void SerialNumberChanged(const QString& serialNumber, int index);
 
@@ -146,7 +144,6 @@ private:
     void UpdateProgresBar();
     void SaveProtokol(const QString& serialNumber, int number);
 
-    ManInterface* m_man;
     Worker* m_worker = nullptr;
     //    QThread m_workerThread;
     bool m_doNotSkip[8];

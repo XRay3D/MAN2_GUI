@@ -1,12 +1,12 @@
 #include "measurements.h"
 #include <QEvent>
 #include <QSignalMapper>
+#include <measuringinterface/measuringinterface.h>
 
 #define SignalMapperInt static_cast<void (QSignalMapper::*)(int)>(&QSignalMapper::mapped)
 
 Measurements::Measurements(QWidget* parent)
     : QWidget(parent)
-    , m_man(nullptr)
     , m_timerMeasure(0)
 {
     setupUi(this);
@@ -150,15 +150,10 @@ void Measurements::on_cbOsc_currentIndexChanged(int index)
             m_listPbOsc[i]->setText("Вкл.");
         }
     }
-    m_man->Oscilloscope(0);
+    MI::man()->Oscilloscope(0);
     if (index) {
-        m_man->Oscilloscope(index);
+        MI::man()->Oscilloscope(index);
     }
-}
-
-void Measurements::setMan(ManInterface* value)
-{
-    m_man = value;
 }
 
 void Measurements::timerEvent(QTimerEvent* event)
@@ -202,7 +197,7 @@ void Measurements::on_dsbSetCurrentAll_valueChanged(double arg1)
     foreach (QDoubleSpinBox* spinBox, m_listDsbSetCurrent) {
         spinBox->setValue(arg1);
     }
-    m_man->SetCurrent(arg1);
+    MI::man()->SetCurrent(arg1);
     smSetCurrent->connect(smSetCurrent, SignalMapperInt, this, &Measurements::DsbSetCurrent, Qt::DirectConnection);
 }
 
@@ -212,7 +207,7 @@ void Measurements::on_pbCurrentAll_clicked(bool checked)
         button->setChecked(checked);
         button->setText(checked ? "Выкл." : "Вкл.");
     }
-    m_man->SwitchCurrent(checked);
+    MI::man()->SwitchCurrent(checked);
 }
 
 void Measurements::on_pbShortAll_clicked(bool checked)
@@ -221,7 +216,7 @@ void Measurements::on_pbShortAll_clicked(bool checked)
         button->setChecked(checked);
         button->setText(checked ? "Выкл." : "Вкл.");
     }
-    m_man->ShortCircuitTest(checked);
+    MI::man()->ShortCircuitTest(checked);
 }
 
 void Measurements::PbCurrentClicked(int channel)
@@ -234,13 +229,13 @@ void Measurements::PbCurrentClicked(int channel)
     else {
         btn->setText("Вкл.");
     }
-    m_man->SwitchCurrent(checked, channel + 1);
+    MI::man()->SwitchCurrent(checked, channel + 1);
 }
 
 void Measurements::DsbSetCurrent(int channel)
 {
     double value = m_listDsbSetCurrent[channel]->value();
-    m_man->SetCurrent(value, channel + 1);
+    MI::man()->SetCurrent(value, channel + 1);
 }
 
 void Measurements::PbShortClicked(int channel)
@@ -253,7 +248,7 @@ void Measurements::PbShortClicked(int channel)
     else {
         btn->setText("Вкл.");
     }
-    m_man->ShortCircuitTest(checked, channel + 1);
+    MI::man()->ShortCircuitTest(checked, channel + 1);
 }
 
 void Measurements::PbOscClicked(int channel)
@@ -301,34 +296,32 @@ void Measurements::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event);
     qDebug() << "showEvent";
-    if (m_man != nullptr) {
-        connect(this, &Measurements::StartMeasure, m_man, &ManInterface::GetMeasuredValueSlot);
-        connect(m_man, &ManInterface::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
-        if (m_man->IsConnected()) {
-            QList<MeasuredValue_t> list;
-            if (m_man->GetMeasuredValue(list)) {
-                smSetCurrent->disconnect(smSetCurrent, SignalMapperInt, this, &Measurements::DsbSetCurrent);
-                for (int i = 0; i < list.size(); ++i) {
-                    m_listDsbVoltage[i]->setValue(list[i].Value1);
-                    m_listDsbCurrent[i]->setValue(list[i].Value2);
-                    m_listDsbSetCurrent[i]->setValue(list[i].Value3);
-                    if (list[i].ManState.Load) {
-                        m_listPbCurrent[i]->setChecked(true);
-                        m_listPbCurrent[i]->setText("Выкл.");
-                    }
-                    if (list[i].ManState.ShortCircuit) {
-                        m_listPbShort[i]->setChecked(true);
-                        m_listPbShort[i]->setText("Выкл.");
-                    }
-                    if (list[i].ManState.Oscilloscope) {
-                        m_listPbOsc[i]->setChecked(true);
-                        m_listPbOsc[i]->setText("Выкл.");
-                    }
+    connect(this, &Measurements::StartMeasure, MI::man(), &MAN2::GetMeasuredValueSlot);
+    connect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
+    if (MI::man()->IsConnected()) {
+        QList<MeasuredValue_t> list;
+        if (MI::man()->GetMeasuredValue(list)) {
+            smSetCurrent->disconnect(smSetCurrent, SignalMapperInt, this, &Measurements::DsbSetCurrent);
+            for (int i = 0; i < list.size(); ++i) {
+                m_listDsbVoltage[i]->setValue(list[i].Value1);
+                m_listDsbCurrent[i]->setValue(list[i].Value2);
+                m_listDsbSetCurrent[i]->setValue(list[i].Value3);
+                if (list[i].ManState.Load) {
+                    m_listPbCurrent[i]->setChecked(true);
+                    m_listPbCurrent[i]->setText("Выкл.");
                 }
-                smSetCurrent->connect(smSetCurrent, SignalMapperInt, this, &Measurements::DsbSetCurrent, Qt::DirectConnection);
+                if (list[i].ManState.ShortCircuit) {
+                    m_listPbShort[i]->setChecked(true);
+                    m_listPbShort[i]->setText("Выкл.");
+                }
+                if (list[i].ManState.Oscilloscope) {
+                    m_listPbOsc[i]->setChecked(true);
+                    m_listPbOsc[i]->setText("Выкл.");
+                }
             }
-            return;
+            smSetCurrent->connect(smSetCurrent, SignalMapperInt, this, &Measurements::DsbSetCurrent, Qt::DirectConnection);
         }
+        return;
     }
     setEnabled(false);
 }
@@ -337,8 +330,8 @@ void Measurements::hideEvent(QHideEvent* event)
 {
     Q_UNUSED(event);
     on_pbStart_clicked(false);
-    disconnect(this, &Measurements::StartMeasure, m_man, &ManInterface::GetMeasuredValueSlot);
-    disconnect(m_man, &ManInterface::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
+    disconnect(this, &Measurements::StartMeasure, MI::man(), &MAN2::GetMeasuredValueSlot);
+    disconnect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
 }
 
 void Measurements::GbChanneClicked(int channel)

@@ -12,6 +12,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include <QElapsedTimer>
+#include "common_interfaces.h"
 #include "myprotokol.h"
 
 enum COMMAND {
@@ -87,20 +88,20 @@ typedef struct MeasuredValue_t {
 } MeasuredValue_t;
 #pragma pack(pop)
 
-class ManInterface;
+class MAN2;
 class SerialPort;
 
-class ManInterface : public QObject, private MyProtokol {
+class MAN2 : public QObject, private MyProtokol, public COMMON_INTERFACES {
     Q_OBJECT
 public:
-    ManInterface(QObject* parent = 0);
-    ~ManInterface();
-    void EnumeratePorts(QComboBox* comboBox);
+    MAN2(QObject* parent = 0);
+    ~MAN2();
 
     bool IsOpen();
+
+    bool Ping(const QString& PortName = QString());
     bool IsConnected() const;
 
-    bool Ping(const QString& PortName = "");
     bool GetMeasuredValue(MeasuredValue_t& value, uint8_t channel = 0, ValueType_t type = CURRENT_MEASURED_VALUE);
     bool GetMeasuredValue(QList<MeasuredValue_t>& value, uint8_t channel = 0, ValueType_t type = CURRENT_MEASURED_VALUE);
     bool SetCurrent(float Current, uint8_t Channel = 0);
@@ -153,21 +154,23 @@ private:
     void CmdTextualParcel(const QByteArray& m_data);
     void CmdCrcError(const QByteArray& m_data);
     void CmdNullFunction(const QByteArray& m_data);
+
+    // COMMON_INTERFACES interface
 };
 
 class SerialPort : public QSerialPort, private MyProtokol {
     Q_OBJECT
 
 public:
-    SerialPort(ManInterface* manInterface);
+    SerialPort(MAN2* manInterface);
     ~SerialPort();
     bool Open(int mode);
     bool m_isOpen;
 
-    ManInterface* m_manInterface;
-    typedef void (ManInterface::*pFunc)(const QByteArray&);
+    MAN2* m_manInterface;
+    typedef void (MAN2::*pFunc)(const QByteArray&);
     pFunc m_cmdArray[0x100];
-    void (ManInterface::*m_dataReady)(const QByteArray&);
+    void (MAN2::*m_dataReady)(const QByteArray&);
 
 private:
     void ReadyRead();

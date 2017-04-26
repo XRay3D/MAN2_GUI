@@ -43,7 +43,7 @@ QByteArray& SCPI::WriteRead(const QByteArray& data, int timeout)
     return m_data;
 }
 
-bool SCPI::IsFound() const
+bool SCPI::IsConnected() const
 {
     return m_isFound;
 }

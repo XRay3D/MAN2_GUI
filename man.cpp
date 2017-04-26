@@ -1,20 +1,20 @@
-#include "man2.h"
+#include "man.h"
 #include "ui_man2.h"
 #include <QDebug>
 #include <QFontDatabase>
 
-MAN2::MAN2(QWidget* parent)
+MAN::MAN(QWidget* parent)
     : QWidget(parent)
     , m_channel(0)
 {
     setupUi(this);
 }
 
-MAN2::~MAN2()
+MAN::~MAN()
 {
 }
 
-void MAN2::SetU(float v, int channel)
+void MAN::SetU(float v, int channel)
 {
     if (m_channel != channel) {
         return;
@@ -27,7 +27,7 @@ void MAN2::SetU(float v, int channel)
     }
 }
 
-void MAN2::SetIM(float i, int channel)
+void MAN::SetIM(float i, int channel)
 {
     if (m_channel != channel) {
         return;
@@ -41,7 +41,7 @@ void MAN2::SetIM(float i, int channel)
     }
 }
 
-void MAN2::SetIU(float u, int channel)
+void MAN::SetIU(float u, int channel)
 {
     if (m_channel != channel) {
         return;
@@ -49,7 +49,7 @@ void MAN2::SetIU(float u, int channel)
     dsbCurrent->setValue(u);
 }
 
-void MAN2::showEvent(QShowEvent* event)
+void MAN::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event)
     *const_cast<int*>(&m_channel) = objectName().split('_').last().toInt();
@@ -57,7 +57,7 @@ void MAN2::showEvent(QShowEvent* event)
     groupBox->setTitle(QString("Канал %1").arg(m_channel));
 }
 
-void MAN2::setupUi(QWidget* MAN2)
+void MAN::setupUi(QWidget* MAN2)
 {
     if (MAN2->objectName().isEmpty()) {
         MAN2->setObjectName(QStringLiteral("MAN2"));
@@ -126,7 +126,7 @@ void MAN2::setupUi(QWidget* MAN2)
     QMetaObject::connectSlotsByName(MAN2);
 }
 
-void MAN2::retranslateUi(QWidget* MAN2)
+void MAN::retranslateUi(QWidget* MAN2)
 {
     MAN2->setWindowTitle(QApplication::translate("MAN2", "Form", Q_NULLPTR));
     groupBox->setTitle(QApplication::translate("MAN2", "\320\232\320\260\320\275\320\260\320\273", Q_NULLPTR));

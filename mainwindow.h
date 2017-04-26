@@ -2,7 +2,6 @@
 #define MAINWINDOW2_H
 
 #include "ui_mainwindow.h"
-#include "man2.h"
 #include "measuringinterface/measuringinterface.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow {
@@ -17,11 +16,12 @@ private:
     void readSettings();
     QThread m_manThread;
     int m_statusBarTimer;
-    MEASURING_INTERFACE mi;
     QLineEdit* statusBarTime;
+
     // QObject interface
 protected:
     void timerEvent(QTimerEvent* event) override;
+    MI mi;
 };
 
 #endif // MAINWINDOW2_H

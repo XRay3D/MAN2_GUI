@@ -16,12 +16,12 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-class MAN2 : public QWidget {
+class MAN : public QWidget {
     Q_OBJECT
 
 public:
-    explicit MAN2(QWidget* parent = 0);
-    ~MAN2();
+    explicit MAN(QWidget* parent = 0);
+    ~MAN();
     void SetU(float v, int channel);
     void SetIM(float i, int channel);
     void SetIU(float u, int channel);
@@ -45,9 +45,8 @@ private:
     QPushButton* pushButton;
     QPushButton* pushButton_2;
 
-    void setupUi(QWidget* MAN2); // setupUi
-
-    void retranslateUi(QWidget* MAN2); // retranslateUi
+    void setupUi(QWidget* MAN); // setupUi
+    void retranslateUi(QWidget* MAN); // retranslateUi
 };
 
 #endif // MAN2_H

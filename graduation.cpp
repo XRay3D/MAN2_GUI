@@ -3,6 +3,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QSettings>
+#include "measuringinterface/measuringinterface.h"
 
 Graduation::Graduation(QWidget* parent)
     : QWidget(parent)
@@ -15,16 +16,10 @@ Graduation::~Graduation()
     qDebug() << "~Graduation()";
 }
 
-void Graduation::setMan(ManInterface* value)
-{
-    m_man = value;
-    m_man->EnumeratePorts(cbScpi);
-}
-
 void Graduation::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event)
-    if (m_man->IsConnected()) {
+    if (MI::man()->IsConnected()) {
         groupBoxTest->setEnabled(true);
         groupBoxGrad->setEnabled(true);
     }
@@ -36,22 +31,22 @@ void Graduation::showEvent(QShowEvent* event)
 
 void Graduation::on_cbTestShortCirc_clicked(bool checked)
 {
-    m_man->ShortCircuitTest(checked, m_channel);
+    MI::man()->ShortCircuitTest(checked, m_channel);
 }
 
 void Graduation::on_pbOscilloscope_clicked(bool checked)
 {
     if (checked) {
-        m_man->Oscilloscope(cbChannelMan->currentText().toInt());
+        MI::man()->Oscilloscope(cbChannelMan->currentText().toInt());
     }
     else {
-        m_man->Oscilloscope(0);
+        MI::man()->Oscilloscope(0);
     }
 }
 
 void Graduation::on_pbCurrentEnable_clicked(bool checked)
 {
-    m_man->SwitchCurrent(checked, m_channel);
+    MI::man()->SwitchCurrent(checked, m_channel);
 }
 
 void Graduation::on_pbStartGrad_clicked()
@@ -77,10 +72,10 @@ void Graduation::on_pbStartGrad_clicked()
 
     if (radioButtonVoltage->isChecked()) {
         //        QMessageBox::information(this, "", "Подайте на вход напряжение 5 вольт.");
-        m_man->ShortCircuitTest(false, m_channel);
-        m_man->SwitchCurrent(false, m_channel);
-        m_man->Oscilloscope(0);
-        m_man->GetCalibrationCoefficients(GradCoeff, m_channel);
+        MI::man()->ShortCircuitTest(false, m_channel);
+        MI::man()->SwitchCurrent(false, m_channel);
+        MI::man()->Oscilloscope(0);
+        MI::man()->GetCalibrationCoefficients(GradCoeff, m_channel);
 
         //        for (int i = 0; i < count; ++i) {
         //            man->GetMeasuredValue(value, channel, CALIB_VOLTAGE);
@@ -104,13 +99,13 @@ void Graduation::on_pbStartGrad_clicked()
         if (QMessageBox::information(this, "", "Подайте на вход напряжение 36 вольт.", QMessageBox::Ok) != QMessageBox::Ok) {
             return;
         }
-        m_man->GetMeasuredValue(value, m_channel, CALIB_VOLTAGE);
+        MI::man()->GetMeasuredValue(value, m_channel, CALIB_VOLTAGE);
         for (int i = 0; i < count; ++i) {
-            m_man->GetMeasuredValue(value, m_channel, CALIB_VOLTAGE);
+            MI::man()->GetMeasuredValue(value, m_channel, CALIB_VOLTAGE);
             dValue2_1 += value.Value1;
             dValue2_2 += value.Value2;
-            if (m_scpi.IsFound()) {
-                dValue2 += m_scpi.GetVoltage();
+            if (MI::scpi()->IsConnected()) {
+                dValue2 += MI::scpi()->GetVoltage();
             }
             //            if (dValue2_1 / (i + 1) < 25.0 || dValue2_1 / (i + 1) > 40.0 && dValue2_2 / (i + 1) < 25.0 || dValue2_2 / (i + 1) > 40.0) {
             //                QMessageBox::information(this, "", "Проверьте подключение!");
@@ -121,7 +116,7 @@ void Graduation::on_pbStartGrad_clicked()
         dValue2_1 /= count;
         dValue2_2 /= count;
         dValue2 /= count;
-        if (!m_scpi.IsFound()) {
+        if (!MI::scpi()->IsConnected()) {
             dValue2 = QInputDialog::getDouble(this, "", "Введите точное значение поданного наапряжения.");
         }
 
@@ -135,8 +130,8 @@ void Graduation::on_pbStartGrad_clicked()
 
         if ((0.04f < GradCoeff.AdcCh1Scale) && (GradCoeff.AdcCh1Scale < 0.06f)
             && (0.04f < GradCoeff.AdcCh2Scale) && (GradCoeff.AdcCh2Scale < 0.06f)) {
-            m_man->SetCalibrationCoefficients(GradCoeff, m_channel);
-            m_man->SaveCalibrationCoefficients(m_channel);
+            MI::man()->SetCalibrationCoefficients(GradCoeff, m_channel);
+            MI::man()->SaveCalibrationCoefficients(m_channel);
         }
         else {
             QMessageBox::critical(this, "", "Что-то пошло не так, коэффициенты выходят за пределы!");
@@ -144,67 +139,67 @@ void Graduation::on_pbStartGrad_clicked()
     }
     else if (radioButtonCurrent->isChecked()) {
         QMessageBox::information(this, "", "Подключите источник тока 3 ампера.");
-        m_man->ShortCircuitTest(false, m_channel);
-        m_man->Oscilloscope(0);
-        m_man->GetCalibrationCoefficients(GradCoeff, m_channel);
-        m_man->SetDefaultCalibrationCoefficients(m_channel);
+        MI::man()->ShortCircuitTest(false, m_channel);
+        MI::man()->Oscilloscope(0);
+        MI::man()->GetCalibrationCoefficients(GradCoeff, m_channel);
+        MI::man()->SetDefaultCalibrationCoefficients(m_channel);
 
         const double i1 = 0.08;
         const double i2 = 3.0;
 
         //0.2 A
-        m_man->SetCurrent(i1, m_channel);
-        m_man->SwitchCurrent(true, m_channel);
+        MI::man()->SetCurrent(i1, m_channel);
+        MI::man()->SwitchCurrent(true, m_channel);
         thread()->sleep(10);
-        m_man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
+        MI::man()->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
         for (int i = 0; i < count; ++i) {
-            m_man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
+            MI::man()->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
             dValue1_1 += value.Value1;
-            if (m_scpi.IsFound()) {
-                dValue1 += m_scpi.GetCurrent();
+            if (MI::scpi()->IsConnected()) {
+                dValue1 += MI::scpi()->GetCurrent();
             }
         }
         dValue1_1 /= count;
         dValue1 /= count;
-        if (!m_scpi.IsFound()) {
+        if (!MI::scpi()->IsConnected()) {
             dValue1 = QInputDialog::getDouble(this, "", "Введите точное значение измеренного тока.");
         }
 
         //3 A
-        m_man->SetCurrent(3, m_channel);
+        MI::man()->SetCurrent(3, m_channel);
         thread()->sleep(10);
-        m_man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
+        MI::man()->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
         for (int i = 0; i < count; ++i) {
-            m_man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
+            MI::man()->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
             dValue1_2 += value.Value1;
-            if (m_scpi.IsFound()) {
-                dValue2 += m_scpi.GetCurrent();
+            if (MI::scpi()->IsConnected()) {
+                dValue2 += MI::scpi()->GetCurrent();
             }
             if (dValue2 / (i + 1) < i1 * 0.8) {
                 QMessageBox::information(this, "", "Источник тока не выдаёт 3 А.");
-                m_man->SetCalibrationCoefficients(GradCoeff, m_channel);
-                m_man->SwitchCurrent(false, m_channel);
+                MI::man()->SetCalibrationCoefficients(GradCoeff, m_channel);
+                MI::man()->SwitchCurrent(false, m_channel);
                 return;
             }
         }
         dValue1_2 /= count;
         dValue2 /= count;
-        if (!m_scpi.IsFound()) {
+        if (!MI::scpi()->IsConnected()) {
             dValue2 = QInputDialog::getDouble(this, "", "Введите точное значение измеренного тока.");
         }
-        m_man->SwitchCurrent(false, m_channel);
+        MI::man()->SwitchCurrent(false, m_channel);
 
         GradCoeff.AdcCh3Scale = ((dValue2 - dValue1) / (dValue1_2 - dValue1_1)) * 0.01;
         GradCoeff.DacOffset = (i1 - dValue1) /*- 0.00075*/ /*- (3 - dValue2) / 2*/;
         GradCoeff.DacScale = ((i2 - i1) / (dValue2 - dValue1)) * 36000.0;
 
-        m_man->SetCalibrationCoefficients(GradCoeff, m_channel);
+        MI::man()->SetCalibrationCoefficients(GradCoeff, m_channel);
         //        man->SaveCalibrationCoefficients(channel);
         if ((0.009f < GradCoeff.AdcCh3Scale) && (GradCoeff.AdcCh3Scale < 0.011f)
             && (0.0f < GradCoeff.DacOffset) && (GradCoeff.DacOffset < 0.1f)
             && (35000.0f < GradCoeff.DacScale) && (GradCoeff.DacScale < 37000.0f)) {
-            m_man->SetCalibrationCoefficients(GradCoeff, m_channel);
-            m_man->SaveCalibrationCoefficients(m_channel);
+            MI::man()->SetCalibrationCoefficients(GradCoeff, m_channel);
+            MI::man()->SaveCalibrationCoefficients(m_channel);
         }
         else {
             QMessageBox::critical(this, "", "Что-то пошло не так, коэффициенты выходят за пределы!");
@@ -214,13 +209,13 @@ void Graduation::on_pbStartGrad_clicked()
 
 void Graduation::on_dsbSetCurrent_valueChanged(double arg1)
 {
-    m_man->SetCurrent(arg1, m_channel);
+    MI::man()->SetCurrent(arg1, m_channel);
 }
 
 void Graduation::on_pbMeasure_clicked()
 {
     MeasuredValue_t value;
-    m_man->GetMeasuredValue(value, m_channel, RAW_DATA);
+    MI::man()->GetMeasuredValue(value, m_channel, RAW_DATA);
     qDebug() << "Value1" << value.Value1;
     qDebug() << "Value2" << value.Value2;
     qDebug() << "Value3" << value.Value3;
@@ -229,7 +224,7 @@ void Graduation::on_pbMeasure_clicked()
 void Graduation::on_pbGradRead_clicked()
 {
     GradCoeff_t GradCoeff;
-    m_man->GetCalibrationCoefficients(GradCoeff, m_channel);
+    MI::man()->GetCalibrationCoefficients(GradCoeff, m_channel);
     qDebug() << "AdcCh1Offset" << GradCoeff.AdcCh1Offset;
     qDebug() << "AdcCh1Scale" << GradCoeff.AdcCh1Scale;
     qDebug() << "AdcCh2Offset" << GradCoeff.AdcCh2Offset;
@@ -243,7 +238,7 @@ void Graduation::on_pbGradRead_clicked()
 
 void Graduation::on_pbCheckConnectionScpi_clicked()
 {
-    qDebug() << m_scpi.Ping(cbScpi->currentText());
+    qDebug() << MI::scpi()->Ping(cbScpi->currentText());
     //    qDebug() << scpi.GetCurrent();
     //    qDebug() << scpi.GetVoltage();
 }
@@ -254,7 +249,7 @@ void Graduation::on_pbSave_clicked()
     QSettings settings("Settings.ini", QSettings::IniFormat);
     settings.setIniCodec("UTF-8");
     settings.beginGroup("Channel" + cbChannelMan->currentText());
-    m_man->GetCalibrationCoefficients(GradCoeff, m_channel);
+    MI::man()->GetCalibrationCoefficients(GradCoeff, m_channel);
     settings.setValue("AdcCh1Offset", 1.0 * GradCoeff.AdcCh1Offset);
     settings.setValue("AdcCh1Scale", 1.0 * GradCoeff.AdcCh1Scale);
     settings.setValue("AdcCh2Offset", 1.0 * GradCoeff.AdcCh2Offset);
@@ -281,8 +276,8 @@ void Graduation::on_pbLoad_clicked()
     GradCoeff.DacOffset = settings.value("DacOffset", 0.0).toFloat();
     GradCoeff.DacScale = settings.value("DacScale", 36000.0).toFloat();
     settings.endGroup();
-    m_man->SetCalibrationCoefficients(GradCoeff, m_channel);
-    m_man->SaveCalibrationCoefficients(m_channel);
+    MI::man()->SetCalibrationCoefficients(GradCoeff, m_channel);
+    MI::man()->SaveCalibrationCoefficients(m_channel);
 }
 
 void Graduation::on_cbChannelMan_currentIndexChanged(int index)

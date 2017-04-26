@@ -1,4 +1,4 @@
-#include "maninterface.h"
+#include "man2.h"
 
 #include <QSerialPortInfo>
 #include <QDebug>
@@ -10,64 +10,54 @@ int id2 = qRegisterMetaType<ValueType_t>("ValueType_t");
 int id3 = qRegisterMetaType<uint8_t>("uint8_t");
 int id5 = qRegisterMetaType<QMap<int, MeasuredValue_t> >("QMap<int, MeasuredValue_t>");
 
-ManInterface::ManInterface(QObject* parent)
+MAN2::MAN2(QObject* parent)
     : QObject(parent)
     , m_port(new SerialPort(this))
     , m_semaphore(0)
     , m_connected(false)
 {
     for (int i = 0; i < 0x100; ++i) {
-        m_port->m_cmdArray[i] = &ManInterface::CmdNullFunction;
+        m_port->m_cmdArray[i] = &MAN2::CmdNullFunction;
     }
-    m_port->m_cmdArray[PING] = &ManInterface::CmdPing;
-    m_port->m_cmdArray[GET_MEASURED_VALUE] = &ManInterface::CmdGetMeasuredValue;
-    m_port->m_cmdArray[SET_CURRENT] = &ManInterface::CmdSetCurrent;
-    m_port->m_cmdArray[SWITCH_CURRENT] = &ManInterface::CmdSwitchCurrent;
-    m_port->m_cmdArray[TRIP_CURRENT_TEST] = &ManInterface::CmdTripCurrentTest;
-    m_port->m_cmdArray[SHORT_CIRCUIT_TEST] = &ManInterface::CmdShortCircuitTest;
-    m_port->m_cmdArray[OSCILLOSCOPE] = &ManInterface::CmdOscilloscope;
-    m_port->m_cmdArray[SET_DEFAULT_CALIBRATION_COEFFICIENTS] = &ManInterface::CmdSetDefaultCalibrationCoefficients;
-    m_port->m_cmdArray[GET_CALIBRATION_COEFFICIENTS] = &ManInterface::CmdGetCalibrationCoefficients;
-    m_port->m_cmdArray[SET_CALIBRATION_COEFFICIENTS] = &ManInterface::CmdSetCalibrationCoefficients;
-    m_port->m_cmdArray[SAVE_CALIBRATION_COEFFICIENTS] = &ManInterface::CmdSaveCalibrationCoefficients;
-    m_port->m_cmdArray[BUFFER_OVERFLOW] = &ManInterface::CmdBufferOverflow;
-    m_port->m_cmdArray[WRONG_COMMAND] = &ManInterface::CmdWrongCommand;
-    m_port->m_cmdArray[TEXTUAL_PARCEL] = &ManInterface::CmdTextualParcel;
-    m_port->m_cmdArray[CRC_ERROR] = &ManInterface::CmdCrcError;
+    m_port->m_cmdArray[PING] = &MAN2::CmdPing;
+    m_port->m_cmdArray[GET_MEASURED_VALUE] = &MAN2::CmdGetMeasuredValue;
+    m_port->m_cmdArray[SET_CURRENT] = &MAN2::CmdSetCurrent;
+    m_port->m_cmdArray[SWITCH_CURRENT] = &MAN2::CmdSwitchCurrent;
+    m_port->m_cmdArray[TRIP_CURRENT_TEST] = &MAN2::CmdTripCurrentTest;
+    m_port->m_cmdArray[SHORT_CIRCUIT_TEST] = &MAN2::CmdShortCircuitTest;
+    m_port->m_cmdArray[OSCILLOSCOPE] = &MAN2::CmdOscilloscope;
+    m_port->m_cmdArray[SET_DEFAULT_CALIBRATION_COEFFICIENTS] = &MAN2::CmdSetDefaultCalibrationCoefficients;
+    m_port->m_cmdArray[GET_CALIBRATION_COEFFICIENTS] = &MAN2::CmdGetCalibrationCoefficients;
+    m_port->m_cmdArray[SET_CALIBRATION_COEFFICIENTS] = &MAN2::CmdSetCalibrationCoefficients;
+    m_port->m_cmdArray[SAVE_CALIBRATION_COEFFICIENTS] = &MAN2::CmdSaveCalibrationCoefficients;
+    m_port->m_cmdArray[BUFFER_OVERFLOW] = &MAN2::CmdBufferOverflow;
+    m_port->m_cmdArray[WRONG_COMMAND] = &MAN2::CmdWrongCommand;
+    m_port->m_cmdArray[TEXTUAL_PARCEL] = &MAN2::CmdTextualParcel;
+    m_port->m_cmdArray[CRC_ERROR] = &MAN2::CmdCrcError;
 
     m_port->moveToThread(&m_portThread);
     connect(&m_portThread, &QThread::finished, m_port, &QObject::deleteLater);
-    connect(this, &ManInterface::Write, m_port, static_cast<qint64 (QSerialPort::*)(const QByteArray&)>(&QSerialPort::write));
-    connect(this, &ManInterface::SetPortName, m_port, &SerialPort::setPortName);
-    connect(this, &ManInterface::Open, m_port, &SerialPort::Open);
-    connect(this, &ManInterface::Close, m_port, &SerialPort::close);
+    connect(this, &MAN2::Write, m_port, static_cast<qint64 (QSerialPort::*)(const QByteArray&)>(&QSerialPort::write));
+    connect(this, &MAN2::SetPortName, m_port, &SerialPort::setPortName);
+    connect(this, &MAN2::Open, m_port, &SerialPort::Open);
+    connect(this, &MAN2::Close, m_port, &SerialPort::close);
     m_portThread.start(QThread::NormalPriority);
 }
 
-ManInterface::~ManInterface()
+MAN2::~MAN2()
 {
-    qDebug() << "~ManInterface()";
+    qDebug() << "~MAN2()";
     m_portThread.quit();
     m_portThread.wait();
 }
 
-void ManInterface::EnumeratePorts(QComboBox* comboBox)
-{
-    QList<QString> portNameList;
-    foreach (QSerialPortInfo portInfo, QSerialPortInfo::availablePorts()) {
-        portNameList.append(portInfo.portName());
-    }
-    qSort(portNameList);
-    comboBox->addItems(portNameList);
-}
-
-bool ManInterface::IsOpen()
+bool MAN2::IsOpen()
 {
     thread()->msleep(10);
     return m_port->m_isOpen;
 }
 
-bool ManInterface::Ping(const QString& PortName)
+bool MAN2::Ping(const QString& PortName)
 {
     qDebug() << "Ping";
     QMutexLocker Locker(&m_mutex);
@@ -94,7 +84,7 @@ bool ManInterface::Ping(const QString& PortName)
     return m_connected;
 }
 
-bool ManInterface::GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, ValueType_t type)
+bool MAN2::GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, ValueType_t type)
 {
     qDebug() << "GetMeasuredValue";
     QMutexLocker Locker(&m_mutex);
@@ -113,7 +103,7 @@ bool ManInterface::GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, Val
     return m_result;
 }
 
-bool ManInterface::GetMeasuredValue(QList<MeasuredValue_t>& value, uint8_t channel, ValueType_t type)
+bool MAN2::GetMeasuredValue(QList<MeasuredValue_t>& value, uint8_t channel, ValueType_t type)
 {
     qDebug() << "GetMeasuredValue";
     QMutexLocker Locker(&m_mutex);
@@ -136,7 +126,7 @@ bool ManInterface::GetMeasuredValue(QList<MeasuredValue_t>& value, uint8_t chann
     return m_result;
 }
 
-bool ManInterface::SetCurrent(float Current, uint8_t channel)
+bool MAN2::SetCurrent(float Current, uint8_t channel)
 {
     qDebug() << "SetCurrent";
     QMutexLocker Locker(&m_mutex);
@@ -153,7 +143,7 @@ bool ManInterface::SetCurrent(float Current, uint8_t channel)
     return m_result;
 }
 
-bool ManInterface::SwitchCurrent(uint8_t Enable, uint8_t channel)
+bool MAN2::SwitchCurrent(uint8_t Enable, uint8_t channel)
 {
     qDebug() << "SwitchCurrent";
     QMutexLocker Locker(&m_mutex);
@@ -170,7 +160,7 @@ bool ManInterface::SwitchCurrent(uint8_t Enable, uint8_t channel)
     return m_result;
 }
 
-bool ManInterface::TripCurrentTest()
+bool MAN2::TripCurrentTest()
 {
     qDebug() << "TripCurrentTest";
     QMutexLocker Locker(&m_mutex);
@@ -187,7 +177,7 @@ bool ManInterface::TripCurrentTest()
     return m_result;
 }
 
-bool ManInterface::ShortCircuitTest(uint8_t Enable, uint8_t channel)
+bool MAN2::ShortCircuitTest(uint8_t Enable, uint8_t channel)
 {
     qDebug() << "ShortCircuitTest";
     QMutexLocker Locker(&m_mutex);
@@ -204,7 +194,7 @@ bool ManInterface::ShortCircuitTest(uint8_t Enable, uint8_t channel)
     return m_result;
 }
 
-bool ManInterface::Oscilloscope(uint8_t channel)
+bool MAN2::Oscilloscope(uint8_t channel)
 {
     qDebug() << "Oscilloscope";
     QMutexLocker Locker(&m_mutex);
@@ -221,7 +211,7 @@ bool ManInterface::Oscilloscope(uint8_t channel)
     return m_result;
 }
 
-bool ManInterface::SetDefaultCalibrationCoefficients(uint8_t channel)
+bool MAN2::SetDefaultCalibrationCoefficients(uint8_t channel)
 {
     qDebug() << "SetDefaultCalibrationCoefficients";
     QMutexLocker Locker(&m_mutex);
@@ -238,7 +228,7 @@ bool ManInterface::SetDefaultCalibrationCoefficients(uint8_t channel)
     return m_result;
 }
 
-bool ManInterface::GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t channel)
+bool MAN2::GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t channel)
 {
     qDebug() << "GetCalibrationCoefficients";
     QMutexLocker Locker(&m_mutex);
@@ -256,7 +246,7 @@ bool ManInterface::GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t ch
     return m_result;
 }
 
-bool ManInterface::SetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t channel)
+bool MAN2::SetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t channel)
 {
     qDebug() << "SetCalibrationCoefficients";
     QMutexLocker Locker(&m_mutex);
@@ -274,7 +264,7 @@ bool ManInterface::SetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t ch
     return m_result;
 }
 
-bool ManInterface::SaveCalibrationCoefficients(uint8_t channel)
+bool MAN2::SaveCalibrationCoefficients(uint8_t channel)
 {
     qDebug() << "SaveCalibrationCoefficients";
     QMutexLocker Locker(&m_mutex);
@@ -291,7 +281,7 @@ bool ManInterface::SaveCalibrationCoefficients(uint8_t channel)
     return m_result;
 }
 
-void ManInterface::GetMeasuredValueSlot(ValueType_t type, uint8_t channel)
+void MAN2::GetMeasuredValueSlot(ValueType_t type, uint8_t channel)
 {
     qDebug() << "GetMeasuredValueSlot";
     QMutexLocker Locker(&m_mutex);
@@ -309,18 +299,18 @@ void ManInterface::GetMeasuredValueSlot(ValueType_t type, uint8_t channel)
     GetMeasuredValueSignal(m_measuredValue);
 }
 
-bool ManInterface::IsConnected() const
+bool MAN2::IsConnected() const
 {
     return m_connected;
 }
 
-void ManInterface::CmdPing(const QByteArray& data)
+void MAN2::CmdPing(const QByteArray& data)
 {
     qDebug() << "CmdPing" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdGetMeasuredValue(const QByteArray& data)
+void MAN2::CmdGetMeasuredValue(const QByteArray& data)
 {
     //    memcpy(&m_value, (MeasuredValue_t*)&data.constData()[5], sizeof(MeasuredValue_t));
     m_value = *(MeasuredValue_t*)(data.constData() + 5);
@@ -350,7 +340,7 @@ void ManInterface::CmdGetMeasuredValue(const QByteArray& data)
     m_semaphore.release();
 }
 
-void ManInterface::CmdSetCurrent(const QByteArray& data)
+void MAN2::CmdSetCurrent(const QByteArray& data)
 {
     qDebug() << "CmdCurrentSetting" << data.toHex().toUpper();
     //    memcpy(&m_value, (MeasuredValue_t*)&data.constData()[5], sizeof(MeasuredValue_t));
@@ -379,37 +369,37 @@ void ManInterface::CmdSetCurrent(const QByteArray& data)
     m_semaphore.release();
 }
 
-void ManInterface::CmdSwitchCurrent(const QByteArray& data)
+void MAN2::CmdSwitchCurrent(const QByteArray& data)
 {
     qDebug() << "CmdSwitchCurrent" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdTripCurrentTest(const QByteArray& data)
+void MAN2::CmdTripCurrentTest(const QByteArray& data)
 {
     qDebug() << "CmdTripCurrentTest" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdShortCircuitTest(const QByteArray& data)
+void MAN2::CmdShortCircuitTest(const QByteArray& data)
 {
     qDebug() << "CmdShortCircuitTest" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdOscilloscope(const QByteArray& data)
+void MAN2::CmdOscilloscope(const QByteArray& data)
 {
     qDebug() << "CmdOscilloscope" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdSetDefaultCalibrationCoefficients(const QByteArray& data)
+void MAN2::CmdSetDefaultCalibrationCoefficients(const QByteArray& data)
 {
     qDebug() << "CmdSetDefaultCalibrationCoefficients" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdGetCalibrationCoefficients(const QByteArray& data)
+void MAN2::CmdGetCalibrationCoefficients(const QByteArray& data)
 {
     qDebug() << "CmdGetCalibrationCoefficients" << data.toHex().toUpper();
     //    memcpy(&m_GradCoeff, (GradCoeff_t*)&data.constData()[5], sizeof(GradCoeff_t));
@@ -417,43 +407,43 @@ void ManInterface::CmdGetCalibrationCoefficients(const QByteArray& data)
     m_semaphore.release();
 }
 
-void ManInterface::CmdSetCalibrationCoefficients(const QByteArray& data)
+void MAN2::CmdSetCalibrationCoefficients(const QByteArray& data)
 {
     qDebug() << "CmdSetCalibrationCoefficients" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdSaveCalibrationCoefficients(const QByteArray& data)
+void MAN2::CmdSaveCalibrationCoefficients(const QByteArray& data)
 {
     qDebug() << "CmdSaveCalibrationCoefficients" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdBufferOverflow(const QByteArray& data)
+void MAN2::CmdBufferOverflow(const QByteArray& data)
 {
     qDebug() << "CmdBufferOverflow" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdWrongCommand(const QByteArray& data)
+void MAN2::CmdWrongCommand(const QByteArray& data)
 {
     qDebug() << "CmdWrongCommand" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdTextualParcel(const QByteArray& data)
+void MAN2::CmdTextualParcel(const QByteArray& data)
 {
     qDebug() << "CmdTextualParcel" << QString::fromLocal8Bit(data.data(), data.size()).mid(5, data.size() - 6);
     m_semaphore.release();
 }
 
-void ManInterface::CmdCrcError(const QByteArray& data)
+void MAN2::CmdCrcError(const QByteArray& data)
 {
     qDebug() << "CmdCrcError" << data.toHex().toUpper();
     m_semaphore.release();
 }
 
-void ManInterface::CmdNullFunction(const QByteArray& data)
+void MAN2::CmdNullFunction(const QByteArray& data)
 {
     qDebug() << "CmdNullFunction" << data.toHex().toUpper();
     m_semaphore.release();
@@ -463,7 +453,7 @@ void ManInterface::CmdNullFunction(const QByteArray& data)
 /// \brief SerialPort::SerialPort
 /// \param manInterface
 ///
-SerialPort::SerialPort(ManInterface* manInterface)
+SerialPort::SerialPort(MAN2* manInterface)
     : m_isOpen(false)
     , m_manInterface(manInterface)
 {

@@ -1,7 +1,7 @@
 #ifndef MEASUREMENTS_H
 #define MEASUREMENTS_H
 
-#include "measuringinterface/maninterface.h"
+#include "measuringinterface/man2.h"
 #include "ui_measurements.h"
 
 class QSignalMapper;
@@ -11,7 +11,6 @@ class Measurements : public QWidget, private Ui::Measurements {
 
 public:
     explicit Measurements(QWidget* parent = 0);
-    void setMan(ManInterface* value);
 
 private slots:
     void on_cbOsc_currentIndexChanged(int index);
@@ -39,7 +38,6 @@ signals:
     //    bool eventFilter(QObject* watched, QEvent* event);
 
 private:
-    ManInterface* m_man;
     QList<QPushButton*> m_listPbCurrent;
     QList<QPushButton*> m_listPbShort;
     QList<QPushButton*> m_listPbOsc;
