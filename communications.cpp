@@ -1,5 +1,5 @@
 #include "communications.h"
-#include "maninterface.h"
+#include "measuringinterface/maninterface.h"
 #include <QDebug>
 #include <QMessageBox>
 #include <QSerialPortInfo>
@@ -49,4 +49,5 @@ void Communications::setMan(ManInterface* man)
 
 void Communications::on_pbIrtCheckConnection_clicked()
 {
+
 }

@@ -1,7 +1,7 @@
 #ifndef AUTOMATICMEASUREMENTS_H
 #define AUTOMATICMEASUREMENTS_H
 
-#include "maninterface.h"
+#include "measuringinterface/maninterface.h"
 #include "ui_automaticmeasurements.h"
 #include "inputparameters.h"
 #include <QAxWidget>

@@ -1,7 +1,7 @@
 #ifndef MEASUREMENTS_H
 #define MEASUREMENTS_H
 
-#include "maninterface.h"
+#include "measuringinterface/maninterface.h"
 #include "ui_measurements.h"
 
 class QSignalMapper;

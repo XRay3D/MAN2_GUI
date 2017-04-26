@@ -3,8 +3,7 @@
 
 #include "ui_mainwindow.h"
 #include "man2.h"
-#include "maninterface.h"
-#include "irt59xx.h"
+#include "measuringinterface/measuringinterface.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow {
     Q_OBJECT
@@ -14,12 +13,11 @@ public:
     ~MainWindow();
 
 private:
-    ManInterface* m_man;
     void writeSettings();
     void readSettings();
     QThread m_manThread;
     int m_statusBarTimer;
-
+    MEASURING_INTERFACE mi;
     QLineEdit* statusBarTime;
     // QObject interface
 protected:

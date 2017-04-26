@@ -14,36 +14,39 @@ TARGET = MAN2_GUI
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-    inputparameters.cpp \
-    graduation.cpp \
-    scpi.cpp \
-    maninterface.cpp \
-    myprotokol.cpp \
-    measurements.cpp \
-    communications.cpp \
+SOURCES += \
+    measuringinterface/elemer.cpp \
+    measuringinterface/irt59xx.cpp \
+    measuringinterface/maninterface.cpp \
+    measuringinterface/measuringinterface.cpp \
+    measuringinterface/myprotokol.cpp \
+    measuringinterface/scpi.cpp \
+    qcustomplot/qcustomplot.cpp \
     automaticmeasurements.cpp \
-    qcustomplot.cpp \
+    communications.cpp \
+    graduation.cpp \
+    inputparameters.cpp \
+    main.cpp \
     mainwindow.cpp \
-    irt59xx.cpp \
-    elemer.cpp \
-    settings.cpp \
+    man2.cpp \
+    measurements.cpp \
     shdocvw.cpp
 
 HEADERS  += \
-    inputparameters.h \
-    graduation.h \
-    scpi.h \
-    maninterface.h \
-    myprotokol.h \
-    measurements.h \
-    communications.h \
+    measuringinterface/elemer.h \
+    measuringinterface/irt59xx.h \
+    measuringinterface/maninterface.h \
+    measuringinterface/measuringinterface.h \
+    measuringinterface/myprotokol.h \
+    measuringinterface/scpi.h \
+    qcustomplot/qcustomplot.h \
     automaticmeasurements.h \
-    qcustomplot.h \
+    communications.h \
+    graduation.h \
+    inputparameters.h \
     mainwindow.h \
-    irt59xx.h \
-    elemer.h \
-    settings.h \
+    man2.h \
+    measurements.h \
     shdocvw.h
 
 FORMS    += \
@@ -52,7 +55,8 @@ FORMS    += \
     communications.ui \
     measurements.ui \
     automaticmeasurements.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    man2.ui
 
 DISTFILES +=
 

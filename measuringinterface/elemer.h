@@ -8,9 +8,8 @@
 class Elemer {
 public:
     explicit Elemer();
-
-    QByteArray ControlSum(const QByteArray& data);
-    int Check(const QByteArray& Parcel, QList<QByteArray>& Array);
+    static QByteArray ControlSum(const QByteArray& data);
+    static int Check(const QByteArray& Parcel, QList<QByteArray>& Array);
 };
 
 #endif // ELEMER_H

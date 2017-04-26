@@ -2,8 +2,8 @@
 #define GRADUATION_H
 
 #include "ui_graduation.h"
-#include "maninterface.h"
-#include "scpi.h"
+#include "measuringinterface/maninterface.h"
+#include "measuringinterface/scpi.h"
 
 class Graduation : public QWidget, private Ui::Graduation {
     Q_OBJECT

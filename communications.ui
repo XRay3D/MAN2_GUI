@@ -36,52 +36,6 @@
        <widget class="QComboBox" name="cbIrtPort"/>
       </item>
       <item>
-       <widget class="QSpinBox" name="sbIrtAddress">
-        <property name="maximum">
-         <number>255</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="cbIrtBaud">
-        <item>
-         <property name="text">
-          <string>300</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>1200</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2400</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>4800</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>9600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>19200</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="pbIrtCheckConnection">
         <property name="text">
          <string>Проверит связь</string>
