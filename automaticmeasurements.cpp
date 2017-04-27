@@ -216,280 +216,6 @@ void AutomaticMeasurements::UpdateProgresBar()
 
 void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number)
 {
-    /* //    qDebug() << "PdfWriter";
-    //    qDebug() << "Cipher" << m_scanSettings.Cipher;
-    //    qDebug() << "Type" << m_scanSettings.Type;
-    //    qDebug() << "RatedVoltage" << m_scanSettings.RatedVoltage;
-    //    qDebug() << "NumberOfChannels" << m_scanSettings.NumberOfChannels;
-    //    qDebug() << "RatedCurrent" << m_scanSettings.RatedCurrent;
-    //    qDebug() << "RestrictionTest2" << m_scanSettings.RestrictionTest2;
-    //    qDebug() << "VisualControl" << m_scanSettings.VisualControl;
-    //    qDebug() << "LimitationsTest4_5" << m_scanSettings.LimitationsTest4_5;
-    //    qDebug() << "LimitTest6" << m_scanSettings.LimitTest6;
-    //    qDebug() << "RestrictionsTest7Min" << m_scanSettings.RestrictionsTest7Min;
-    //    qDebug() << "RestrictionsTest7Max" << m_scanSettings.RestrictionsTest7Max;
-    //    qDebug() << "Voltageerrortest3_4U1" << m_scanSettings.Voltageerrortest3_4U1;
-    //    qDebug() << "Voltageerrortest3_4U2" << m_scanSettings.Voltageerrortest3_4U2;
-    //    qDebug() << "Voltageerrortest5U1" << m_scanSettings.Voltageerrortest5U1;
-    //    qDebug() << "Voltageerrortest5U2" << m_scanSettings.Voltageerrortest5U2;
-    //    qDebug() << "VoltageErrorTest7" << m_scanSettings.VoltageErrorTest7;
-    //    qDebug() << "ParameterDLTest7" << m_scanSettings.ParameterDLTest7;
-
-    const int rowCount = (int)m_scanSettings.NumberOfChannels;
-
-    for (int sn = 0; sn < serialNumber.size(); ++sn) {
-    }
-    QString path = qApp->applicationDirPath()
-                       .append("/")
-                       .append(m_scanSettings.Type)
-                       .append(QDate::currentDate().toString("/yyyy/"))
-                       .append(QDate::currentDate().toString("MM"));
-
-    if (!QDir().mkpath(path)) {
-        QMessageBox::critical(this, "", "Не удaётся записать на диск файл протокола!");
-        return;
-    }
-    path = path
-               .append("/")
-               .append(serialNumber)
-               .append(QDate::currentDate().toString("_dd.MM.yyyy"))
-               .append("г.pdf");
-
-    m_paths[number] = path;
-    QPdfWriter PdfWriter(path);
-    PdfWriter.setResolution(100);
-    PdfWriter.setPageLayout(QPageLayout(QPageSize(QPageSize::A4), QPageLayout::Landscape, QMarginsF(0, 0, 0, 0)));
-
-    QPainter painter(&PdfWriter);
-    painter.translate(QPoint(80, 40));
-    painter.setPen(QPen(QBrush(), 1.25));
-
-    QList<QString> headerNameList;
-    headerNameList
-        << "№\n"
-           "канала"
-        << QString("Выходное\n"
-                   "напряжени\n"
-                   "от %1\n"
-                   "до %2\n"
-                   "В")
-               .arg(m_scanSettings.RatedVoltage - m_scanSettings.RestrictionTest2)
-               .arg(m_scanSettings.RatedVoltage + m_scanSettings.RestrictionTest2)
-               .replace('.', ',')
-        << QString("Пульсация\n"
-                   "выходного\n"
-                   "напряжения\n"
-                   "не более\n"
-                   "%1 мВ")
-               .arg(m_scanSettings.VisualControl)
-               .replace('.', ',')
-        << QString("Нестабильность\n"
-                   "выходного\n"
-                   "напряжения при\n"
-                   "изменении напряжения\n"
-                   "сети,не более выходного\n"
-                   "напряжения\n"
-                   "± %1 В")
-               .arg(m_scanSettings.LimitationsTest4_5)
-               .replace('.', ',')
-        << QString("Нестабильность выходного\n"
-                   "напряжения при изменении\n"
-                   "тока нагрузки от нуля\n"
-                   "до номинального не более\n"
-                   "вых. напряжения\n"
-                   "± %1 В")
-               .arg(m_scanSettings.LimitationsTest4_5)
-               .replace('.', ',')
-        << QString("Ток\n"
-                   "срабатывания\n"
-                   "электронной\n"
-                   "защиты\n"
-                   "от %1\n"
-                   "до %2 мА")
-               .arg(m_scanSettings.RestrictionsTest7Min)
-               .arg(m_scanSettings.RestrictionsTest7Max)
-               .replace('.', ',')
-        << "Срабатывание\n"
-           "электронной\n"
-           "защиты\n"
-           "при коротком\n"
-           "замыкании";
-
-    QString capSrting = QString("Протокол приемо-сдаточных испытаний источника питания постоянного тока\n"
-                                "%1\n"
-                                "Заводской номер № %2\n")
-                            .arg(m_scanSettings.Cipher)
-                            .arg(serialNumber);
-
-    QVector<int> columnWidth;
-    QVector<int> rowHeight;
-    QVector<int> columnOffset(1, 0);
-    QVector<int> rowOffset(1, 0);
-    QRect rect;
-
-    // заполняем ширину столбцов
-    painter.setFont(QFont("Times New Roman", 14));
-    for (int i = 0, width = 0; i < headerNameList.size(); ++i) {
-        width = painter.boundingRect(0, 0, 10, 10, Qt::AlignCenter, headerNameList[i]).width() + 20;
-        if (i == 3) {
-            columnWidth.append(width / 2);
-            columnWidth.append(width / 2);
-        }
-        else {
-            columnWidth.append(width);
-        }
-    }
-    // заполняем высоту строк
-    painter.setFont(QFont("Times New Roman", 16));
-    rowHeight << painter.boundingRect(QRect(), Qt::AlignCenter, capSrting).height() + 10;
-    painter.setFont(QFont("Times New Roman", 14));
-    rowHeight << painter.boundingRect(QRect(), Qt::AlignCenter, headerNameList[3]).height() + 10;
-    for (int row = 0; row <= rowCount; ++row) {
-        rowHeight << painter.boundingRect(QRect(), Qt::AlignCenter, "0,000").height() + 10;
-    }
-    rowHeight << rowHeight.last() * 2;
-
-    // заполняем смещения от 0 до N
-    for (int i = 0, c = 0; i < columnWidth.size(); ++i) {
-        c += columnWidth[i];
-        columnOffset.append(c);
-    }
-    for (int i = 0, c = 0; i < rowHeight.size(); ++i) {
-        c += rowHeight[i];
-        rowOffset.append(c);
-    }
-
-    // пишем шапку
-    painter.setFont(QFont("Times New Roman", 16));
-    painter.drawText(columnOffset[0], rowOffset[0], columnOffset.last(), rowHeight[0], Qt::AlignTop | Qt::AlignHCenter, capSrting);
-
-    // заполняем заголовок таблицы
-    painter.setFont(QFont("Times New Roman", 14));
-    for (int i = 0, col = 0; i < headerNameList.size(); ++i, ++col) {
-        if (i == 3) {
-            rect = QRect(columnOffset[col], rowOffset[1], columnWidth[col] + columnWidth[col + 1], rowHeight[1]);
-            ++col;
-        }
-        else
-            rect = QRect(columnOffset[col], rowOffset[1], columnWidth[col], rowHeight[1] + rowHeight[2]);
-        painter.drawText(rect, Qt::AlignCenter, headerNameList[i]);
-    }
-    // заполняем данные
-    double val;
-    QString str;
-    char num[100];
-    rect = QRect(columnOffset[3], rowOffset[2], columnWidth[3], rowHeight[2]);
-    val = m_scanSettings.Voltageerrortest3_4U1;
-    sprintf(num, "%.2f", val);
-    str = QString(num).replace('.', ',');
-    painter.drawText(rect, Qt::AlignCenter, str);
-    rect = QRect(columnOffset[4], rowOffset[2], columnWidth[4], rowHeight[2]);
-    val = m_scanSettings.Voltageerrortest5U1;
-    sprintf(num, "%.2f", val);
-    str = QString(num);
-    painter.drawText(rect, Qt::AlignCenter, str);
-
-    for (int row = 0; row < rowCount; ++row) {
-        for (int col = 0; col < columnWidth.size(); ++col) {
-            rect = QRect(columnOffset[col], rowOffset[row + 3], columnWidth[col], rowHeight[row + 3]);
-            switch (col) {
-            case 0:
-                str = QString().setNum(row + 1);
-                break;
-            case 1:
-                val = m_result[row + number * rowCount].test1;
-                sprintf(num, "%.4f", val);
-                str = QString(num).replace('.', ',');
-                if (qAbs(m_scanSettings.RatedVoltage - val) > m_scanSettings.RestrictionTest2) {
-                    painter.setBrush(QBrush(Qt::red));
-                }
-                break;
-            case 2:
-                val = m_result[row + number * rowCount].test2;
-                if (val > 0) {
-                    str = "в норме";
-                }
-                else {
-                    painter.setBrush(QBrush(Qt::red));
-                    str = "отказ";
-                }
-                break;
-            case 3:
-                val = m_result[row + number * rowCount].test1 - m_result[row + number * rowCount].test3;
-                sprintf(num, "%.4f", val);
-                str = QString(num).replace('.', ',');
-                if (qAbs(val) > m_scanSettings.LimitationsTest4_5) {
-                    painter.setBrush(QBrush(Qt::red));
-                }
-                break;
-            case 4:
-                val = m_result[row + number * rowCount].test1 - m_result[row + number * rowCount].test4;
-                sprintf(num, "%.4f", val);
-                str = QString(num).replace('.', ',');
-                if (qAbs(val) > m_scanSettings.LimitationsTest4_5) {
-                    painter.setBrush(QBrush(Qt::red));
-                }
-                break;
-            case 5:
-                val = m_result[row + number * rowCount].test1 - m_result[row + number * rowCount].test5;
-                sprintf(num, "%.4f", val);
-                str = QString(num).replace('.', ',');
-                if (qAbs(val) > m_scanSettings.LimitationsTest4_5) {
-                    painter.setBrush(QBrush(Qt::red));
-                }
-                break;
-            case 6:
-                val = m_result[row + number * rowCount].test6;
-                sprintf(num, "%.1f", val);
-                str = QString(num).replace('.', ',');
-                if ((m_scanSettings.RestrictionsTest7Min) > val || val > (m_scanSettings.RestrictionsTest7Max)) {
-                    painter.setBrush(QBrush(Qt::red));
-                }
-                if (0.0 > val) {
-                    painter.setBrush(QBrush(Qt::red));
-                    //str = "отказ";
-                }
-                break;
-            case 7:
-                val = m_result[row + number * rowCount].test7;
-                sprintf(num, "%.3f", val);
-                str = QString(num).replace('.', ',');
-                if (val > m_scanSettings.VoltageErrorTest7) {
-                    painter.setBrush(QBrush(Qt::red));
-                    //str = "отказ";
-                }
-                break;
-            default:
-                break;
-            }
-            painter.drawText(rect, Qt::AlignCenter, str);
-            painter.setBrush(QBrush(Qt::black));
-        }
-    }
-    // заполняем "корень"
-    rect = QRect(columnOffset[0], rowOffset[rowOffset.size() - 2], columnOffset[5], rowHeight.last());
-    painter.drawText(rect, Qt::AlignBottom | Qt::AlignRight, QDate::currentDate().toString("dd.MM.yyyy г.") + " Представитель ОТК");
-    rect = QRect(columnOffset[6], rowOffset[rowOffset.size() - 2], columnOffset.last() - columnOffset[6], rowHeight.last());
-    painter.drawText(rect, Qt::AlignBottom | Qt::AlignLeft, m_scanSettings.Fio);
-
-    // рисуем границы строк
-    for (int row = 1; row < rowOffset.size() - 1; ++row) {
-        if (row == 2)
-            painter.drawLine(columnOffset[3], rowOffset[row], columnOffset[5], rowOffset[row]);
-        else
-            painter.drawLine(columnOffset.first(), rowOffset[row], columnOffset.last(), rowOffset[row]);
-    }
-    painter.drawLine(columnOffset[5], rowOffset.last(), columnOffset[6], rowOffset.last());
-
-    // рисуем границы солбцов
-    for (int col = 0; col < columnOffset.size(); ++col) {
-        if (col == 4)
-            painter.drawLine(columnOffset[col], rowOffset[2], columnOffset[col], rowOffset[rowOffset.size() - 2]);
-        else
-            painter.drawLine(columnOffset[col], rowOffset[1], columnOffset[col], rowOffset[rowOffset.size() - 2]);
-    }
-
-    painter.end();*/
 
     //    QFile file1(":/protocol/Шапка.htm");
     //    QFile file2(":/protocol/Строка.htm");
@@ -655,6 +381,16 @@ void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number
     //    Dialog->LoadFile(qApp->applicationDirPath().append("/").append("123.htm"));
 }
 
+void AutomaticMeasurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& list)
+{
+    QMapIterator<int, MeasuredValue_t> iterator(list);
+    while (iterator.hasNext()) {
+        iterator.next();
+        m_listDsbVoltage[iterator.key() - 1]->setValue(iterator.value().Value1);
+        m_listDsbCurrent[iterator.key() - 1]->setValue(iterator.value().Value2);
+    }
+}
+
 void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
 {
     pbStartStop->setChecked(checked);
@@ -687,34 +423,18 @@ void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
     }
 }
 
-//void AutomaticMeasurements::paintEvent(QPaintEvent* event)
-//{
-//    Q_UNUSED(event)
-//    static QMutex mutex;
-//    QMutexLocker locker(&mutex);
-//    if (!m_paintState) {
-//        return;
-//    }
-//    m_paintState = false;
-//    for (int i = 0; i < 8; ++i) {
-//        if (!listWidget->item(i)->isHidden()) {
-//            SaveProtokol(listWidget->item(i)->text(), i);
-//        }
-//    }
-//    for (int i = 0; i < 8; ++i) {
-//        if (!m_paths[i].isEmpty()) {
-//            ShowProtocol(i);
-//        }
-//    }
-//}
-
 void AutomaticMeasurements::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event);
     if (MI::man()->IsConnected()) {
+        connect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
         return;
     }
     setEnabled(false);
+}
+void AutomaticMeasurements::hideEvent(QHideEvent* event)
+{
+    disconnect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
 }
 ///////////////////////////////////////
 /// \brief Worker::Worker

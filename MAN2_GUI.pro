@@ -63,7 +63,8 @@ FORMS    += \
     man.ui
 
 DISTFILES += \
-    modify.txt
+    modify.txt \
+    scratch.txt
 
 RESOURCES += \
     res.qrc
