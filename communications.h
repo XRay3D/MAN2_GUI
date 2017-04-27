@@ -19,8 +19,8 @@ signals:
     void SetTabBarEnabled(bool);
 private slots:
     void on_pbManCheckConnection_clicked();
-
     void on_pbIrtCheckConnection_clicked();
+    void CheckConnection();
 
 private:
     MAN* m_man;

@@ -121,6 +121,7 @@ void MainWindow::readSettings()
 
     settings.beginGroup("Communications");
     tabCommunications->cbManPort->setCurrentIndex(settings.value("cbManPort").toInt());
+    tabCommunications->cbIrtPort->setCurrentIndex(settings.value("cbIrtPort").toInt());
     settings.endGroup();
 
     settings.beginGroup("InputParameters");
@@ -152,6 +153,7 @@ void MainWindow::writeSettings()
 
     settings.beginGroup("Communications");
     settings.setValue("cbManPort", tabCommunications->cbManPort->currentIndex());
+    settings.setValue("cbIrtPort", tabCommunications->cbIrtPort->currentIndex());
     settings.endGroup();
 
     settings.beginGroup("InputParameters");

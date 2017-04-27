@@ -1,5 +1,5 @@
 #include "man.h"
-#include "ui_man2.h"
+#include "ui_man.h"
 #include <QDebug>
 #include <QFontDatabase>
 

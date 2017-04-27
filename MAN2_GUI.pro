@@ -62,7 +62,8 @@ FORMS    += \
     mainwindow.ui \
     man.ui
 
-DISTFILES +=
+DISTFILES += \
+    modify.txt
 
 RESOURCES += \
     res.qrc
