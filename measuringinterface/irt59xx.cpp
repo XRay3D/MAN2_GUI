@@ -14,7 +14,7 @@ QByteArray IRT59XX::WriteRead(const QByteArray& parcel, int timeout)
     QByteArray data(parcel);
     if (isOpen()) {
         data += Elemer::ControlSum(parcel) + '\r';
-        qDebug() << data;
+        //        qDebug() << data;
         write(data);
         data.clear();
         do {
@@ -23,7 +23,7 @@ QByteArray IRT59XX::WriteRead(const QByteArray& parcel, int timeout)
             QCoreApplication::processEvents(QEventLoop::AllEvents /*, 10*/);
             data.append(readAll());
         } while (!data.contains('\r') && timeout > 0);
-        qDebug() << data;
+        //        qDebug() << data;
     }
     return data;
 }

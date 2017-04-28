@@ -138,22 +138,22 @@ private:
     bool m_result;
     QElapsedTimer m_timer;
 
-    void CmdPing(const QByteArray& m_data);
-    void CmdGetMeasuredValue(const QByteArray& m_data);
-    void CmdSetCurrent(const QByteArray& m_data);
-    void CmdSwitchCurrent(const QByteArray& m_data);
-    void CmdTripCurrentTest(const QByteArray& m_data);
-    void CmdShortCircuitTest(const QByteArray& m_data);
-    void CmdOscilloscope(const QByteArray& m_data);
-    void CmdSetDefaultCalibrationCoefficients(const QByteArray& m_data);
-    void CmdGetCalibrationCoefficients(const QByteArray& m_data);
-    void CmdSetCalibrationCoefficients(const QByteArray& m_data);
-    void CmdSaveCalibrationCoefficients(const QByteArray& m_data);
-    void CmdBufferOverflow(const QByteArray& m_data);
-    void CmdWrongCommand(const QByteArray& m_data);
-    void CmdTextualParcel(const QByteArray& m_data);
-    void CmdCrcError(const QByteArray& m_data);
-    void CmdNullFunction(const QByteArray& m_data);
+    void CallbackCmdPing(const QByteArray& m_data);
+    void CallbackCmdGetMeasuredValue(const QByteArray& m_data);
+    void CallbackCmdSetCurrent(const QByteArray& m_data);
+    void CallbackCmdSwitchCurrent(const QByteArray& m_data);
+    void CallbackCmdTripCurrentTest(const QByteArray& m_data);
+    void CallbackCmdShortCircuitTest(const QByteArray& m_data);
+    void CallbackCmdOscilloscope(const QByteArray& m_data);
+    void CallbackCmdSetDefaultCalibrationCoefficients(const QByteArray& m_data);
+    void CallbackCmdGetCalibrationCoefficients(const QByteArray& m_data);
+    void CallbackCmdSetCalibrationCoefficients(const QByteArray& m_data);
+    void CallbackCmdSaveCalibrationCoefficients(const QByteArray& m_data);
+    void CallbackCmdBufferOverflow(const QByteArray& m_data);
+    void CallbackCmdWrongCommand(const QByteArray& m_data);
+    void CallbackCmdTextualParcel(const QByteArray& m_data);
+    void CallbackCmdCrcError(const QByteArray& m_data);
+    void CallbackCmdNullFunction(const QByteArray& m_data);
 
     // COMMON_INTERFACES interface
 };

@@ -5,9 +5,7 @@
 
 class COMMON_INTERFACES {
 public:
-    COMMON_INTERFACES()
-    {
-    }
+    COMMON_INTERFACES();
     virtual bool Ping(const QString& portName = QString()) = 0;
     virtual bool IsConnected() const = 0;
 };

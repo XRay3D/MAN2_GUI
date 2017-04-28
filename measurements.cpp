@@ -296,9 +296,8 @@ void Measurements::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event);
     qDebug() << "showEvent";
-    connect(this, &Measurements::StartMeasure, MI::man(), &MAN2::GetMeasuredValueSlot);
-    connect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
     if (MI::man()->IsConnected()) {
+
         QList<MeasuredValue_t> list;
         if (MI::man()->GetMeasuredValue(list)) {
             smSetCurrent->disconnect(smSetCurrent, SignalMapperInt, this, &Measurements::DsbSetCurrent);
@@ -321,6 +320,8 @@ void Measurements::showEvent(QShowEvent* event)
             }
             smSetCurrent->connect(smSetCurrent, SignalMapperInt, this, &Measurements::DsbSetCurrent, Qt::DirectConnection);
         }
+        connect(this, &Measurements::StartMeasure, MI::man(), &MAN2::GetMeasuredValueSlot);
+        connect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
         return;
     }
     setEnabled(false);

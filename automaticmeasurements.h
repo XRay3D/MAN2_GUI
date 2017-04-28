@@ -143,6 +143,7 @@ private:
     void ItemDoubleClicked(QListWidgetItem* item);
     void UpdateProgresBar();
     void SaveProtokol(const QString& serialNumber, int number);
+    void GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& list);
 
     Worker* m_worker = nullptr;
     //    QThread m_workerThread;
@@ -164,6 +165,9 @@ private slots:
 protected:
     //    void paintEvent(QPaintEvent* event);
     void showEvent(QShowEvent* event);
+    void hideEvent(QHideEvent *event);
 };
+
+
 
 #endif // AUTOMATICMEASUREMENTS_H
