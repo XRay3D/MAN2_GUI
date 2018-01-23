@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <QApplication>
+#include <QFontDatabase>
 //#include <qt_windows.h>
 
 //void handler_sigsegv(int signum)
@@ -19,9 +20,17 @@ int main(int argc, char* argv[])
     //QCoreApplication::setOrganizationDomain("mysoft.com");
     QCoreApplication::setApplicationName("MAN2");
 
-    MainWindow w;
+    //    w.setFont(QFont(QFontDatabase::applicationFontFamilies(f_id).first()));
     int f_id = QFontDatabase::addApplicationFont(":/ubuntu-font-family-0.83/Ubuntu-R.ttf");
-    w.setFont(QFont(QFontDatabase::applicationFontFamilies(f_id).first()));
+    QFont f(QFontDatabase::applicationFontFamilies(f_id).first());
+    f.setPointSize(16);
+    a.setFont(f);
+
+    MI mi;
+    Q_UNUSED(mi)
+
+    MainWindow w;
+
     w.show();
     return a.exec();
 }

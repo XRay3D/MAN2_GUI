@@ -14,12 +14,22 @@
    <string>Модуль активной нагрузки 2</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -43,7 +53,7 @@
       </widget>
       <widget class="Measurements" name="tabMeasurements">
        <attribute name="title">
-        <string>Ручное измерение</string>
+        <string>Ручное управление</string>
        </attribute>
       </widget>
       <widget class="Communications" name="tabCommunications">

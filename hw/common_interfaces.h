@@ -1,13 +1,15 @@
 #ifndef COMMON_INTERFACES_H
 #define COMMON_INTERFACES_H
 
-#include <QObject>
+#include <QString>
 
 class COMMON_INTERFACES {
 public:
-    COMMON_INTERFACES();
     virtual bool Ping(const QString& portName = QString()) = 0;
-    virtual bool IsConnected() const = 0;
+    virtual bool IsConnected() const { return m_connected; }
+
+protected:
+    bool m_connected = false;
 };
 
 #endif // COMMON_INTERFACES_H

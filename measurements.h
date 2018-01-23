@@ -1,10 +1,13 @@
 #ifndef MEASUREMENTS_H
 #define MEASUREMENTS_H
 
-#include "measuringinterface/man2.h"
+#include "hw/man2.h"
 #include "ui_measurements.h"
 
-class QSignalMapper;
+#include <QLineSeries>
+#include <QDate>
+
+QT_CHARTS_USE_NAMESPACE
 
 class Measurements : public QWidget, private Ui::Measurements {
     Q_OBJECT
@@ -33,7 +36,7 @@ private slots:
     void on_pbClear_clicked();
 
 signals:
-    void StartMeasure(ValueType_t type = CURRENT_MEASURED_VALUE, uint8_t channel = 0);
+    void StartMeasure(ValuetypeEnum type = CURRENT_MEASURED_VALUE, uint8_t channel = 0);
     //public:
     //    bool eventFilter(QObject* watched, QEvent* event);
 
@@ -45,13 +48,16 @@ private:
     QList<QDoubleSpinBox*> m_listDsbCurrent;
     QList<QDoubleSpinBox*> m_listDsbSetCurrent;
     QList<QGroupBox*> m_listGroupBox;
+    QList<QLineSeries*> m_series;
     int m_timerMeasure;
-
-    QSignalMapper* smCurrent;
-    QSignalMapper* smShort;
-    QSignalMapper* smOsc;
-    QSignalMapper* smSetCurrent;
-    QSignalMapper* smGroupBox;
+    bool m_disableSlots = false;
+    QDateTime m_keyX;
+    QDateTime m_minX;
+    //    QSignalMapper* smCurrent;
+    //    QSignalMapper* smShort;
+    //    QSignalMapper* smOsc;
+    //    QSignalMapper* smSetCurrent;
+    //    QSignalMapper* smGroupBox;
 
     QSemaphore m_semaphore;
     QMutex m_mutex;

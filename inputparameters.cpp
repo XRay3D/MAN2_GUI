@@ -10,22 +10,16 @@ InputParameters::InputParameters(QWidget* parent)
 {
     setupUi(this);
 
-    m_listLeSerNumDevice << leSerialNumberDevice_1;
-    m_listLeSerNumDevice << leSerialNumberDevice_2;
-    m_listLeSerNumDevice << leSerialNumberDevice_3;
-    m_listLeSerNumDevice << leSerialNumberDevice_4;
-    m_listLeSerNumDevice << leSerialNumberDevice_5;
-    m_listLeSerNumDevice << leSerialNumberDevice_6;
-    m_listLeSerNumDevice << leSerialNumberDevice_7;
-    m_listLeSerNumDevice << leSerialNumberDevice_8;
-
-    smSerialNumberDevice = new QSignalMapper(this);
-    for (int i = 0; i < m_listLeSerNumDevice.size(); ++i) {
-        QLineEdit* lineEdit = m_listLeSerNumDevice[i];
-        connect(lineEdit, &QLineEdit::editingFinished, smSerialNumberDevice, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
-        smSerialNumberDevice->setMapping(lineEdit, i);
-    }
-    connect(smSerialNumberDevice, SignalMapperInt, this, &InputParameters::SerialNumberDeviceEditingFinished, Qt::DirectConnection);
+    m_listLeSerNumDevice = QVector<QLineEdit*>({ leSerialNumberDevice_1,
+        leSerialNumberDevice_2,
+        leSerialNumberDevice_3,
+        leSerialNumberDevice_4,
+        leSerialNumberDevice_5,
+        leSerialNumberDevice_6,
+        leSerialNumberDevice_7,
+        leSerialNumberDevice_8 });
+    for (QLineEdit* lineEdit : m_listLeSerNumDevice)
+        connect(lineEdit, &QLineEdit::textChanged, [=]() { DeviceSerNumChange(lineEdit); });
 }
 
 InputParameters::~InputParameters()
@@ -35,9 +29,9 @@ InputParameters::~InputParameters()
 
 void InputParameters::on_pbClearSerialNumber_clicked()
 {
-    for (int i = 0; i < m_listLeSerNumDevice.size(); ++i) {
-        m_listLeSerNumDevice[i]->clear();
-        SerialNumberDeviceEditingFinished(i);
+    for (QLineEdit* lineEdit : m_listLeSerNumDevice) {
+        lineEdit->clear();
+        DeviceSerNumChange(lineEdit);
     }
 }
 
@@ -56,9 +50,9 @@ void InputParameters::on_pbStatrtMeasure_clicked()
     emit CurrentTabIndex(1);
 }
 
-void InputParameters::SerialNumberDeviceEditingFinished(int num)
+void InputParameters::DeviceSerNumChange(QLineEdit* lineEdit)
 {
-    emit SerialNumberChanged(m_listLeSerNumDevice[num]->text(), num);
+    emit SerialNumberChanged(lineEdit->text(), m_listLeSerNumDevice.indexOf(lineEdit));
 }
 
 void InputParameters::on_cbDevice_currentIndexChanged(int index)

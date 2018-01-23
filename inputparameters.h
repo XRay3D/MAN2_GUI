@@ -1,31 +1,34 @@
 #ifndef INPUTPARAMETERS_H
 #define INPUTPARAMETERS_H
 
-#include <QSignalMapper>
+//#include <QSignalMapper>
 #include <QWidget>
 #include "ui_inputparameters.h"
 
 class ScanSettings {
 public:
-    ScanSettings(const QList<QString>& list = QList<QString>())
-        : Type(list.size() >= 17 ? list.at(0.0) : "")
-        , Cipher(list.size() >= 17 ? list.at(1) : "")
-        , RatedVoltage(list.size() >= 17 ? list.at(2).toDouble(/*&ok*/) : 0.0)
-        , NumberOfChannels(list.size() >= 17 ? list.at(3).toInt(/*&ok*/) : 0.0)
-        , RatedCurrent(list.size() >= 17 ? list.at(4).toDouble(/*&ok*/) : 0.0)
-        , RestrictionTest2(list.size() >= 17 ? list.at(5).toDouble(/*&ok*/) : 0.0)
-        , VisualControl(list.size() >= 17 ? list.at(6).toDouble(/*&ok*/) : 0.0)
-        , LimitationsTest4_5(list.size() >= 17 ? list.at(7).toDouble(/*&ok*/) : 0.0)
-        , LimitTest6(list.size() >= 17 ? list.at(8).toDouble(/*&ok*/) : 0.0)
-        , RestrictionsTest7Min(list.size() >= 17 ? list.at(9).toDouble(/*&ok*/) : 0.0)
-        , RestrictionsTest7Max(list.size() >= 17 ? list.at(10).toDouble(/*&ok*/) : 0.0)
-        , Voltageerrortest3_4U1(list.size() >= 17 ? list.at(11).toDouble(/*&ok*/) : 0.0)
-        , Voltageerrortest3_4U2(list.size() >= 17 ? list.at(12).toDouble(/*&ok*/) : 0.0)
-        , Voltageerrortest5U1(list.size() >= 17 ? list.at(13).toDouble(/*&ok*/) : 0.0)
-        , Voltageerrortest5U2(list.size() >= 17 ? list.at(14).toDouble(/*&ok*/) : 0.0)
-        , VoltageErrorTest7(list.size() >= 17 ? list.at(15).toDouble(/*&ok*/) : 0.0)
-        , ParameterDLTest7(list.size() >= 17 ? list.at(16).toDouble(/*&ok*/) : 0.0)
+    explicit ScanSettings(const QList<QString>& list = QList<QString>())
     {
+        bool ok;
+        if (list.size() > 16) {
+            Type = list.at(0.0);
+            Cipher = list.at(1);
+            RatedVoltage = list.at(2).toDouble(&ok);
+            NumberOfChannels = list.at(3).toInt(&ok);
+            RatedCurrent = list.at(4).toDouble(&ok);
+            RestrictionTest2 = list.at(5).toDouble(&ok);
+            VisualControl = list.at(6).toDouble(&ok);
+            LimitationsTest4_5 = list.at(7).toDouble(&ok);
+            LimitTest6 = list.at(8).toDouble(&ok);
+            RestrictionsTest7Min = list.at(9).toDouble(&ok);
+            RestrictionsTest7Max = list.at(10).toDouble(&ok);
+            Voltageerrortest3_4U1 = list.at(11).toDouble(&ok);
+            Voltageerrortest3_4U2 = list.at(12).toDouble(&ok);
+            Voltageerrortest5U1 = list.at(13).toDouble(&ok);
+            Voltageerrortest5U2 = list.at(14).toDouble(&ok);
+            VoltageErrorTest7 = list.at(15).toDouble(&ok);
+            ParameterDLTest7 = list.at(16).toDouble(&ok);
+        }
     }
 
     QString Fio;
@@ -47,32 +50,32 @@ public:
     double VoltageErrorTest7;
     double ParameterDLTest7;
 
-    ScanSettings& operator=(const ScanSettings& right)
-    {
-        //проверка на самоприсваивание
-        if (this == &right) {
-            return *this;
-        }
-        Fio = right.Fio;
-        Type = right.Type;
-        Cipher = right.Cipher;
-        RatedVoltage = right.RatedVoltage;
-        NumberOfChannels = right.NumberOfChannels;
-        RatedCurrent = right.RatedCurrent;
-        RestrictionTest2 = right.RestrictionTest2;
-        VisualControl = right.VisualControl;
-        LimitationsTest4_5 = right.LimitationsTest4_5;
-        LimitTest6 = right.LimitTest6;
-        RestrictionsTest7Min = right.RestrictionsTest7Min;
-        RestrictionsTest7Max = right.RestrictionsTest7Max;
-        Voltageerrortest3_4U1 = right.Voltageerrortest3_4U1;
-        Voltageerrortest3_4U2 = right.Voltageerrortest3_4U2;
-        Voltageerrortest5U1 = right.Voltageerrortest5U1;
-        Voltageerrortest5U2 = right.Voltageerrortest5U2;
-        VoltageErrorTest7 = right.VoltageErrorTest7;
-        ParameterDLTest7 = right.ParameterDLTest7;
-        return *this;
-    }
+    //    ScanSettings& operator=(const ScanSettings& right)
+    //    {
+    //        //проверка на самоприсваивание
+    //        if (this == &right) {
+    //            return *this;
+    //        }
+    //        Fio = right.Fio;
+    //        Type = right.Type;
+    //        Cipher = right.Cipher;
+    //        RatedVoltage = right.RatedVoltage;
+    //        NumberOfChannels = right.NumberOfChannels;
+    //        RatedCurrent = right.RatedCurrent;
+    //        RestrictionTest2 = right.RestrictionTest2;
+    //        VisualControl = right.VisualControl;
+    //        LimitationsTest4_5 = right.LimitationsTest4_5;
+    //        LimitTest6 = right.LimitTest6;
+    //        RestrictionsTest7Min = right.RestrictionsTest7Min;
+    //        RestrictionsTest7Max = right.RestrictionsTest7Max;
+    //        Voltageerrortest3_4U1 = right.Voltageerrortest3_4U1;
+    //        Voltageerrortest3_4U2 = right.Voltageerrortest3_4U2;
+    //        Voltageerrortest5U1 = right.Voltageerrortest5U1;
+    //        Voltageerrortest5U2 = right.Voltageerrortest5U2;
+    //        VoltageErrorTest7 = right.VoltageErrorTest7;
+    //        ParameterDLTest7 = right.ParameterDLTest7;
+    //        return *this;
+    //    }
 };
 
 class MainWindow;
@@ -97,10 +100,10 @@ private slots:
     void on_cbDevice_currentIndexChanged(int index);
 
 private:
-    void SerialNumberDeviceEditingFinished(int num);
+    void DeviceSerNumChange(QLineEdit *lineEdit);
 
-    QList<QLineEdit*> m_listLeSerNumDevice;
-    QSignalMapper* smSerialNumberDevice;
+    QVector<QLineEdit*> m_listLeSerNumDevice;
+    //    QSignalMapper* smSerialNumberDevice;
     QVector<ScanSettings*> m_listScanSettings;
 };
 

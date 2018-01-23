@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 
 #include <QSettings>
+#include <QMessageBox>
+#include <QSerialPortInfo>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -9,87 +11,20 @@ MainWindow::MainWindow(QWidget* parent)
 {
     setupUi(this);
 
-    //    int i = QFontDatabase::addApplicationFont(":/ubuntu-font-family-0.83/Ubuntu-R.ttf");
-    //    QFont font =QFontDatabase::;
-    //    font.setPointSize(10);
-    //    tabWidget->setFont(font);
-
-    //    //    QFile file1(":/protocol/Шапка.htm");
-    //    //    QFile file2(":/protocol/Строка.htm");
-    //    //    QFile file3(":/protocol/Подвал.htm");
-    //    QFile file1(qApp->applicationDirPath().append("/").append("protocol/Шапка.htm"));
-    //    QFile file2(qApp->applicationDirPath().append("/").append("protocol/Строка.htm"));
-    //    QFile file3(qApp->applicationDirPath().append("/").append("protocol/Подвал.htm"));
-
-    //    qDebug() << file1.open(QFile::ReadOnly);
-    //    qDebug() << file2.open(QFile::ReadOnly);
-    //    qDebug() << file3.open(QFile::ReadOnly);
-
-    //    qDebug() << QString("%1 %2 %3").arg(1).arg("i").arg("");
-
-    //    QString protocol;
-
-    //    QString cap = QString().fromLocal8Bit(file1.readAll());
-    //    QString row = QString().fromLocal8Bit(file2.readAll());
-    //    QString basement = QString().fromLocal8Bit(file3.readAll());
-
-    //    protocol.append(cap
-    //                        .arg(1)
-    //                        .arg(2)
-    //                        .arg(3)
-    //                        .arg(4)
-    //                        .arg(5)
-    //                        .arg(6)
-    //                        .arg(7)
-    //                        .arg(8)
-    //                        .arg(9)
-    //                        .arg(10)
-    //                        .arg(11));
-
-    //    for (int i = 0; i < 10; ++i) {
-    //        protocol.append(row.arg(i + 1)
-    //                            .arg(2)
-    //                            .arg(3)
-    //                            .arg(4)
-    //                            .arg(5)
-    //                            .arg(6)
-    //                            .arg(7)
-    //                            .arg(8)
-    //                            .arg("; color:red")
-    //                            .arg("; color:red")
-    //                            .arg("; color:red")
-    //                            .arg("; color:red")
-    //                            .arg("; color:red")
-    //                            .arg("; color:red")
-    //                            .arg("; color:red"));
-    //    }
-    //    protocol.append(basement
-    //                        .arg(QDate::currentDate().toString("dd.MM.yyyy"))
-    //                        .arg("Ф.И.О."));
-
-    //    QFile file4(qApp->applicationDirPath().append("/").append("123.htm"));
-    //    qDebug() << file4.open(QFile::WriteOnly);
-    //    qDebug() << file4.write(protocol.toLocal8Bit());
-    //    file4.close();
-    //    protocol;
-
-    //    MyDialog* Dialog = new MyDialog(this, "123");
-    //    Dialog->LoadFile(qApp->applicationDirPath().append("/").append("123.htm"));
-
     statusBarTime->setObjectName(QStringLiteral("statusBarTime"));
     statusBarTime->setReadOnly(true);
     statusBarTime->setAlignment(Qt::AlignCenter);
     statusBarTime->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     statusbar->addWidget(statusBarTime);
 
-    tabCommunications->connect(tabCommunications, &Communications::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
-    tabCommunications->connect(tabCommunications, &Communications::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
+    connect(tabCommunications, &Communications::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
+    connect(tabCommunications, &Communications::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
 
-    tabInputParameters->connect(tabInputParameters, &InputParameters::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
-    tabInputParameters->connect(tabInputParameters, &InputParameters::ScanSettingsSignal, tabAutomaticMeasurements, &AutomaticMeasurements::ScanSettingsSlot);
-    tabInputParameters->connect(tabInputParameters, &InputParameters::SerialNumberChanged, tabAutomaticMeasurements, &AutomaticMeasurements::SerialNumberChanged);
+    connect(tabInputParameters, &InputParameters::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
+    connect(tabInputParameters, &InputParameters::ScanSettingsSignal, tabAutomaticMeasurements, &AutomaticMeasurements::ScanSettingsSlot);
+    connect(tabInputParameters, &InputParameters::SerialNumberChanged, tabAutomaticMeasurements, &AutomaticMeasurements::SerialNumberChanged);
 
-    tabAutomaticMeasurements->connect(tabAutomaticMeasurements, &AutomaticMeasurements::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
+    connect(tabAutomaticMeasurements, &AutomaticMeasurements::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
 
     readSettings();
     m_statusBarTimer = startTimer(1000);
@@ -121,7 +56,10 @@ void MainWindow::readSettings()
 
     settings.beginGroup("Communications");
     tabCommunications->cbManPort->setCurrentIndex(settings.value("cbManPort").toInt());
-    tabCommunications->cbIrtPort->setCurrentIndex(settings.value("cbIrtPort").toInt());
+    settings.endGroup();
+
+    settings.beginGroup("Graduation");
+    tabGraduation->cbxScpi->setCurrentIndex(settings.value("cbxScpi").toInt());
     settings.endGroup();
 
     settings.beginGroup("InputParameters");
@@ -137,6 +75,15 @@ void MainWindow::readSettings()
         tabInputParameters->cbDevice->addItem(tabInputParameters->m_listScanSettings.last()->Type + " (" + tabInputParameters->m_listScanSettings.last()->Cipher + ")");
     }
     tabInputParameters->cbDevice->setCurrentIndex(settings.value("cbDevice", 0).toInt());
+
+    tabInputParameters->leSerialNumberDevice_1->setText(settings.value("leSerialNumberDevice_1", "").toString());
+    tabInputParameters->leSerialNumberDevice_2->setText(settings.value("leSerialNumberDevice_2", "").toString());
+    tabInputParameters->leSerialNumberDevice_3->setText(settings.value("leSerialNumberDevice_3", "").toString());
+    tabInputParameters->leSerialNumberDevice_4->setText(settings.value("leSerialNumberDevice_4", "").toString());
+    tabInputParameters->leSerialNumberDevice_5->setText(settings.value("leSerialNumberDevice_5", "").toString());
+    tabInputParameters->leSerialNumberDevice_6->setText(settings.value("leSerialNumberDevice_6", "").toString());
+    tabInputParameters->leSerialNumberDevice_7->setText(settings.value("leSerialNumberDevice_7", "").toString());
+    tabInputParameters->leSerialNumberDevice_8->setText(settings.value("leSerialNumberDevice_8", "").toString());
     settings.endGroup();
 }
 
@@ -153,11 +100,23 @@ void MainWindow::writeSettings()
 
     settings.beginGroup("Communications");
     settings.setValue("cbManPort", tabCommunications->cbManPort->currentIndex());
-    settings.setValue("cbIrtPort", tabCommunications->cbIrtPort->currentIndex());
+    settings.endGroup();
+
+    settings.beginGroup("Graduation");
+    settings.setValue("cbxScpi", tabGraduation->cbxScpi->currentIndex());
     settings.endGroup();
 
     settings.beginGroup("InputParameters");
     settings.setValue("cbDevice", tabInputParameters->cbDevice->currentIndex());
     settings.setValue("leFioOtk", tabInputParameters->leFioOtk->text());
+
+    settings.setValue("leSerialNumberDevice_1", tabInputParameters->leSerialNumberDevice_1->text());
+    settings.setValue("leSerialNumberDevice_2", tabInputParameters->leSerialNumberDevice_2->text());
+    settings.setValue("leSerialNumberDevice_3", tabInputParameters->leSerialNumberDevice_3->text());
+    settings.setValue("leSerialNumberDevice_4", tabInputParameters->leSerialNumberDevice_4->text());
+    settings.setValue("leSerialNumberDevice_5", tabInputParameters->leSerialNumberDevice_5->text());
+    settings.setValue("leSerialNumberDevice_6", tabInputParameters->leSerialNumberDevice_6->text());
+    settings.setValue("leSerialNumberDevice_7", tabInputParameters->leSerialNumberDevice_7->text());
+    settings.setValue("leSerialNumberDevice_8", tabInputParameters->leSerialNumberDevice_8->text());
     settings.endGroup();
 }

@@ -4,54 +4,64 @@
 #
 #-------------------------------------------------
 
-QT += core gui
-QT += serialport printsupport axcontainer
-#QMAKE_CXXFLAGS += vms
+QT += core gui widgets serialport printsupport axcontainer
+QT += charts
+#FQMAKE_CXXFLAGS += vms
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+# The following define makes your compiler emit warnings if you use
+# any feature of Qt which as been marked deprecated (the exact warnings
+# depend on your compiler). Please consult the documentation of the
+# deprecated API in order to know how to port your code away from it.
+DEFINES += QT_DEPRECATED_WARNINGS
+
+# You can also make your code fail to compile if you use deprecated APIs.
+# In order to do so, uncomment the following line.
+# You can also select to disable deprecated APIs only up to a certain version of Qt.
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
 
 TARGET = MAN2_GUI
 TEMPLATE = app
 
+#win32:RC_FILE = myapp.rc
+
 
 SOURCES += \
-    measuringinterface/elemer.cpp \
-    measuringinterface/irt59xx.cpp \
-    measuringinterface/measuringinterface.cpp \
-    measuringinterface/myprotokol.cpp \
-    measuringinterface/scpi.cpp \
-    qcustomplot/qcustomplot.cpp \
     automaticmeasurements.cpp \
     communications.cpp \
     graduation.cpp \
     inputparameters.cpp \
     main.cpp \
     mainwindow.cpp \
-    measurements.cpp \
-    shdocvw.cpp \
     man.cpp \
-    measuringinterface/common_interfaces.cpp \
-    measuringinterface/common_interfaces.cpp \
-    measuringinterface/man2.cpp
+    measurements.cpp \
+    hw/man2.cpp \
+    hw/myprotokol.cpp \
+    hw/scpi.cpp \
+    mydialog.cpp \
+    shdocvw.cpp \
+    worker.cpp \
+    hw/interface.cpp
+
 
 HEADERS  += \
-    measuringinterface/elemer.h \
-    measuringinterface/irt59xx.h \
-    measuringinterface/measuringinterface.h \
-    measuringinterface/myprotokol.h \
-    measuringinterface/scpi.h \
-    qcustomplot/qcustomplot.h \
     automaticmeasurements.h \
     communications.h \
     graduation.h \
     inputparameters.h \
     mainwindow.h \
-    measurements.h \
-    shdocvw.h \
     man.h \
-    measuringinterface/common_interfaces.h \
-    measuringinterface/common_interfaces.h \
-    measuringinterface/man2.h
+    measurements.h \
+    hw/common_interfaces.h \
+    hw/common_interfaces.h \
+    hw/man2.h \
+    hw/myprotokol.h \
+    hw/scpi.h \
+    mydialog.h \
+    shdocvw.h \
+    worker.h \
+    hw/interface.h
+
 
 FORMS    += \
     inputparameters.ui \

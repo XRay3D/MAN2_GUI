@@ -2,7 +2,7 @@
 #define MAINWINDOW2_H
 
 #include "ui_mainwindow.h"
-#include "measuringinterface/measuringinterface.h"
+#include "hw/interface.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow {
     Q_OBJECT
@@ -21,7 +21,6 @@ private:
     // QObject interface
 protected:
     void timerEvent(QTimerEvent* event) override;
-    MI mi;
 };
 
 #endif // MAINWINDOW2_H

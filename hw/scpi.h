@@ -4,21 +4,23 @@
 #include "common_interfaces.h"
 
 #include <QSerialPort>
+#include <QMutex>
 
 class SCPI : public QSerialPort, public COMMON_INTERFACES {
     Q_OBJECT
 public:
     explicit SCPI(QObject* parent = 0);
     bool Ping(const QString& potName = QString());
-    bool IsConnected() const;
-    double GetVoltage();
-    double GetCurrent();
+    double GetDcVoltage();
+    double GetAcVoltage();
+    double GetDcCurrent();
 
 private:
-    QByteArray& WriteRead(const QByteArray& data, int timeout = 10);
+    QByteArray& WriteRead(const QByteArray& data);
+    void Write(const QByteArray& data);
     QByteArray m_data;
     int m_counter;
-    bool m_isFound;
+    QMutex m_mutex;
 };
 
 #endif // SCPI_H

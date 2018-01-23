@@ -3,8 +3,11 @@
 
 #include "ui_graduation.h"
 
+class MainWindow;
+
 class Graduation : public QWidget, private Ui::Graduation {
     Q_OBJECT
+    friend class MainWindow;
 
 public:
     explicit Graduation(QWidget* parent = 0);
@@ -12,25 +15,15 @@ public:
     ~Graduation();
 
 private:
-
     int m_channel = 0;
+    QVector<QCheckBox*> m_chbxs;
 
     // QWidget interface
 protected:
     void showEvent(QShowEvent* event);
 
 private slots:
-    void on_cbTestShortCirc_clicked(bool checked);
-    void on_pbOscilloscope_clicked(bool checked);
-    void on_pbCurrentEnable_clicked(bool checked);
     void on_pbStartGrad_clicked();
-    void on_dsbSetCurrent_valueChanged(double arg1);
-    void on_pbMeasure_clicked();
-    void on_pbGradRead_clicked();
-    void on_pbCheckConnectionScpi_clicked();
-    void on_pbSave_clicked();
-    void on_pbLoad_clicked();
-    void on_cbChannelMan_currentIndexChanged(int index);
 };
 
 #endif // GRADUATION_H

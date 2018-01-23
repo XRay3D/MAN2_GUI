@@ -12,6 +12,7 @@ class Communications : public QWidget, private Ui::Communications {
 
 public:
     explicit Communications(QWidget* parent = 0);
+    void CheckConnection();
     ~Communications();
 
 signals:
@@ -19,8 +20,7 @@ signals:
     void SetTabBarEnabled(bool);
 private slots:
     void on_pbManCheckConnection_clicked();
-    void on_pbIrtCheckConnection_clicked();
-    void CheckConnection();
+
 
 private:
     MAN* m_man;
