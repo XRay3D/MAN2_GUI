@@ -21,28 +21,18 @@ signals:
     void UpdateProgresBar();
 
 private:
-    bool IsBreak();
-    bool WaitUserSolution(int question);
-    bool CheckFinished();
-    bool SetVoltage(int voltage);
-    bool Test1();
-    bool Test2();
-    bool Test3();
-    bool Test4();
-    bool Test5();
-    bool Test6();
-    bool Test7();
+    void WaitSolutionOrEnd(int question);
+    void CheckFinished();
+    void SetVoltage(int voltage);
+    void Test1();
+    void Test2();
+    void Test3();
+    void Test4();
+    void Test5();
+    void Test6();
+    void Test7();
 
-    //    bool GetVoltage(double);
-    //    bool GetMeasuredValue(m_list);
-    //    bool GetMeasuredValue(MeasuredValue_t& value, int i);
-    //    bool Oscilloscope(int val);
-    //    bool SetCurrent(double current);
-    //    bool SetCurrent(double current, int i);
-    //    bool ShortCircuitTest(int val);
-    //    bool SwitchCurrent(int val);
-
-    bool Msleep(unsigned long time);
+    void Msleep(unsigned long time);
 
     QList<MeasuredValue_t> m_list;
     double m_inVoltage;

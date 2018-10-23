@@ -1,14 +1,16 @@
 #include "automaticmeasurements.h"
-#include "inputparameters.h"
+#include "hw/interface.h"
+#include "measuremodel.h"
 #include "mydialog.h"
+#include "preparation/preparation.h"
+#include "preparation/sernummodel.h"
 #include "worker.h"
+#include <QDate>
+#include <QDir>
 #include <QMessageBox>
 #include <QPainter>
 #include <QPdfWriter>
 #include <QSettings>
-#include <QDate>
-#include <QDir>
-#include "hw/interface.h"
 
 const ScanSettings AutomaticMeasurements::m_scanSettings;
 
@@ -19,25 +21,29 @@ AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
 {
     setupUi(this);
 
+    tvMeasure->setModel(new MeasureModel(this));
+    tvMeasure->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tvMeasure->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    tvSerNum->setModel(SerNumModel ::self);
+    tvSerNum->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tvSerNum->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
     m_listCheckBox = QList<QCheckBox*>({ checkBox_1, checkBox_2, checkBox_3, checkBox_4, checkBox_5, checkBox_6, checkBox_7 });
-    m_listDsbVoltage = QList<QDoubleSpinBox*>({ dsbVoltage_1, dsbVoltage_2, dsbVoltage_3, dsbVoltage_4, dsbVoltage_5, dsbVoltage_6, dsbVoltage_7, dsbVoltage_8 });
-    m_listDsbCurrent = QList<QDoubleSpinBox*>({ dsbCurrent_1, dsbCurrent_2, dsbCurrent_3, dsbCurrent_4, dsbCurrent_5, dsbCurrent_6, dsbCurrent_7, dsbCurrent_8 });
+    //    m_listDsbVoltage = QList<QDoubleSpinBox*>({ dsbVoltage_1, dsbVoltage_2, dsbVoltage_3, dsbVoltage_4, dsbVoltage_5, dsbVoltage_6, dsbVoltage_7, dsbVoltage_8 });
+    //    m_listDsbCurrent = QList<QDoubleSpinBox*>({ dsbCurrent_1, dsbCurrent_2, dsbCurrent_3, dsbCurrent_4, dsbCurrent_5, dsbCurrent_6, dsbCurrent_7, dsbCurrent_8 });
 
-    for (int i = 0; i < listWidget->count(); ++i) {
-        m_doNotSkip[i] = true;
-        listWidget->item(i)->setText("");
-        listWidget->item(i)->setHidden(true);
-    }
+    //    for (int i = 0; i < listWidget->count(); ++i) {
+    //        m_doNotSkip[i] = true;
+    //        listWidget->item(i)->setText("");
+    //        listWidget->item(i)->setHidden(true);
+    //    }
+    //    connect(listWidget, &QListWidget::itemDoubleClicked, this, &AutomaticMeasurements::ItemDoubleClicked);
 
-    //    QFont font;
-    //    font.setPixelSize(20);
-    //    listWidget->setFont(font);
-    //    font.setPixelSize(14);
-    //    widget->setFont(font);
-    connect(listWidget, &QListWidget::itemDoubleClicked, this, &AutomaticMeasurements::ItemDoubleClicked);
-    //    m_paths.resize(8);
-    //    m_serNum.resize(8);
-    connect(&m_timerRms, &QTimer::timeout, [&]() { dsbVoltageRms->setValue(MI::man()->GetMeasuredValueRMS()); });
+    //    connect(&m_timerRms, &QTimer::timeout, [&]() {
+    //        dsbVoltageRms->setValue(mi::man->GetRmsValue());
+    //        qDebug() << dsbVoltageRms->value();
+    //    });
 }
 
 AutomaticMeasurements::~AutomaticMeasurements()
@@ -51,26 +57,25 @@ void AutomaticMeasurements::ScanSettingsSlot(const ScanSettings* scanSettings)
 
 void AutomaticMeasurements::SerialNumberChanged(const QString& serialNumber, int index)
 {
-    listWidget->item(index)->setText(serialNumber);
+    //    listWidget->item(index)->setText(serialNumber);
 
-    if (serialNumber.isEmpty()) {
-        listWidget->item(index)->setHidden(true);
-    }
-    else {
-        m_serNum[index] = serialNumber;
-        listWidget->item(index)->setHidden(false);
-    }
+    //    if (serialNumber.isEmpty()) {
+    //        listWidget->item(index)->setHidden(true);
+    //    } else {
+    //        m_serNum[index] = serialNumber;
+    //        listWidget->item(index)->setHidden(false);
+    //    }
 
-    for (bool& val : m_doNotSkip)
-        val = true;
+    //    for (bool& val : m_doNotSkip)
+    //        val = true;
 
-    for (int i = 0, end = listWidget->count(); i < end; ++i) {
-        if (listWidget->item(i)->isHidden()) {
-            for (int j = 0; j < m_scanSettings.NumberOfChannels; ++j) {
-                m_doNotSkip[i * int(m_scanSettings.NumberOfChannels) + j] = false;
-            }
-        }
-    }
+    //    for (int i = 0, end = listWidget->count(); i < end; ++i) {
+    //        if (listWidget->item(i)->isHidden()) {
+    //            for (int j = 0; j < m_scanSettings.NumberOfChannels; ++j) {
+    //                m_doNotSkip[i * int(m_scanSettings.NumberOfChannels) + j] = false;
+    //            }
+    //        }
+    //    }
 }
 
 void AutomaticMeasurements::ShowMessage(int num)
@@ -143,16 +148,16 @@ void AutomaticMeasurements::ShowMessage(int num)
         }
         break;
     case VERIFICATION_IS_COMPLETE:
-        messageText = "Проверка закончена.";
-        QMessageBox::information(this, "", messageText);
-        for (int i = 0; i < 8; ++i) {
-            if (!listWidget->item(i)->isHidden()) {
-                SaveProtokol(listWidget->item(i)->text(), i);
-            }
-            if (!m_paths[i].isEmpty()) {
-                ShowProtocol(i);
-            }
-        }
+        //        messageText = "Проверка закончена.";
+        //        QMessageBox::information(this, "", messageText);
+        //        for (int i = 0; i < 8; ++i) {
+        //            if (!listWidget->item(i)->isHidden()) {
+        //                SaveProtokol(listWidget->item(i)->text(), i);
+        //            }
+        //            if (!m_paths[i].isEmpty()) {
+        //                ShowProtocol(i);
+        //            }
+        //        }
         break;
     case TEST_1:
     case TEST_2:
@@ -205,10 +210,10 @@ void AutomaticMeasurements::ShowProtocol(int num)
     // Dialog->deleteLater();
 }
 
-void AutomaticMeasurements::ItemDoubleClicked(QListWidgetItem* item)
-{
-    ShowProtocol(listWidget->row(item));
-}
+//void AutomaticMeasurements::ItemDoubleClicked(QListWidgetItem* item)
+//{
+//    ShowProtocol(listWidget->row(item));
+//}
 
 void AutomaticMeasurements::UpdateProgresBar()
 {
@@ -269,8 +274,7 @@ void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number
                 val = m_result[row + number * rowCount].test2;
                 if (val > 0) {
                     str = "в норме";
-                }
-                else {
+                } else {
                     flags[col - 1] = true;
                     str = "отказ";
                 }
@@ -351,80 +355,79 @@ void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number
     }
     path = path.append("/")
                .append(serialNumber)
-               .append(QDate::currentDate().toString("_dd.MM.yyyy"))
-               .append("г.htm");
+               .append(QDateTime::currentDateTime().toString(" dd.MM.yyyy H.mm.ss"))
+               .append(".htm");
 
     m_paths[number] = path;
 
     QFile file4(path);
     qDebug() << file4.open(QFile::WriteOnly);
     qDebug() << file4.write(protocol.toLocal8Bit());
-    file1.close();
-    file2.close();
-    file3.close();
-    file4.close();
-    // MyDialog* Dialog = new MyDialog(this, "123");
-    // Dialog->LoadFile(qApp->applicationDirPath().append("/").append("123.htm"));
+    //    file1.close();
+    //    file2.close();
+    //    file3.close();
+    //    file4.close();
+    //    // MyDialog* Dialog = new MyDialog(this, "123");
+    //    // Dialog->LoadFile(qApp->applicationDirPath().append("/").append("123.htm"));
 }
 
 void AutomaticMeasurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& m_list)
 {
-    QMapIterator<int, MeasuredValue_t> iterator(m_list);
-    while (iterator.hasNext()) {
-        iterator.next();
-        m_listDsbVoltage[iterator.key() - 1]->setValue(iterator.value().Value1);
-        m_listDsbCurrent[iterator.key() - 1]->setValue(iterator.value().Value2);
-    }
+    //    QMapIterator<int, MeasuredValue_t> iterator(m_list);
+    //    while (iterator.hasNext()) {
+    //        iterator.next();
+    //        m_listDsbVoltage[iterator.key() - 1]->setValue(iterator.value().Value1);
+    //        m_listDsbCurrent[iterator.key() - 1]->setValue(iterator.value().Value2);
+    //    }
 }
 
 void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
 {
-    pbStartStop->setChecked(checked);
-    if (checked) {
-        for (int i = 0, flag = 0; i < listWidget->count(); ++i) {
-            if (listWidget->item(i)->isHidden()) {
-                ++flag;
-            }
-            if (flag == 8) {
-                QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
-                pbStartStop->setChecked(false);
-                return;
-            }
-        }
-        foreach (QCheckBox* cb, m_listCheckBox) {
-            cb->setChecked(false);
-        }
-        pbStartStop->setText("Остановить измерения");
-        memset(m_result, 0, sizeof(m_result));
-        m_worker = new Worker(m_doNotSkip, m_result, &m_scanSettings);
-        connect(m_worker, &QThread::finished, [this]() {
-            pbStartStop->setText("Начать измерения");
-            pbStartStop->setChecked(false);
-        });
-        connect(m_worker, &QThread::finished, m_worker, &QObject::deleteLater);
-        connect(m_worker, &Worker::ShowMessage, this, &AutomaticMeasurements::ShowMessage);
-        connect(m_worker, &Worker::UpdateProgresBar, this, &AutomaticMeasurements::UpdateProgresBar);
-        progressBar->setValue(0);
-        m_worker->start();
-    }
-    else {
-        pbStartStop->setText("Начать измерения");
-        m_worker->FinishMeasurements();
-    }
+    //    pbStartStop->setChecked(checked);
+    //    if (checked) {
+    //        for (int i = 0, flag = 0; i < listWidget->count(); ++i) {
+    //            if (listWidget->item(i)->isHidden()) {
+    //                ++flag;
+    //            }
+    //            if (flag == 8) {
+    //                QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
+    //                pbStartStop->setChecked(false);
+    //                return;
+    //            }
+    //        }
+    //        foreach (QCheckBox* cb, m_listCheckBox) {
+    //            cb->setChecked(false);
+    //        }
+    //        pbStartStop->setText("Остановить измерения");
+    //        memset(m_result, 0, sizeof(m_result));
+    //        m_worker = new Worker(m_doNotSkip, m_result, &m_scanSettings);
+    //        connect(m_worker, &QThread::finished, [this]() {
+    //            pbStartStop->setText("Начать измерения");
+    //            pbStartStop->setChecked(false);
+    //        });
+    //        connect(m_worker, &QThread::finished, m_worker, &QObject::deleteLater);
+    //        connect(m_worker, &Worker::ShowMessage, this, &AutomaticMeasurements::ShowMessage);
+    //        connect(m_worker, &Worker::UpdateProgresBar, this, &AutomaticMeasurements::UpdateProgresBar);
+    //        progressBar->setValue(0);
+    //        m_worker->start();
+    //    } else {
+    //        pbStartStop->setText("Начать измерения");
+    //        m_worker->FinishMeasurements();
+    //    }
 }
 
 void AutomaticMeasurements::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event);
-    if (MI::man()->IsConnected()) {
-        connect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
+    if (mi::man->IsConnected()) {
+        connect(mi::man, &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
         m_timerRms.start(100);
         return;
     }
     setEnabled(false);
 }
-void AutomaticMeasurements::hideEvent(QHideEvent* event)
+void AutomaticMeasurements::hideEvent(QHideEvent* /*event*/)
 {
-    disconnect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
+    disconnect(mi::man, &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
     m_timerRms.stop();
 }

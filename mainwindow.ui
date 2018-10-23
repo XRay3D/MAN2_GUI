@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Модуль активной нагрузки 2</string>
+   <string>Электросила</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -41,7 +41,7 @@
       <property name="tabBarAutoHide">
        <bool>false</bool>
       </property>
-      <widget class="InputParameters" name="tabInputParameters">
+      <widget class="PrepareForm" name="tabInputParameters">
        <attribute name="title">
         <string>Ввод параметров</string>
        </attribute>
@@ -84,9 +84,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>InputParameters</class>
+   <class>PrepareForm</class>
    <extends>QWidget</extends>
-   <header>inputparameters.h</header>
+   <header>preparation/prepareform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -18,16 +18,17 @@ int main(int argc, char* argv[])
 
     QCoreApplication::setOrganizationName("XrSoft");
     //QCoreApplication::setOrganizationDomain("mysoft.com");
-    QCoreApplication::setApplicationName("MAN2");
+    QCoreApplication::setApplicationName("Электросила");
 
     //    w.setFont(QFont(QFontDatabase::applicationFontFamilies(f_id).first()));
-    int f_id = QFontDatabase::addApplicationFont(":/ubuntu-font-family-0.83/Ubuntu-R.ttf");
-    QFont f(QFontDatabase::applicationFontFamilies(f_id).first());
-    f.setPointSize(16);
+    //    int f_id = QFontDatabase::addApplicationFont(":/ubuntu-font-family-0.83/Ubuntu-R.ttf");
+    //    QFont f(QFontDatabase::applicationFontFamilies(f_id).first());
+    QFont f;
+    f.setPointSize(14);
     a.setFont(f);
 
-    MI mi;
-    Q_UNUSED(mi)
+    mi mi_;
+    Q_UNUSED(mi_)
 
     MainWindow w;
 

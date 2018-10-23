@@ -3,7 +3,7 @@
 
 //#include <QSignalMapper>
 #include <QWidget>
-#include "ui_inputparameters.h"
+//#include "ui_inputparameters.h"
 
 class ScanSettings {
 public:
@@ -78,33 +78,33 @@ public:
     //    }
 };
 
-class MainWindow;
+//class MainWindow;
 
-class InputParameters : public QWidget, private Ui::InputParameters {
-    Q_OBJECT
+//class Preparation : public QWidget, private Ui::Preparation {
+//    Q_OBJECT
 
-    friend class MainWindow;
+//    friend class MainWindow;
 
-public:
-    explicit InputParameters(QWidget* parent = 0);
-    ~InputParameters();
+//public:
+//    explicit Preparation(QWidget* parent = 0);
+//    ~Preparation();
 
-signals:
-    void CurrentTabIndex(int);
-    void ScanSettingsSignal(const ScanSettings*);
-    void SerialNumberChanged(const QString&, int);
+//signals:
+//    void CurrentTabIndex(int);
+//    void ScanSettingsSignal(const ScanSettings*);
+//    void SerialNumberChanged(const QString&, int);
 
-private slots:
-    void on_pbClearSerialNumber_clicked();
-    void on_pbStatrtMeasure_clicked();
-    void on_cbDevice_currentIndexChanged(int index);
+//private slots:
+//    void on_pbClearSerialNumber_clicked();
+//    void on_pbStatrtMeasure_clicked();
+//    void on_cbDevice_currentIndexChanged(int index);
 
-private:
-    void DeviceSerNumChange(QLineEdit *lineEdit);
+//private:
+//    void DeviceSerNumChange(QLineEdit *lineEdit);
 
-    QVector<QLineEdit*> m_listLeSerNumDevice;
-    //    QSignalMapper* smSerialNumberDevice;
-    QVector<ScanSettings*> m_listScanSettings;
-};
+//    QVector<QLineEdit*> m_listLeSerNumDevice;
+//    //    QSignalMapper* smSerialNumberDevice;
+//    QVector<ScanSettings*> m_listScanSettings;
+//};
 
 #endif // INPUTPARAMETERS_H

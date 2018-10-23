@@ -31,11 +31,11 @@ enum CommandEnum {
     GET_CALIBRATION_COEFFICIENTS,
     SET_CALIBRATION_COEFFICIENTS,
     SAVE_CALIBRATION_COEFFICIENTS,
-    GET_RMS_MEASURED_VALUE,
-    BUFFER_OVERFLOW = 0xF0,
-    WRONG_COMMAND = 0xF1,
-    TEXTUAL_PARCEL = 0xF2,
-    CRC_ERROR = 0xF3
+    GetRmsMeasuredValue,
+    BUFFER_OVERFLOW,
+    WRONG_COMMAND,
+    TEXTUAL_PARCEL,
+    CRC_ERROR
 };
 
 enum CalibEnum {
@@ -99,26 +99,26 @@ class SerialPort;
 
 class CallBack {
 public:
-    virtual void RxPing(const QByteArray& data) = 0;
-    virtual void RxGetMeasuredValue(const QByteArray& data) = 0;
-    virtual void RxSetCurrent(const QByteArray& data) = 0;
-    virtual void RxSwitchCurrent(const QByteArray& data) = 0;
-    virtual void RxTripCurrentTest(const QByteArray& data) = 0;
-    virtual void RxShortCircuitTest(const QByteArray& data) = 0;
-    virtual void RxOscilloscope(const QByteArray& data) = 0;
-    virtual void RxSetDefaultCalibrationCoefficients(const QByteArray& data) = 0;
-    virtual void RxGetCalibrationCoefficients(const QByteArray& data) = 0;
-    virtual void RxSetCalibrationCoefficients(const QByteArray& data) = 0;
-    virtual void RxSaveCalibrationCoefficients(const QByteArray& data) = 0;
-    virtual void RxGetMeasuredRmsValue(const QByteArray& data) = 0;
-    virtual void RxBufferOverflow(const QByteArray& data) = 0;
-    virtual void RxWrongCommand(const QByteArray& data) = 0;
-    virtual void RxTextualParcel(const QByteArray& data) = 0;
-    virtual void RxCrcError(const QByteArray& data) = 0;
-    virtual void RxNullFunction(const QByteArray& data) = 0;
+    virtual void RxPing(const Parcel_t& data) = 0;
+    virtual void RxGetMeasuredValue(const Parcel_t& data) = 0;
+    virtual void RxSetCurrent(const Parcel_t& data) = 0;
+    virtual void RxSwitchCurrent(const Parcel_t& data) = 0;
+    virtual void RxTripCurrentTest(const Parcel_t& data) = 0;
+    virtual void RxShortCircuitTest(const Parcel_t& data) = 0;
+    virtual void RxOscilloscope(const Parcel_t& data) = 0;
+    virtual void RxSetDefaultCalibrationCoefficients(const Parcel_t& data) = 0;
+    virtual void RxGetCalibrationCoefficients(const Parcel_t& data) = 0;
+    virtual void RxSetCalibrationCoefficients(const Parcel_t& data) = 0;
+    virtual void RxSaveCalibrationCoefficients(const Parcel_t& data) = 0;
+    virtual void RxGetRmsValue(const Parcel_t& data) = 0;
+    virtual void RxBufferOverflow(const Parcel_t& data) = 0;
+    virtual void RxWrongCommand(const Parcel_t& data) = 0;
+    virtual void RxTextualParcel(const Parcel_t& data) = 0;
+    virtual void RxCrcError(const Parcel_t& data) = 0;
+    virtual void RxNullFunction(const Parcel_t& data) = 0;
 };
 
-class MAN2 : public QObject, private MyProtokol, public COMMON_INTERFACES, public CallBack {
+class MAN2 : public QObject, private MyProtokol, public CommonInterfaces, public CallBack {
     Q_OBJECT
     friend class SerialPort;
 
@@ -127,11 +127,10 @@ public:
     ~MAN2();
 
     bool Ping(const QString& PortName = QString());
-    bool IsConnected() const;
 
     bool GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, ValuetypeEnum type = CURRENT_MEASURED_VALUE);
     bool GetMeasuredValue(QList<MeasuredValue_t>& value, ValuetypeEnum type = CURRENT_MEASURED_VALUE);
-    double GetMeasuredValueRMS();
+    double GetRmsValue();
     bool SetCurrent(float Current, uint8_t Channel = 0);
     bool SwitchCurrent(uint8_t Enable, uint8_t Channel = 0);
     bool TripCurrentTest();
@@ -139,7 +138,7 @@ public:
     bool Oscilloscope(uint8_t Channel);
     bool SetDefaultCalibrationCoefficients(uint8_t Channel);
     bool GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t Channel);
-    bool SetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t Channel);
+    bool SetCalibrationCoefficients(const GradCoeff_t& GradCoeff, uint8_t Channel);
     bool SaveCalibrationCoefficients(uint8_t Channel);
     bool DisableAll();
 
@@ -154,36 +153,36 @@ signals:
 
 private:
     SerialPort* m_port;
-    //    QByteArray m_data;
-    GradCoeff_t m_GradCoeff;
+    GradCoeff_t m_coeff;
+    GradCoeff_t m_rmsCoeff;
     MeasuredValue_t m_value;
     QMap<int, MeasuredValue_t> m_measuredValue;
-    QThread m_portThread;
     QMutex m_mutex;
+    QThread m_portThread;
+    float m_rms;
     int m_counter;
     mutable QSemaphore m_semaphore;
     mutable bool m_result;
-    float m_rms;
-    GradCoeff_t m_rmsScale;
+
     void Init();
-    void Reset();
-    void RxPing(const QByteArray& data);
-    void RxGetMeasuredValue(const QByteArray& data);
-    void RxSetCurrent(const QByteArray& data);
-    void RxSwitchCurrent(const QByteArray& data);
-    void RxTripCurrentTest(const QByteArray& data);
-    void RxShortCircuitTest(const QByteArray& data);
-    void RxOscilloscope(const QByteArray& data);
-    void RxSetDefaultCalibrationCoefficients(const QByteArray& data);
-    void RxGetCalibrationCoefficients(const QByteArray& data);
-    void RxSetCalibrationCoefficients(const QByteArray& data);
-    void RxSaveCalibrationCoefficients(const QByteArray& data);
-    void RxGetMeasuredRmsValue(const QByteArray& data);
-    void RxBufferOverflow(const QByteArray& data);
-    void RxWrongCommand(const QByteArray& data);
-    void RxTextualParcel(const QByteArray& data);
-    void RxCrcError(const QByteArray& data);
-    void RxNullFunction(const QByteArray& data);
+    inline void Reset();
+    void RxPing(const Parcel_t& data);
+    void RxGetMeasuredValue(const Parcel_t& data);
+    void RxSetCurrent(const Parcel_t& data);
+    void RxSwitchCurrent(const Parcel_t& data);
+    void RxTripCurrentTest(const Parcel_t& data);
+    void RxShortCircuitTest(const Parcel_t& data);
+    void RxOscilloscope(const Parcel_t& data);
+    void RxSetDefaultCalibrationCoefficients(const Parcel_t& data);
+    void RxGetCalibrationCoefficients(const Parcel_t& data);
+    void RxSetCalibrationCoefficients(const Parcel_t& data);
+    void RxSaveCalibrationCoefficients(const Parcel_t& data);
+    void RxGetRmsValue(const Parcel_t& data);
+    void RxBufferOverflow(const Parcel_t& data);
+    void RxWrongCommand(const Parcel_t& data);
+    void RxTextualParcel(const Parcel_t& data);
+    void RxCrcError(const Parcel_t& data);
+    void RxNullFunction(const Parcel_t& data);
 
     // COMMON_INTERFACES interface
 };
@@ -204,7 +203,7 @@ public:
     //    typedef void (MAN2::*pFunc)(const QByteArray&);
     //    pFunc m_f[0x100];
     //    void (MAN2::*m_dataReady)(const QByteArray&);
-    typedef void (MAN2::*func)(const QByteArray&);
+    typedef void (MAN2::*func)(const Parcel_t&);
     QVector<func> m_f;
 
 private:

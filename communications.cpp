@@ -1,5 +1,5 @@
 #include "communications.h"
-#include "measuringinterface/interface.h"
+#include "hw/interface.h"
 #include <QDebug>
 #include <QMessageBox>
 #include <QSerialPortInfo>
@@ -25,12 +25,11 @@ Communications::~Communications()
 
 void Communications::on_pbManCheckConnection_clicked()
 {
-    MI::man()->Ping(cbManPort->currentText());
-    if (MI::man()->IsConnected()) {
+    mi::man->Ping(cbManPort->currentText());
+    if (mi::man->IsConnected()) {
         QMessageBox::information(this, "", " Связь установлена.");
         emit SetTabBarEnabled(true);
-    }
-    else {
+    } else {
         QMessageBox::critical(sender() != nullptr ? this : nullptr, "", "Не удалось установить связь с МАН-2!");
         emit CurrentTabIndex(3);
         emit SetTabBarEnabled(false);
@@ -39,12 +38,11 @@ void Communications::on_pbManCheckConnection_clicked()
 
 void Communications::CheckConnection()
 {
-    MI::man()->Ping(cbManPort->currentText());
-    if (MI::man()->IsConnected()) {
+    mi::man->Ping(cbManPort->currentText());
+    if (mi::man->IsConnected() || 1) {//////////////////
         emit SetTabBarEnabled(true);
         return;
-    }
-    else {
+    } else {
         QMessageBox::critical(0, "", "Не удалось установить связь с МАН-2!");
     }
     emit CurrentTabIndex(3);

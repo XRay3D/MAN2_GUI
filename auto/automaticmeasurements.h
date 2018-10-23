@@ -2,8 +2,8 @@
 #define AUTOMATICMEASUREMENTS_H
 
 #include "hw/man2.h"
+#include "preparation/preparation.h"
 #include "ui_automaticmeasurements.h"
-#include "inputparameters.h"
 #include <QAxWidget>
 #include <QDialog>
 #include <QHideEvent>
@@ -62,7 +62,7 @@ signals:
 private:
     void ShowMessage(int num);
     void ShowProtocol(int num);
-    void ItemDoubleClicked(QListWidgetItem* item);
+    //    void ItemDoubleClicked(QListWidgetItem* item);
     void UpdateProgresBar();
     void SaveProtokol(const QString& serialNumber, int number);
     void GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& list);
@@ -77,8 +77,6 @@ private:
     QVector<QString> m_paths;
     QVector<QString> m_serNum;
     QList<QCheckBox*> m_listCheckBox;
-    QList<QDoubleSpinBox*> m_listDsbVoltage;
-    QList<QDoubleSpinBox*> m_listDsbCurrent;
 
     int m_measureTimerId = 0;
     int m_stage = 0;

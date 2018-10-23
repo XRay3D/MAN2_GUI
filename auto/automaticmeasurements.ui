@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AutomaticMeasurements</class>
+ <widget class="QWidget" name="AutomaticMeasurements">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1047</width>
+    <height>704</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="1" colspan="2">
+    <widget class="QTableView" name="tableView"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="QTableView" name="tvSerNum">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="3">
+    <widget class="QCheckBox" name="checkBox_3">
+     <property name="text">
+      <string>Измерение отклонения выходного напряжения от номинального при номинальной нагрузке и входном напряжении 130В.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="3">
+    <widget class="QCheckBox" name="checkBox_4">
+     <property name="text">
+      <string>Измерение отклонения выходного напряжения от номинального при номинальной нагрузке и входном напряжении 250В.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="3">
+    <widget class="QCheckBox" name="checkBox_2">
+     <property name="text">
+      <string>Проверка пульсаций выходного напряжения  при номинальной нагрузке и входном напряжении 130В.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="3">
+    <widget class="QCheckBox" name="checkBox_5">
+     <property name="text">
+      <string>Измерение отклонения выходного напряжения холостого хода от номинального при входном напряжении 220В.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="1" colspan="3">
+    <widget class="QPushButton" name="pbStartStop">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Начать измерения</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1" colspan="3">
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QCheckBox" name="checkBox_6">
+     <property name="text">
+      <string>Ток срабатывания электронной защиты</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="3">
+    <widget class="QCheckBox" name="checkBox_1">
+     <property name="text">
+      <string>Измерение выходного напряжения при номинальной нагрузке и входном напряжении 220В.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QTableView" name="tvMeasure"/>
+   </item>
+   <item row="10" column="1">
+    <widget class="QCheckBox" name="checkBox_7">
+     <property name="text">
+      <string>Срабатывание электронной защиты при коротком замыкании</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -27,30 +27,31 @@ TEMPLATE = app
 
 
 SOURCES += \
-    automaticmeasurements.cpp \
+    auto/automaticmeasurements.cpp \
     communications.cpp \
     graduation.cpp \
-    inputparameters.cpp \
     main.cpp \
     mainwindow.cpp \
-    man.cpp \
     measurements.cpp \
     hw/man2.cpp \
     hw/myprotokol.cpp \
     hw/scpi.cpp \
     mydialog.cpp \
     shdocvw.cpp \
-    worker.cpp \
-    hw/interface.cpp
+    auto/worker.cpp \
+    hw/interface.cpp \
+    preparation\preparation.cpp \
+    preparation/devicemodel.cpp \
+    preparation/prepareform.cpp \
+    preparation/sernummodel.cpp \
+    auto/measuremodel.cpp
 
 
 HEADERS  += \
-    automaticmeasurements.h \
+    auto/automaticmeasurements.h \
     communications.h \
     graduation.h \
-    inputparameters.h \
     mainwindow.h \
-    man.h \
     measurements.h \
     hw/common_interfaces.h \
     hw/common_interfaces.h \
@@ -59,18 +60,24 @@ HEADERS  += \
     hw/scpi.h \
     mydialog.h \
     shdocvw.h \
-    worker.h \
-    hw/interface.h
+    auto/worker.h \
+    hw/interface.h \
+    preparation\preparation.h \
+    preparation/devicemodel.h \
+    preparation/prepareform.h \
+    preparation/sernummodel.h \
+    auto/measuremodel.h
 
 
 FORMS    += \
-    inputparameters.ui \
     graduation.ui \
     communications.ui \
     measurements.ui \
-    automaticmeasurements.ui \
+    auto/automaticmeasurements.ui \
     mainwindow.ui \
-    man.ui
+    man.ui \
+    preparation\preparation.ui \
+    preparation/prepareform.ui
 
 DISTFILES += \
     modify.txt \

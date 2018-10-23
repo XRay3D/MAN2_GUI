@@ -14,10 +14,14 @@ enum {
 
 typedef struct Parcel_t {
     uint16_t start;
-    uint8_t len;
-    uint8_t cannel;
-    uint8_t cmd;
-    uint8_t data[32];
+    uint8_t length;
+    uint8_t addres;
+    uint8_t command;
+    uint8_t data[128];
+    uint8_t crc() const { return data[length - MIN_LEN]; }
+    template <typename T>
+    T value() const { return *reinterpret_cast<const T*>(data); }
+    QByteArray text() const { return QByteArray(reinterpret_cast<const char*>(data), length - MIN_LEN); }
 } Parcel_t;
 
 #pragma pack(pop)
@@ -27,14 +31,14 @@ public:
     MyProtokol();
 
     template <typename T>
-    QByteArray& Parcel(uint8_t cmd, const T& data, uint8_t cannel = 0)
+    QByteArray& Parcel(uint8_t cmd, const T& data, uint8_t cannel)
     {
         m_data.resize(MIN_LEN + sizeof(T));
         Parcel_t* d = reinterpret_cast<Parcel_t*>(m_data.data());
         d->start = TX;
-        d->len = m_data.size();
-        d->cannel = cannel;
-        d->cmd = cmd;
+        d->length = m_data.size();
+        d->addres = cannel;
+        d->command = cmd;
         memcpy(d->data, &data, sizeof(T));
         d->data[sizeof(T)] = CalcCrc(m_data); //crc
         return m_data;

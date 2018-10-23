@@ -80,7 +80,7 @@ void Measurements::on_cbOsc_currentIndexChanged(int index)
             m_listPbOsc[i]->setText("Вкл.");
         }
     }
-    MI::man()->Oscilloscope(index);
+    mi::man->Oscilloscope(index);
 }
 
 void Measurements::timerEvent(QTimerEvent* event)
@@ -125,7 +125,7 @@ void Measurements::on_dsbSetCurrentAll_valueChanged(double arg1)
     m_disableSlots = true;
     for (QDoubleSpinBox* spinBox : m_listDsbSetCurrent)
         spinBox->setValue(arg1);
-    MI::man()->SetCurrent(arg1);
+    mi::man->SetCurrent(arg1);
     m_disableSlots = false;
 }
 
@@ -135,7 +135,7 @@ void Measurements::on_pbCurrentAll_clicked(bool checked)
         button->setChecked(checked);
         button->setText(checked ? "Выкл." : "Вкл.");
     }
-    MI::man()->SwitchCurrent(checked);
+    mi::man->SwitchCurrent(checked);
 }
 
 void Measurements::on_pbShortAll_clicked(bool checked)
@@ -144,7 +144,7 @@ void Measurements::on_pbShortAll_clicked(bool checked)
         button->setChecked(checked);
         button->setText(checked ? "Выкл." : "Вкл.");
     }
-    MI::man()->ShortCircuitTest(checked);
+    mi::man->ShortCircuitTest(checked);
 }
 
 void Measurements::PbCurrentClicked(int channel)
@@ -156,7 +156,7 @@ void Measurements::PbCurrentClicked(int channel)
     else
         btn->setText("Вкл.");
 
-    MI::man()->SwitchCurrent(checked, channel + 1);
+    mi::man->SwitchCurrent(checked, channel + 1);
 }
 
 void Measurements::DsbSetCurrent(int channel)
@@ -164,7 +164,7 @@ void Measurements::DsbSetCurrent(int channel)
     if (m_disableSlots)
         return;
     double value = m_listDsbSetCurrent[channel]->value();
-    MI::man()->SetCurrent(value, channel + 1);
+    mi::man->SetCurrent(value, channel + 1);
 }
 
 void Measurements::PbShortClicked(int channel)
@@ -176,7 +176,7 @@ void Measurements::PbShortClicked(int channel)
     else
         btn->setText("Вкл.");
 
-    MI::man()->ShortCircuitTest(checked, channel + 1);
+    mi::man->ShortCircuitTest(checked, channel + 1);
 }
 
 void Measurements::PbOscClicked(int channel)
@@ -204,7 +204,7 @@ void Measurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& list)
     bool flag = false;
 
     double rms = 0.0;
-    rms = MI::man()->GetMeasuredValueRMS();
+    rms = mi::man->GetRmsValue();
     dsbVoltage_9->setValue(rms);
     while (iterator.hasNext()) {
         iterator.next();
@@ -241,9 +241,9 @@ void Measurements::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event);
     qDebug() << "showEvent";
-    if (MI::man()->IsConnected()) {
+    if (mi::man->IsConnected()) {
         QList<MeasuredValue_t> list;
-        if (MI::man()->GetMeasuredValue(list)) {
+        if (mi::man->GetMeasuredValue(list)) {
             m_disableSlots = true;
             for (int i = 0; i < list.size(); ++i) {
                 m_listDsbVoltage[i]->setValue(list[i].Value1);
@@ -261,8 +261,8 @@ void Measurements::showEvent(QShowEvent* event)
             }
             m_disableSlots = false;
         }
-        connect(this, &Measurements::StartMeasure, MI::man(), &MAN2::GetMeasuredValueSlot);
-        connect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
+        connect(this, &Measurements::StartMeasure, mi::man, &MAN2::GetMeasuredValueSlot);
+        connect(mi::man, &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
         return;
     }
     setEnabled(false);
@@ -272,8 +272,8 @@ void Measurements::hideEvent(QHideEvent* event)
 {
     Q_UNUSED(event);
     on_pbStart_clicked(false);
-    disconnect(this, &Measurements::StartMeasure, MI::man(), &MAN2::GetMeasuredValueSlot);
-    disconnect(MI::man(), &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
+    disconnect(this, &Measurements::StartMeasure, mi::man, &MAN2::GetMeasuredValueSlot);
+    disconnect(mi::man, &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
 }
 
 void Measurements::GbChanneClicked(int channel)

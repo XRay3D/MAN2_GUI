@@ -1,25 +1,26 @@
 #include "interface.h"
+#include <QObject>
 
 QThread thread;
 QSemaphore semafore;
 
-MAN2* man_ = nullptr;
-SCPI* scpi_ = nullptr;
+MAN2* mi::man = nullptr;
+SCPI* mi::scpi = nullptr;
 //IRT59XX* irt_ = nullptr;
 
-MI::MI()
+mi::mi()
 {
     if (!semafore.available()) {
-        man_ = new MAN2;
-        scpi_ = new SCPI;
+        man = new MAN2;
+        scpi = new SCPI;
         //irt_ = new IRT59XX;
 
-        man_->moveToThread(&thread);
-        scpi_->moveToThread(&thread);
+        man->moveToThread(&thread);
+        scpi->moveToThread(&thread);
         //irt_->moveToThread(&thread);
 
-        thread.connect(&thread, &QThread::finished, man_, &QObject::deleteLater);
-        thread.connect(&thread, &QThread::finished, scpi_, &QObject::deleteLater);
+        thread.connect(&thread, &QThread::finished, man, &QObject::deleteLater);
+        thread.connect(&thread, &QThread::finished, scpi, &QObject::deleteLater);
         //thread.connect(&thread, &QThread::finished, irt_, &QObject::deleteLater);
 
         thread.start(QThread::NormalPriority);
@@ -27,19 +28,19 @@ MI::MI()
     semafore.release();
 }
 
-MI::~MI()
+mi::~mi()
 {
     semafore.acquire();
     if (!semafore.available()) {
-        man_->DisableAll();
+        man->DisableAll();
         thread.quit();
         thread.wait();
         //        thread.terminate();
-        //        delete man_;
-        //        delete scpi_;
+        //        delete man;
+        //        delete scpi;
     }
 }
 
-MAN2* MI::man() { return man_; }
-//IRT59XX* MI::irt() { return irt_; }
-SCPI* MI::scpi() { return scpi_; }
+//MAN2* MI::man { return man; }
+////IRT59XX* MI::irt() { return irt_; }
+//SCPI* MI::scpi { return scpi; }

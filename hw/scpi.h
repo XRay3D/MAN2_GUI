@@ -6,7 +6,7 @@
 #include <QSerialPort>
 #include <QMutex>
 
-class SCPI : public QSerialPort, public COMMON_INTERFACES {
+class SCPI : public QSerialPort, public CommonInterfaces {
     Q_OBJECT
 public:
     explicit SCPI(QObject* parent = 0);
