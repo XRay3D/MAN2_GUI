@@ -39,7 +39,7 @@ void Communications::on_pbManCheckConnection_clicked()
 void Communications::CheckConnection()
 {
     mi::man->Ping(cbManPort->currentText());
-    if (mi::man->IsConnected() || 1) {//////////////////
+    if (mi::man->IsConnected()) {
         emit SetTabBarEnabled(true);
         return;
     } else {

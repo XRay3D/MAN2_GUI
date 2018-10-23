@@ -15,6 +15,8 @@ public:
     QVariant data(const QModelIndex& index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    void setRms(double val);
+
 private:
     double m_u[8];
     double m_i[8];

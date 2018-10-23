@@ -46,6 +46,7 @@ enum {
 };
 
 class Worker;
+class MeasureModel;
 
 class AutomaticMeasurements : public QWidget, private Ui::AutomaticMeasurements {
     Q_OBJECT
@@ -90,6 +91,8 @@ private:
     bool Test7();
 
     QTimer m_timerRms;
+
+    MeasureModel* m_model;
 
 private slots:
     void on_pbStartStop_clicked(bool checked);

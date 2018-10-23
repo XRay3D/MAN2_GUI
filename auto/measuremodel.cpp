@@ -42,3 +42,9 @@ Qt::ItemFlags MeasureModel::flags(const QModelIndex& /*index*/) const
 {
     return Qt::ItemIsEnabled;
 }
+
+void MeasureModel::setRms(double val)
+{
+    m_acU = val;
+    dataChanged(createIndex(2, 0), createIndex(2, 7), { Qt::DisplayRole });
+}

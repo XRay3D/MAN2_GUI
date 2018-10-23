@@ -1,17 +1,18 @@
 #include "man2.h"
 
-#include <QSerialPortInfo>
 #include <QDebug>
+#include <QSerialPortInfo>
 #include <QTimer>
 
 #define Dbg 0
+#define Emu 1
 
 enum { ChannelCount = 8 };
 
 int id1 = qRegisterMetaType<MeasuredValue_t>("MeasuredValue_t");
 int id2 = qRegisterMetaType<ValuetypeEnum>("ValuetypeEnum");
 int id3 = qRegisterMetaType<uint8_t>("uint8_t");
-int id5 = qRegisterMetaType<QMap<int, MeasuredValue_t> >("QMap<int, MeasuredValue_t>");
+int id5 = qRegisterMetaType<QMap<int, MeasuredValue_t>>("QMap<int, MeasuredValue_t>");
 
 MAN2::MAN2(QObject* parent)
     : QObject(parent)
@@ -33,6 +34,11 @@ MAN2::~MAN2()
 
 bool MAN2::Ping(const QString& PortName)
 {
+    if (Emu) {
+        m_connected = true;
+        return true;
+    }
+
     QMutexLocker locker(&m_mutex);
     qDebug("Ping");
     Reset();
@@ -76,6 +82,10 @@ bool MAN2::GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, ValuetypeEn
 
 bool MAN2::GetMeasuredValue(QList<MeasuredValue_t>& value, ValuetypeEnum type)
 {
+    if (Emu) {
+        return true;
+    }
+
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -98,6 +108,9 @@ bool MAN2::GetMeasuredValue(QList<MeasuredValue_t>& value, ValuetypeEnum type)
 
 double MAN2::GetRmsValue()
 {
+    if (Emu) {
+        return 220.0;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -112,6 +125,9 @@ double MAN2::GetRmsValue()
 
 bool MAN2::SetCurrent(float Current, uint8_t channel)
 {
+    if (Emu) {
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -126,6 +142,9 @@ bool MAN2::SetCurrent(float Current, uint8_t channel)
 
 bool MAN2::SwitchCurrent(uint8_t Enable, uint8_t channel)
 {
+    if (Emu) {
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -138,6 +157,9 @@ bool MAN2::SwitchCurrent(uint8_t Enable, uint8_t channel)
 
 bool MAN2::TripCurrentTest()
 {
+    if (Emu) {
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -150,6 +172,9 @@ bool MAN2::TripCurrentTest()
 
 bool MAN2::ShortCircuitTest(uint8_t Enable, uint8_t channel)
 {
+    if (Emu) {
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -162,6 +187,9 @@ bool MAN2::ShortCircuitTest(uint8_t Enable, uint8_t channel)
 
 bool MAN2::Oscilloscope(uint8_t channel)
 {
+    if (Emu) {
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -174,6 +202,9 @@ bool MAN2::Oscilloscope(uint8_t channel)
 
 bool MAN2::SetDefaultCalibrationCoefficients(uint8_t channel)
 {
+    if (Emu) {
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -191,6 +222,9 @@ bool MAN2::SetDefaultCalibrationCoefficients(uint8_t channel)
 
 bool MAN2::GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t channel)
 {
+    if (Emu) {
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -205,6 +239,9 @@ bool MAN2::GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t channel)
 
 bool MAN2::SetCalibrationCoefficients(const GradCoeff_t& GradCoeff, uint8_t channel)
 {
+    if (Emu) {
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -224,6 +261,9 @@ bool MAN2::SetCalibrationCoefficients(const GradCoeff_t& GradCoeff, uint8_t chan
 
 bool MAN2::SaveCalibrationCoefficients(uint8_t channel)
 {
+    if (Emu) {
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -236,6 +276,9 @@ bool MAN2::SaveCalibrationCoefficients(uint8_t channel)
 
 bool MAN2::DisableAll()
 {
+    if (Emu) {
+        return true;
+    }
     while (IsConnected()) {
         Reset();
         if (!ShortCircuitTest(Off))
@@ -254,6 +297,9 @@ bool MAN2::DisableAll()
 
 void MAN2::GetMeasuredValueSlot(ValuetypeEnum type, uint8_t channel)
 {
+    if (Emu) {
+        return;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
 

@@ -16,12 +16,13 @@ const ScanSettings AutomaticMeasurements::m_scanSettings;
 
 AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
     : QWidget(parent)
+    , m_model(new MeasureModel(this))
     , m_paths(8)
     , m_serNum(8)
 {
     setupUi(this);
 
-    tvMeasure->setModel(new MeasureModel(this));
+    tvMeasure->setModel(m_model);
     tvMeasure->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tvMeasure->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -40,10 +41,12 @@ AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
     //    }
     //    connect(listWidget, &QListWidget::itemDoubleClicked, this, &AutomaticMeasurements::ItemDoubleClicked);
 
-    //    connect(&m_timerRms, &QTimer::timeout, [&]() {
-    //        dsbVoltageRms->setValue(mi::man->GetRmsValue());
-    //        qDebug() << dsbVoltageRms->value();
-    //    });
+    connect(&m_timerRms, &QTimer::timeout, [&]() {
+        m_model->setRms(mi::man->GetRmsValue());
+        qDebug() << mi::man->GetRmsValue();
+        //        dsbVoltageRms->setValue(mi::man->GetRmsValue());
+        //        qDebug() << dsbVoltageRms->value();
+    });
 }
 
 AutomaticMeasurements::~AutomaticMeasurements()
@@ -373,6 +376,7 @@ void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number
 
 void AutomaticMeasurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& m_list)
 {
+
     //    QMapIterator<int, MeasuredValue_t> iterator(m_list);
     //    while (iterator.hasNext()) {
     //        iterator.next();
