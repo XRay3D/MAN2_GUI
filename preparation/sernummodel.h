@@ -18,8 +18,13 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    void clear();
+    bool isEmpty();
     //    int count() const;
     //    void setCount(int count);
+
+    int count() const;
+    void setCount(int count);
 
 private:
     QVector<QString> m_data;

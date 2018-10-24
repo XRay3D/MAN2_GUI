@@ -28,7 +28,7 @@ QVariant MeasureModel::data(const QModelIndex& index, int role) const
         case 1: // i
             return QString("%1мА").arg(m_i[index.column()], 0, 'f', 2);
         case 2: // ac u
-            return QString("~%1B").arg(m_acU, 0, 'f', 0);
+            return QString("~%1B").arg(m_acU, 0, 'f', 2);
         }
     case Qt::TextAlignmentRole:
         return Qt::AlignCenter;

@@ -23,8 +23,8 @@ public:
             RestrictionsTest7Min = list.at(9).toDouble(&ok);
             RestrictionsTest7Max = list.at(10).toDouble(&ok);
             Voltageerrortest3_4U1 = list.at(11).toDouble(&ok);
-            Voltageerrortest3_4U2 = list.at(12).toDouble(&ok);
-            Voltageerrortest5U1 = list.at(13).toDouble(&ok);
+            Voltageerrortest3_4U2 = list.at(13).toDouble(&ok);
+            Voltageerrortest5U1 = list.at(12).toDouble(&ok);
             Voltageerrortest5U2 = list.at(14).toDouble(&ok);
             VoltageErrorTest7 = list.at(15).toDouble(&ok);
             ParameterDLTest7 = list.at(16).toDouble(&ok);
@@ -77,6 +77,8 @@ public:
     //        return *this;
     //    }
 };
+
+Q_DECLARE_METATYPE(ScanSettings)
 
 //class MainWindow;
 

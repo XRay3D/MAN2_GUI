@@ -12,6 +12,7 @@
 #include <QPdfWriter>
 #include <QSettings>
 
+
 const ScanSettings AutomaticMeasurements::m_scanSettings;
 
 AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
@@ -23,6 +24,7 @@ AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
     setupUi(this);
 
     tvMeasure->setModel(m_model);
+
     tvMeasure->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tvMeasure->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 

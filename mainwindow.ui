@@ -110,7 +110,7 @@
   <customwidget>
    <class>AutomaticMeasurements</class>
    <extends>QWidget</extends>
-   <header>automaticmeasurements.h</header>
+   <header>auto/automaticmeasurements.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

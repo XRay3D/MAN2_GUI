@@ -109,7 +109,7 @@ bool MAN2::GetMeasuredValue(QList<MeasuredValue_t>& value, ValuetypeEnum type)
 double MAN2::GetRmsValue()
 {
     if (Emu) {
-        return 220.0;
+        return 220.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
     }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {

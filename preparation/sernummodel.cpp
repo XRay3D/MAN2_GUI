@@ -18,7 +18,7 @@ SerNumModel::~SerNumModel()
 
 int SerNumModel::rowCount(const QModelIndex& /*parent*/) const
 {
-    return 8;
+    return m_count;
 }
 
 int SerNumModel::columnCount(const QModelIndex& /*parent*/) const
@@ -43,7 +43,7 @@ bool SerNumModel::setData(const QModelIndex& index, const QVariant& value, int r
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-        if (m_data.indexOf(value.toString()) != -1 && m_data.indexOf(value.toString()) != index.row()) {
+        if (m_data.indexOf(value.toString()) != -1 && m_data.indexOf(value.toString()) != index.row() && !value.toString().isEmpty()) {
             QMessageBox::warning(nullptr, "", "Такой серийник уже есть!");
             return false;
         } else {
@@ -88,6 +88,40 @@ QVariant SerNumModel::headerData(int section, Qt::Orientation orientation, int r
 Qt::ItemFlags SerNumModel::flags(const QModelIndex& /*index*/) const
 {
     return Qt::ItemIsEditable | Qt::ItemIsEnabled;
+}
+
+void SerNumModel::clear()
+{
+    for (QString& var : m_data)
+        var.clear();
+    dataChanged(createIndex(0, 0), createIndex(7, 0));
+}
+
+bool SerNumModel::isEmpty()
+{
+    for (QString& var : m_data) {
+        if (!var.isEmpty())
+            return false;
+    }
+    return true;
+}
+
+int SerNumModel::count() const
+{
+    return m_count;
+}
+
+void SerNumModel::setCount(int count)
+{
+    if (m_count < count) {
+        beginInsertRows(QModelIndex(), m_count, count - 1);
+        m_count = count;
+        endInsertRows();
+    } else if (m_count > count) {
+        beginRemoveRows(QModelIndex(), count, m_count - 1);
+        m_count = count;
+        endRemoveRows();
+    }
 }
 
 //int SerNumModel::count() const

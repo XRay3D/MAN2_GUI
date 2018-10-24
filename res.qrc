@@ -1,25 +1,3 @@
 <RCC>
-    <qresource prefix="/">
-        <file>res/DigitBack.bmp</file>
-        <file>res/sa-digital-number.ttf</file>
-        <file>res/image1.png</file>
-        <file>res/image2.png</file>
-        <file>res/image3.png</file>
-        <file>ubuntu-font-family-0.83/Ubuntu-L.ttf</file>
-        <file>ubuntu-font-family-0.83/Ubuntu-LI.ttf</file>
-        <file>ubuntu-font-family-0.83/Ubuntu-RI.ttf</file>
-        <file>ubuntu-font-family-0.83/Ubuntu-MI.ttf</file>
-        <file>ubuntu-font-family-0.83/Ubuntu-BI.ttf</file>
-        <file>ubuntu-font-family-0.83/Ubuntu-R.ttf</file>
-        <file>ubuntu-font-family-0.83/Ubuntu-C.ttf</file>
-        <file>ubuntu-font-family-0.83/Ubuntu-M.ttf</file>
-        <file>ubuntu-font-family-0.83/Ubuntu-B.ttf</file>
-        <file>ubuntu-font-family-0.83/UbuntuMono-BI.ttf</file>
-        <file>ubuntu-font-family-0.83/UbuntuMono-RI.ttf</file>
-        <file>ubuntu-font-family-0.83/UbuntuMono-R.ttf</file>
-        <file>ubuntu-font-family-0.83/UbuntuMono-B.ttf</file>
-        <file>protocol/Строка.htm</file>
-        <file>protocol/Шапка.htm</file>
-        <file>protocol/Подвал.htm</file>
-    </qresource>
+    <qresource prefix="/"/>
 </RCC>

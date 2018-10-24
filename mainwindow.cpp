@@ -69,16 +69,7 @@ void MainWindow::readSettings()
 
     settings.beginGroup("InputParameters");
     tabInputParameters->leFio->setText(settings.value("leFioOtk", "Ф.И.О.").toString());
-    QFile file("modify.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::critical(0, "", "Не найден файл \"modify.txt\" с параметрами блоков питания!");
-        return;
-    }
-    //    QTextStream in(&file);
-    //    while (!in.atEnd()) {
-    //        tabInputParameters->m_listScanSettings.append(new ScanSettings(in.readLine().split(';')));
-    //        tabInputParameters->cbDevice->addItem(tabInputParameters->m_listScanSettings.last()->Type + " (" + tabInputParameters->m_listScanSettings.last()->Cipher + ")");
-    //    }
+
     //    tabInputParameters->cbDevice->setCurrentIndex(settings.value("cbDevice", 0).toInt());
 
     //    tabInputParameters->leSerialNumberDevice_1->setText(settings.value("leSerialNumberDevice_1", "").toString());
