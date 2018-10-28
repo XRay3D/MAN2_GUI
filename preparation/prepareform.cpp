@@ -34,7 +34,6 @@ PrepareForm::PrepareForm(QWidget* parent)
 
     connect(pbClearSerNum, &QPushButton::clicked, SerNumModel::self, &SerNumModel::clear);
     connect(pbStatrtMeasure, &QPushButton::clicked, this, &PrepareForm::statrtMeasure_clicked);
-    connect(pbStatrtMeasure, &QPushButton::clicked, this, &PrepareForm::statrtMeasure_clicked);
     //connect(cbxDevice, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), DeviceModel::self, &DeviceModel::setIndex);
     connect(cbxDevice, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [](int index) {
         DeviceModel::self->setIndex(index);
@@ -48,15 +47,8 @@ PrepareForm::~PrepareForm()
 
 void PrepareForm::statrtMeasure_clicked()
 {
-    //    bool begin = false;
-    //    for (int i = 0; i < m_listLeSerNum.size(); ++i) {
-    //        if (!m_listLeSerNum[i]->text().isEmpty()) {
-    //            begin = true;
-    //        }
-    //    }
-    //    if (!begin) {
-    //        QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
-    //        return;
-    //    }
-    emit CurrentTabIndex(1);
+    if (SerNumModel::self->isEmpty())
+        QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
+    else
+        emit CurrentTabIndex(1);
 }

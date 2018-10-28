@@ -54,7 +54,6 @@ class AutomaticMeasurements : public QWidget, private Ui::AutomaticMeasurements 
 public:
     explicit AutomaticMeasurements(QWidget* parent = 0);
     ~AutomaticMeasurements();
-    void ScanSettingsSlot(const ScanSettings* scanSettings);
     void SerialNumberChanged(const QString& serialNumber, int index);
 
 signals:
@@ -64,14 +63,13 @@ private:
     void ShowMessage(int num);
     void ShowProtocol(int num);
     //    void ItemDoubleClicked(QListWidgetItem* item);
-    void UpdateProgresBar();
+    //    void UpdateProgresBar();
     void SaveProtokol(const QString& serialNumber, int number);
     void GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& list);
 
     Worker* m_worker = nullptr;
     //    QThread m_workerThread;
     bool m_doNotSkip[8];
-    static const ScanSettings m_scanSettings;
     //    const QString m_cipher;
     //    const QString m_type;
     Result_t m_result[8];

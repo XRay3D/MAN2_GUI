@@ -1,13 +1,13 @@
 #ifndef WORKER_H
 #define WORKER_H
 
-#include <QThread>
 #include "automaticmeasurements.h"
+#include <QThread>
 
 class Worker : public QThread {
     Q_OBJECT
 public:
-    Worker(bool* doNotSkip, Result_t* result, const ScanSettings* scanSettings, QObject* parent = Q_NULLPTR);
+    Worker(bool* doNotSkip, Result_t* result, QObject* parent = Q_NULLPTR);
     ~Worker();
     void SetMan();
     void Continue();
@@ -41,7 +41,6 @@ private:
 
     const bool* m_doNotSkip;
     Result_t* m_result;
-    const ScanSettings* m_pScanSettings;
     QSemaphore m_semaphore;
     int m_counter;
 };

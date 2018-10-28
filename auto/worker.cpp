@@ -1,11 +1,10 @@
 #include "worker.h"
 #include "hw/interface.h"
-
-Worker::Worker(bool* doNotSkip, Result_t* result, const ScanSettings* scanSettings, QObject* parent)
+#include "preparation/devicemodel.h"
+Worker::Worker(bool* doNotSkip, Result_t* result, QObject* parent)
     : QThread(parent)
     , m_doNotSkip(doNotSkip)
     , m_result(result)
-    , m_pScanSettings(scanSettings)
 {
 }
 
@@ -60,8 +59,7 @@ void Worker::run()
         // 2 Измерение выходного напряжения под номинальной нагрузкой Максимальное (249) Да
         SetVoltage(SET_INPUT_VOLTAGE_0);
         Test4();
-    }
-    catch (int i) {
+    } catch (int i) {
         Q_UNUSED(i)
         emit ShowMessage(VERIFICATION_IS_COMPLETE);
         m_semaphore.acquire(m_semaphore.available());
@@ -93,12 +91,12 @@ void Worker::SetVoltage(int voltage)
 {
     switch (voltage) {
     case SET_INPUT_VOLTAGE_0:
-        m_minInVoltage = m_pScanSettings->Voltageerrortest5U1 - m_pScanSettings->Voltageerrortest5U2 /** 1.5*/;
-        m_maxInVoltage = m_pScanSettings->Voltageerrortest5U1 + m_pScanSettings->Voltageerrortest5U2 /** 1.5*/;
+        m_minInVoltage = DeviceModel::self->scanSettings().Voltageerrortest5U1 - DeviceModel::self->scanSettings().Voltageerrortest5U2 /** 1.5*/;
+        m_maxInVoltage = DeviceModel::self->scanSettings().Voltageerrortest5U1 + DeviceModel::self->scanSettings().Voltageerrortest5U2 /** 1.5*/;
         break;
     case SET_INPUT_VOLTAGE_1:
-        m_minInVoltage = m_pScanSettings->Voltageerrortest3_4U1 - m_pScanSettings->Voltageerrortest3_4U2 /** 1.5*/;
-        m_maxInVoltage = m_pScanSettings->Voltageerrortest3_4U1 + m_pScanSettings->Voltageerrortest3_4U2 /** 1.5*/;
+        m_minInVoltage = DeviceModel::self->scanSettings().Voltageerrortest3_4U1 - DeviceModel::self->scanSettings().Voltageerrortest3_4U2 /** 1.5*/;
+        m_maxInVoltage = DeviceModel::self->scanSettings().Voltageerrortest3_4U1 + DeviceModel::self->scanSettings().Voltageerrortest3_4U2 /** 1.5*/;
         break;
     case SET_INPUT_VOLTAGE_2:
         m_minInVoltage = 220 - 4.4;
@@ -175,7 +173,7 @@ void Worker::Test4()
 {
     qDebug() << "Test4";
 
-    while (!mi::man->SetCurrent(m_pScanSettings->RatedCurrent))
+    while (!mi::man->SetCurrent(DeviceModel::self->scanSettings().RatedCurrent))
         WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
     Msleep(5000);
@@ -230,12 +228,12 @@ void Worker::Test6()
         if (m_doNotSkip[i - 1]) {
             peak.append(-1.0);
 
-            while (!mi::man->SetCurrent(m_pScanSettings->RestrictionsTest7Min, i))
+            while (!mi::man->SetCurrent(DeviceModel::self->scanSettings().RestrictionsTest7Min, i))
                 WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
             Msleep(5000);
-            for (double current = m_pScanSettings->RestrictionsTest7Min, step = (m_pScanSettings->RestrictionsTest7Max - m_pScanSettings->RestrictionsTest7Min) / 20.0;
-                 current <= m_pScanSettings->RestrictionsTest7Max;
+            for (double current = DeviceModel::self->scanSettings().RestrictionsTest7Min, step = (DeviceModel::self->scanSettings().RestrictionsTest7Max - DeviceModel::self->scanSettings().RestrictionsTest7Min) / 20.0;
+                 current <= DeviceModel::self->scanSettings().RestrictionsTest7Max;
                  current += step) {
                 Msleep(100);
 
@@ -269,7 +267,7 @@ void Worker::Test6()
 void Worker::Test7()
 {
     qDebug() << "Test7";
-    while (!mi::man->SetCurrent(m_pScanSettings->RatedCurrent)) {
+    while (!mi::man->SetCurrent(DeviceModel::self->scanSettings().RatedCurrent)) {
         WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
     }
     Msleep(5000);

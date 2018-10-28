@@ -29,6 +29,10 @@ public:
 private:
     QVector<QString> m_data;
     int m_count = 8;
+
+    void readSerNum();
+    void writeSerNum();
+
 };
 
 #endif // SERNUMMODEL_H

@@ -1,6 +1,7 @@
 #include "sernummodel.h"
 
 #include <QMessageBox>
+#include <QSettings>
 
 SerNumModel* SerNumModel::self = nullptr;
 
@@ -8,12 +9,14 @@ SerNumModel::SerNumModel(QObject* parent)
     : QAbstractTableModel(parent)
     , m_data(8)
 {
+    readSerNum();
     self = this;
 }
 
 SerNumModel::~SerNumModel()
 {
     self = nullptr;
+    writeSerNum();
 }
 
 int SerNumModel::rowCount(const QModelIndex& /*parent*/) const
@@ -124,13 +127,24 @@ void SerNumModel::setCount(int count)
     }
 }
 
-//int SerNumModel::count() const
-//{
-//    return m_count;
-//}
+void SerNumModel::readSerNum()
+{
+    QSettings settings("Settings.ini", QSettings::IniFormat);
+    settings.setIniCodec("UTF-8");
+    settings.beginGroup("InputParameters");
+    for (int i = 0; i < 8; ++i) {
+        m_data[i] = settings.value("leSerialNumberDevice_" + QString::number(i), "").toString();
+    }
+    settings.endGroup();
+}
 
-//void SerNumModel::setCount(int count)
-//{
-//    m_count = count;
-//    dataChanged(createIndex(0, 0), createIndex(7, 0));
-//}
+void SerNumModel::writeSerNum()
+{
+    QSettings settings("Settings.ini", QSettings::IniFormat);
+    settings.setIniCodec("UTF-8");
+    settings.beginGroup("InputParameters");
+    for (int i = 0; i < 8; ++i) {
+        settings.setValue("leSerialNumberDevice_" + QString::number(i), m_data[i]);
+    }
+    settings.endGroup();
+}

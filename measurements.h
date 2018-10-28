@@ -4,8 +4,8 @@
 #include "hw/man2.h"
 #include "ui_measurements.h"
 
-#include <QLineSeries>
 #include <QDate>
+#include <QLineSeries>
 
 QT_CHARTS_USE_NAMESPACE
 

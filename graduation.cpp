@@ -1,10 +1,10 @@
 #include "graduation.h"
 
+#include "hw/interface.h"
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QSerialPortInfo>
 #include <QSettings>
-#include "hw/interface.h"
 
 Graduation::Graduation(QWidget* parent)
     : QWidget(parent)
@@ -126,8 +126,7 @@ void Graduation::on_pbStartGrad_clicked()
             //                QMessageBox::critical(this, "", "Что-то пошло не так, коэффициенты выходят за пределы!");
 
             m_chbxs[5]->setChecked(true);
-        }
-        else {
+        } else {
             enum {
                 Ch1,
                 Ch2
@@ -175,8 +174,7 @@ void Graduation::on_pbStartGrad_clicked()
 
             m_chbxs[5]->setChecked(true);
         }
-    }
-    else if (rbCurrent->isChecked()) {
+    } else if (rbCurrent->isChecked()) {
         enum {
             Meas1,
             Meas2

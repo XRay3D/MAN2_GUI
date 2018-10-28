@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(tabCommunications, &Communications::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
     connect(tabCommunications, &Communications::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
 
-    //    connect(tabInputParameters, &Preparation::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
+    connect(tabInputParameters, &PrepareForm::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
     //    connect(tabInputParameters, &Preparation::ScanSettingsSignal, tabAutomaticMeasurements, &AutomaticMeasurements::ScanSettingsSlot);
     //    connect(tabInputParameters, &Preparation::SerialNumberChanged, tabAutomaticMeasurements, &AutomaticMeasurements::SerialNumberChanged);
 
@@ -68,18 +68,8 @@ void MainWindow::readSettings()
     settings.endGroup();
 
     settings.beginGroup("InputParameters");
+    tabInputParameters->cbxDevice->setCurrentIndex(settings.value("cbDevice", 0).toInt());
     tabInputParameters->leFio->setText(settings.value("leFioOtk", "Ф.И.О.").toString());
-
-    //    tabInputParameters->cbDevice->setCurrentIndex(settings.value("cbDevice", 0).toInt());
-
-    //    tabInputParameters->leSerialNumberDevice_1->setText(settings.value("leSerialNumberDevice_1", "").toString());
-    //    tabInputParameters->leSerialNumberDevice_2->setText(settings.value("leSerialNumberDevice_2", "").toString());
-    //    tabInputParameters->leSerialNumberDevice_3->setText(settings.value("leSerialNumberDevice_3", "").toString());
-    //    tabInputParameters->leSerialNumberDevice_4->setText(settings.value("leSerialNumberDevice_4", "").toString());
-    //    tabInputParameters->leSerialNumberDevice_5->setText(settings.value("leSerialNumberDevice_5", "").toString());
-    //    tabInputParameters->leSerialNumberDevice_6->setText(settings.value("leSerialNumberDevice_6", "").toString());
-    //    tabInputParameters->leSerialNumberDevice_7->setText(settings.value("leSerialNumberDevice_7", "").toString());
-    //    tabInputParameters->leSerialNumberDevice_8->setText(settings.value("leSerialNumberDevice_8", "").toString());
     settings.endGroup();
 }
 
@@ -103,16 +93,7 @@ void MainWindow::writeSettings()
     settings.endGroup();
 
     settings.beginGroup("InputParameters");
-    //    settings.setValue("cbDevice", tabInputParameters->cbDevice->currentIndex());
-    //    settings.setValue("leFioOtk", tabInputParameters->leFioOtk->text());
-
-    //    settings.setValue("leSerialNumberDevice_1", tabInputParameters->leSerialNumberDevice_1->text());
-    //    settings.setValue("leSerialNumberDevice_2", tabInputParameters->leSerialNumberDevice_2->text());
-    //    settings.setValue("leSerialNumberDevice_3", tabInputParameters->leSerialNumberDevice_3->text());
-    //    settings.setValue("leSerialNumberDevice_4", tabInputParameters->leSerialNumberDevice_4->text());
-    //    settings.setValue("leSerialNumberDevice_5", tabInputParameters->leSerialNumberDevice_5->text());
-    //    settings.setValue("leSerialNumberDevice_6", tabInputParameters->leSerialNumberDevice_6->text());
-    //    settings.setValue("leSerialNumberDevice_7", tabInputParameters->leSerialNumberDevice_7->text());
-    //    settings.setValue("leSerialNumberDevice_8", tabInputParameters->leSerialNumberDevice_8->text());
+    settings.setValue("cbDevice", tabInputParameters->cbxDevice->currentIndex());
+    settings.setValue("leFioOtk", tabInputParameters->leFio->text());
     settings.endGroup();
 }

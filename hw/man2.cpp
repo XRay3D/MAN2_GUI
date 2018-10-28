@@ -66,6 +66,12 @@ bool MAN2::Ping(const QString& PortName)
 
 bool MAN2::GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, ValuetypeEnum type)
 {
+    if (Emu) {
+        value.Value1 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
+        value.Value2 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
+        value.Value3 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
+        return true;
+    }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
@@ -83,6 +89,14 @@ bool MAN2::GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, ValuetypeEn
 bool MAN2::GetMeasuredValue(QList<MeasuredValue_t>& value, ValuetypeEnum type)
 {
     if (Emu) {
+        value.clear();
+        for (int i = 0; i < 8; ++i) {
+            MeasuredValue_t val;
+            val.Value1 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
+            val.Value2 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
+            val.Value3 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
+            value.append(val);
+        }
         return true;
     }
 
@@ -298,6 +312,15 @@ bool MAN2::DisableAll()
 void MAN2::GetMeasuredValueSlot(ValuetypeEnum type, uint8_t channel)
 {
     if (Emu) {
+        m_measuredValue.clear();
+        for (int i = 0; i < 8; ++i) {
+            MeasuredValue_t val;
+            val.Value1 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX * 100);
+            val.Value2 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX * 100);
+            val.Value3 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX * 100);
+            m_measuredValue[i + 1] = val;
+        }
+        emit GetMeasuredValueSignal(m_measuredValue);
         return;
     }
     QMutexLocker Locker(&m_mutex);

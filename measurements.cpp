@@ -1,11 +1,11 @@
 #include "measurements.h"
-#include <limits>
+#include "hw/interface.h"
 #include <QChart>
+#include <QDateTimeAxis>
 #include <QEvent>
 #include <QLineSeries>
 #include <QValueAxis>
-#include <QDateTimeAxis>
-#include "hw/interface.h"
+#include <limits>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -25,12 +25,16 @@ Measurements::Measurements(QWidget* parent)
 
     for (QPushButton* ptn : m_listPbCurrent)
         connect(ptn, &QPushButton::clicked, [=]() { PbCurrentClicked(m_listPbCurrent.indexOf(ptn)); });
+
     for (QPushButton* ptn : m_listPbShort)
         connect(ptn, &QPushButton::clicked, [=]() { PbShortClicked(m_listPbShort.indexOf(ptn)); });
+
     for (QPushButton* ptn : m_listPbOsc)
         connect(ptn, &QPushButton::clicked, [=]() { PbOscClicked(m_listPbOsc.indexOf(ptn)); });
+
     for (QDoubleSpinBox* ptn : m_listDsbSetCurrent)
         connect(ptn, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [=]() { DsbSetCurrent(m_listDsbSetCurrent.indexOf(ptn)); });
+
     for (QGroupBox* ptn : m_listGroupBox)
         connect(ptn, &QGroupBox::clicked, [=]() { GbChanneClicked(m_listGroupBox.indexOf(ptn)); });
 
@@ -74,8 +78,7 @@ void Measurements::on_cbOsc_currentIndexChanged(int index)
         if (i == index - 1) {
             m_listPbOsc[i]->setChecked(true);
             m_listPbOsc[i]->setText("Выкл.");
-        }
-        else {
+        } else {
             m_listPbOsc[i]->setChecked(false);
             m_listPbOsc[i]->setText("Вкл.");
         }
@@ -103,8 +106,7 @@ void Measurements::on_pbStart_clicked(bool checked)
         pbStart->setText("Стоп");
         m_semaphore.release();
         m_keyX = m_minX = QDateTime();
-    }
-    else {
+    } else {
         killTimer(m_timerMeasure);
         m_timerMeasure = 0;
         pbStart->setText("Старт");

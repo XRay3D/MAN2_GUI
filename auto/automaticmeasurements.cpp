@@ -11,9 +11,7 @@
 #include <QPainter>
 #include <QPdfWriter>
 #include <QSettings>
-
-
-const ScanSettings AutomaticMeasurements::m_scanSettings;
+#include <preparation/devicemodel.h>
 
 AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
     : QWidget(parent)
@@ -55,11 +53,6 @@ AutomaticMeasurements::~AutomaticMeasurements()
 {
 }
 
-void AutomaticMeasurements::ScanSettingsSlot(const ScanSettings* scanSettings)
-{
-    *const_cast<ScanSettings*>(&m_scanSettings) = *scanSettings;
-}
-
 void AutomaticMeasurements::SerialNumberChanged(const QString& serialNumber, int index)
 {
     //    listWidget->item(index)->setText(serialNumber);
@@ -76,8 +69,8 @@ void AutomaticMeasurements::SerialNumberChanged(const QString& serialNumber, int
 
     //    for (int i = 0, end = listWidget->count(); i < end; ++i) {
     //        if (listWidget->item(i)->isHidden()) {
-    //            for (int j = 0; j < m_scanSettings.NumberOfChannels; ++j) {
-    //                m_doNotSkip[i * int(m_scanSettings.NumberOfChannels) + j] = false;
+    //            for (int j = 0; j < DeviceModel::self->scanSettings().NumberOfChannels; ++j) {
+    //                m_doNotSkip[i * int(DeviceModel::self->scanSettings().NumberOfChannels) + j] = false;
     //            }
     //        }
     //    }
@@ -90,7 +83,7 @@ void AutomaticMeasurements::ShowMessage(int num)
     switch (num) {
     case SET_INPUT_VOLTAGE_0:
         stage = num;
-        messageText = QString("Установите входное напряжение %1±%2В").arg(m_scanSettings.Voltageerrortest5U1).arg(m_scanSettings.Voltageerrortest5U2).replace('.', ',');
+        messageText = QString("Установите входное напряжение %1±%2В").arg(DeviceModel::self->scanSettings().Voltageerrortest5U1).arg(DeviceModel::self->scanSettings().Voltageerrortest5U2).replace('.', ',');
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
             m_worker->FinishMeasurements();
         else
@@ -98,7 +91,7 @@ void AutomaticMeasurements::ShowMessage(int num)
         break;
     case SET_INPUT_VOLTAGE_1:
         stage = num;
-        messageText = QString("Установите входное напряжение %1±%2В").arg(m_scanSettings.Voltageerrortest3_4U1).arg(m_scanSettings.Voltageerrortest3_4U2).replace('.', ',');
+        messageText = QString("Установите входное напряжение %1±%2В").arg(DeviceModel::self->scanSettings().Voltageerrortest3_4U1).arg(DeviceModel::self->scanSettings().Voltageerrortest3_4U2).replace('.', ',');
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
             m_worker->FinishMeasurements();
         else
@@ -135,7 +128,7 @@ void AutomaticMeasurements::ShowMessage(int num)
     case PULSATIONS_ON_THE_CHANNEL_6:
     case PULSATIONS_ON_THE_CHANNEL_7:
     case PULSATIONS_ON_THE_CHANNEL_8:
-        messageText = QString("Пульсации в канале %2 соответствуют норме <%1мВ ?").arg(m_scanSettings.VisualControl).arg(num - (PULSATIONS_ON_THE_CHANNEL_1 - 1)).replace('.', ',');
+        messageText = QString("Пульсации в канале %2 соответствуют норме <%1мВ ?").arg(DeviceModel::self->scanSettings().VisualControl).arg(num - (PULSATIONS_ON_THE_CHANNEL_1 - 1)).replace('.', ',');
         switch (QMessageBox::question(this, "", messageText, "Да", "Нет", "Остановить измерения")) {
         case 0:
             m_worker->Continue();
@@ -176,14 +169,14 @@ void AutomaticMeasurements::ShowMessage(int num)
     case CHECK_INPUT_VOLTAGE:
         switch (stage) {
         case 0:
-            messageText = QString("Установите входное напряжение %1±%2В").arg(m_scanSettings.Voltageerrortest5U1).arg(m_scanSettings.Voltageerrortest5U2).replace('.', ',');
+            messageText = QString("Установите входное напряжение %1±%2В").arg(DeviceModel::self->scanSettings().Voltageerrortest5U1).arg(DeviceModel::self->scanSettings().Voltageerrortest5U2).replace('.', ',');
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
                 m_worker->FinishMeasurements();
             else
                 m_worker->Continue();
             break;
         case 1:
-            messageText = QString("Установите входное напряжение %1±%2В").arg(m_scanSettings.Voltageerrortest3_4U1).arg(m_scanSettings.Voltageerrortest3_4U2).replace('.', ',');
+            messageText = QString("Установите входное напряжение %1±%2В").arg(DeviceModel::self->scanSettings().Voltageerrortest3_4U1).arg(DeviceModel::self->scanSettings().Voltageerrortest3_4U2).replace('.', ',');
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
                 m_worker->FinishMeasurements();
             else
@@ -220,13 +213,13 @@ void AutomaticMeasurements::ShowProtocol(int num)
 //    ShowProtocol(listWidget->row(item));
 //}
 
-void AutomaticMeasurements::UpdateProgresBar()
-{
-    if (progressBar->value() == progressBar->maximum()) {
-        progressBar->setValue(0);
-    }
-    progressBar->setValue(progressBar->value() + 1);
-}
+//void AutomaticMeasurements::UpdateProgresBar()
+//{
+//    if (progressBar->value() == progressBar->maximum()) {
+//        progressBar->setValue(0);
+//    }
+//    progressBar->setValue(progressBar->value() + 1);
+//}
 
 void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number)
 {
@@ -243,19 +236,19 @@ void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number
     QString rowStr = QString().fromLocal8Bit(file2.readAll());
     QString basement = QString().fromLocal8Bit(file3.readAll());
 
-    protocol.append(cap.arg(m_scanSettings.Cipher)
+    protocol.append(cap.arg(DeviceModel::self->scanSettings().Cipher)
                         .arg(serialNumber)
-                        .arg(QString::number(m_scanSettings.RatedVoltage - m_scanSettings.RestrictionTest2).replace('.', ','))
-                        .arg(QString::number(m_scanSettings.RatedVoltage + m_scanSettings.RestrictionTest2).replace('.', ','))
-                        .arg(QString::number(m_scanSettings.VisualControl).replace('.', ','))
-                        .arg(QString::number(m_scanSettings.LimitationsTest4_5).replace('.', ','))
-                        .arg(QString::number(m_scanSettings.LimitationsTest4_5).replace('.', ','))
-                        .arg(QString::number(m_scanSettings.RestrictionsTest7Min).replace('.', ','))
-                        .arg(QString::number(m_scanSettings.RestrictionsTest7Max).replace('.', ','))
-                        .arg(QString::number(m_scanSettings.Voltageerrortest3_4U1).replace('.', ','))
-                        .arg(QString::number(m_scanSettings.Voltageerrortest5U1).replace('.', ',')));
+                        .arg(QString::number(DeviceModel::self->scanSettings().RatedVoltage - DeviceModel::self->scanSettings().RestrictionTest2).replace('.', ','))
+                        .arg(QString::number(DeviceModel::self->scanSettings().RatedVoltage + DeviceModel::self->scanSettings().RestrictionTest2).replace('.', ','))
+                        .arg(QString::number(DeviceModel::self->scanSettings().VisualControl).replace('.', ','))
+                        .arg(QString::number(DeviceModel::self->scanSettings().LimitationsTest4_5).replace('.', ','))
+                        .arg(QString::number(DeviceModel::self->scanSettings().LimitationsTest4_5).replace('.', ','))
+                        .arg(QString::number(DeviceModel::self->scanSettings().RestrictionsTest7Min).replace('.', ','))
+                        .arg(QString::number(DeviceModel::self->scanSettings().RestrictionsTest7Max).replace('.', ','))
+                        .arg(QString::number(DeviceModel::self->scanSettings().Voltageerrortest3_4U1).replace('.', ','))
+                        .arg(QString::number(DeviceModel::self->scanSettings().Voltageerrortest5U1).replace('.', ',')));
 
-    const int rowCount = m_scanSettings.NumberOfChannels;
+    const int rowCount = DeviceModel::self->scanSettings().NumberOfChannels;
 
     for (int row = 0; row < rowCount; ++row) {
         bool flags[7] = { false, false, false, false, false, false, false };
@@ -271,7 +264,7 @@ void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number
             case 1:
                 val = m_result[row + number * rowCount].test1;
                 str = QString::number(val, 'f', 4).replace('.', ',');
-                if (qAbs(m_scanSettings.RatedVoltage - val) > m_scanSettings.RestrictionTest2) {
+                if (qAbs(DeviceModel::self->scanSettings().RatedVoltage - val) > DeviceModel::self->scanSettings().RestrictionTest2) {
                     flags[col - 1] = true;
                 }
                 break;
@@ -287,28 +280,28 @@ void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number
             case 3:
                 val = m_result[row + number * rowCount].test1 - m_result[row + number * rowCount].test3;
                 str = QString::number(val, 'f', 4).replace('.', ',');
-                if (qAbs(val) > m_scanSettings.LimitationsTest4_5) {
+                if (qAbs(val) > DeviceModel::self->scanSettings().LimitationsTest4_5) {
                     flags[col - 1] = true;
                 }
                 break;
             case 4:
                 val = m_result[row + number * rowCount].test1 - m_result[row + number * rowCount].test4;
                 str = QString::number(val, 'f', 4).replace('.', ',');
-                if (qAbs(val) > m_scanSettings.LimitationsTest4_5) {
+                if (qAbs(val) > DeviceModel::self->scanSettings().LimitationsTest4_5) {
                     flags[col - 1] = true;
                 }
                 break;
             case 5:
                 val = m_result[row + number * rowCount].test1 - m_result[row + number * rowCount].test5;
                 str = QString::number(val, 'f', 4).replace('.', ',');
-                if (qAbs(val) > m_scanSettings.LimitationsTest4_5) {
+                if (qAbs(val) > DeviceModel::self->scanSettings().LimitationsTest4_5) {
                     flags[col - 1] = true;
                 }
                 break;
             case 6:
                 val = m_result[row + number * rowCount].test6;
                 str = QString::number(val, 'f', 1).replace('.', ',');
-                if ((m_scanSettings.RestrictionsTest7Min) > val || val > (m_scanSettings.RestrictionsTest7Max)) {
+                if ((DeviceModel::self->scanSettings().RestrictionsTest7Min) > val || val > (DeviceModel::self->scanSettings().RestrictionsTest7Max)) {
                     flags[col - 1] = true;
                 }
                 if (0.0 > val) {
@@ -319,7 +312,7 @@ void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number
             case 7:
                 val = m_result[row + number * rowCount].test7;
                 str = QString::number(val, 'f', 3).replace('.', ',');
-                if (val > m_scanSettings.VoltageErrorTest7) {
+                if (val > DeviceModel::self->scanSettings().VoltageErrorTest7) {
                     flags[col - 1] = true;
                     //str = "отказ";
                 }
@@ -347,11 +340,11 @@ void AutomaticMeasurements::SaveProtokol(const QString& serialNumber, int number
                             .arg(flags[6] ? "; color:red" : ""));
     }
     protocol.append(basement.arg(QDate::currentDate().toString("dd.MM.yyyy"))
-                        .arg(m_scanSettings.Fio));
+                        .arg(DeviceModel::self->scanSettings().Fio));
 
     QString path = qApp->applicationDirPath()
                        .append("/")
-                       .append(m_scanSettings.Type)
+                       .append(DeviceModel::self->scanSettings().Type)
                        .append(QDate::currentDate().toString("/yyyy"));
 
     if (!QDir().mkpath(path)) {
@@ -389,37 +382,32 @@ void AutomaticMeasurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue_t
 
 void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
 {
-    //    pbStartStop->setChecked(checked);
-    //    if (checked) {
-    //        for (int i = 0, flag = 0; i < listWidget->count(); ++i) {
-    //            if (listWidget->item(i)->isHidden()) {
-    //                ++flag;
-    //            }
-    //            if (flag == 8) {
-    //                QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
-    //                pbStartStop->setChecked(false);
-    //                return;
-    //            }
-    //        }
-    //        foreach (QCheckBox* cb, m_listCheckBox) {
-    //            cb->setChecked(false);
-    //        }
-    //        pbStartStop->setText("Остановить измерения");
-    //        memset(m_result, 0, sizeof(m_result));
-    //        m_worker = new Worker(m_doNotSkip, m_result, &m_scanSettings);
-    //        connect(m_worker, &QThread::finished, [this]() {
-    //            pbStartStop->setText("Начать измерения");
-    //            pbStartStop->setChecked(false);
-    //        });
-    //        connect(m_worker, &QThread::finished, m_worker, &QObject::deleteLater);
-    //        connect(m_worker, &Worker::ShowMessage, this, &AutomaticMeasurements::ShowMessage);
-    //        connect(m_worker, &Worker::UpdateProgresBar, this, &AutomaticMeasurements::UpdateProgresBar);
-    //        progressBar->setValue(0);
-    //        m_worker->start();
-    //    } else {
-    //        pbStartStop->setText("Начать измерения");
-    //        m_worker->FinishMeasurements();
-    //    }
+    pbStartStop->setChecked(checked);
+    if (checked) {
+        if (SerNumModel::self->isEmpty()) {
+            QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
+            pbStartStop->setChecked(false);
+            return;
+        }
+        foreach (QCheckBox* cb, m_listCheckBox) {
+            cb->setChecked(false);
+        }
+        pbStartStop->setText("Остановить измерения");
+        memset(m_result, 0, sizeof(m_result));
+        m_worker = new Worker(m_doNotSkip, m_result);
+        connect(m_worker, &QThread::finished, [this]() {
+            pbStartStop->setText("Начать измерения");
+            pbStartStop->setChecked(false);
+        });
+        connect(m_worker, &QThread::finished, m_worker, &QObject::deleteLater);
+        connect(m_worker, &Worker::ShowMessage, this, &AutomaticMeasurements::ShowMessage);
+        //connect(m_worker, &Worker::UpdateProgresBar, this, &AutomaticMeasurements::UpdateProgresBar);
+        progressBar->setValue(0);
+        m_worker->start();
+    } else {
+        pbStartStop->setText("Начать измерения");
+        m_worker->FinishMeasurements();
+    }
 }
 
 void AutomaticMeasurements::showEvent(QShowEvent* event)
