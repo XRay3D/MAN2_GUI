@@ -3,6 +3,8 @@
 
 #include <QAbstractTableModel>
 
+#include <hw/man2.h>
+
 class MeasureModel : public QAbstractTableModel {
     Q_OBJECT
 public:
@@ -14,8 +16,10 @@ public:
     int columnCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
     void setRms(double val);
+    void setMeasuredValueSignal(const QMap<int, MeasuredValue_t>&);
 
 private:
     double m_u[8];

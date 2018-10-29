@@ -48,3 +48,37 @@ void MeasureModel::setRms(double val)
     m_acU = val;
     dataChanged(createIndex(2, 0), createIndex(2, 7), { Qt::DisplayRole });
 }
+
+void MeasureModel::setMeasuredValueSignal(const QMap<int, MeasuredValue_t>& data)
+{
+    QMapIterator<int, MeasuredValue_t> iterator(data);
+    while (iterator.hasNext()) {
+        iterator.next();
+        m_u[iterator.key() - 1] = iterator.value().Value1;
+        m_i[iterator.key() - 1] = iterator.value().Value2;
+    }
+    dataChanged(createIndex(0, 0), createIndex(1, 7), { Qt::DisplayRole });
+}
+
+QVariant MeasureModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    switch (role) {
+    case Qt::DisplayRole:
+        if (orientation == Qt::Horizontal)
+            return QString::number(section + 1);
+        else
+            switch (section) {
+            case 0:
+                return "Входное\nнапряжение";
+            case 1:
+                return "Ток\nнагрузки";
+            case 2:
+                return "Сеть";
+            }
+    case Qt::TextAlignmentRole:
+        return Qt::AlignCenter;
+    default:
+        QVariant();
+    }
+    return QVariant();
+}

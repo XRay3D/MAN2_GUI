@@ -22,6 +22,7 @@ AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
     setupUi(this);
 
     tvMeasure->setModel(m_model);
+    tvMeasure->setSpan(2, 0, 1, 8);
 
     tvMeasure->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tvMeasure->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -414,14 +415,17 @@ void AutomaticMeasurements::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event);
     if (mi::man->IsConnected()) {
-        connect(mi::man, &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
+        connect(mi::man, &MAN2::GetMeasuredValueSignal, m_model, &MeasureModel::setMeasuredValueSignal);
+        //connect(mi::man, &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
         m_timerRms.start(100);
         return;
     }
     setEnabled(false);
 }
+
 void AutomaticMeasurements::hideEvent(QHideEvent* /*event*/)
 {
-    disconnect(mi::man, &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
+    disconnect(mi::man, &MAN2::GetMeasuredValueSignal, m_model, &MeasureModel::setMeasuredValueSignal);
+    //disconnect(mi::man, &MAN2::GetMeasuredValueSignal, this, &AutomaticMeasurements::GetMeasuredValueSlot);
     m_timerRms.stop();
 }
