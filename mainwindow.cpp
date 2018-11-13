@@ -53,6 +53,7 @@ void MainWindow::readSettings()
 {
     QSettings settings("Settings.ini", QSettings::IniFormat);
     settings.setIniCodec("UTF-8");
+
     settings.beginGroup("MainWindow");
     resize(settings.value("size", QSize(400, 400)).toSize());
     move(settings.value("pos", QPoint(200, 200)).toPoint());
@@ -75,7 +76,6 @@ void MainWindow::readSettings()
 void MainWindow::writeSettings()
 {
     QSettings settings("Settings.ini", QSettings::IniFormat);
-
     settings.setIniCodec("UTF-8");
 
     settings.beginGroup("MainWindow");

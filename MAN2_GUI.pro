@@ -44,7 +44,8 @@ SOURCES += \
     preparation/devicemodel.cpp \
     preparation/prepareform.cpp \
     preparation/sernummodel.cpp \
-    auto/measuremodel.cpp
+    auto/mandatamodel.cpp \
+    auto/mesuremodel.cpp
 
 
 HEADERS  += \
@@ -66,7 +67,8 @@ HEADERS  += \
     preparation/devicemodel.h \
     preparation/prepareform.h \
     preparation/sernummodel.h \
-    auto/measuremodel.h
+    auto/mandatamodel.h \
+    auto/mesuremodel.h
 
 
 FORMS    += \

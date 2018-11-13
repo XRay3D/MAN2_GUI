@@ -1,10 +1,11 @@
 #include "worker.h"
 #include "hw/interface.h"
+#include "mesuremodel.h"
 #include "preparation/devicemodel.h"
-Worker::Worker(bool* doNotSkip, Result_t* result, QObject* parent)
+Worker::Worker(bool* doNotSkip, QObject* parent)
     : QThread(parent)
     , m_doNotSkip(doNotSkip)
-    , m_result(result)
+//    ,//m_result(result)
 {
 }
 
@@ -114,14 +115,13 @@ void Worker::Test1()
     Msleep(5000);
     do {
         Msleep(500);
-
         while (!mi::man->GetMeasuredValue(m_list))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
-
-        for (int i = 0; i < m_list.size(); ++i) {
-            m_result[i].test1 = m_list[i].Value1;
-            qDebug() << i << m_list[i].Value1;
-        }
+        MesureModel::self->setTest1(m_list);
+        //        for (int i = 0; i < m_list.size(); ++i) {
+        //           //m_result[i].test1 = m_list[i].Value1;
+        //            qDebug() << i << m_list[i].Value1;
+        //        }
         CheckFinished();
     } while (m_list.size() != 8);
     CheckFinished();
@@ -135,10 +135,8 @@ void Worker::Test2()
         if (m_doNotSkip[i]) {
             while (!mi::man->Oscilloscope(0))
                 WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
-
             while (!mi::man->Oscilloscope(i + 1))
                 WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
-
             WaitSolutionOrEnd(i + PULSATIONS_ON_THE_CHANNEL_1);
         }
     }
@@ -158,11 +156,11 @@ void Worker::Test3()
 
         while (!mi::man->GetMeasuredValue(m_list))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
-
-        for (int i = 0; i < m_list.size(); ++i) {
-            m_result[i].test3 = m_list[i].Value1;
-            qDebug() << i << m_list[i].Value1;
-        }
+        MesureModel::self->setTest3(m_list);
+        //        for (int i = 0; i < m_list.size(); ++i) {
+        //            //m_result[i].test3 = m_list[i].Value1;
+        //            qDebug() << i << m_list[i].Value1;
+        //        }
         CheckFinished();
     } while (m_list.size() != 8);
     CheckFinished();
@@ -182,11 +180,10 @@ void Worker::Test4()
 
         while (!mi::man->GetMeasuredValue(m_list))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
-
-        for (int i = 0; i < m_list.size(); ++i)
-            m_result[i].test4 = m_list[i].Value1;
+        MesureModel::self->setTest4(m_list);
+        //        for (int i = 0; i < m_list.size(); ++i)
+        //            m_result[i].test4 = m_list[i].Value1;
         CheckFinished();
-
     } while (m_list.size() != 8);
     CheckFinished();
     emit ShowMessage(TEST_4);
@@ -205,11 +202,11 @@ void Worker::Test5()
 
         while (!mi::man->GetMeasuredValue(m_list))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
-
-        for (int i = 0; i < m_list.size(); ++i) {
-            m_result[i].test5 = m_list[i].Value1;
-            qDebug() << i << m_list[i].Value1;
-        }
+        MesureModel::self->setTest5(m_list);
+        //        for (int i = 0; i < m_list.size(); ++i) {
+        //            //m_result[i].test5 = m_list[i].Value1;
+        //            qDebug() << i << m_list[i].Value1;
+        //        }
         CheckFinished();
     } while (m_list.size() != 8);
     CheckFinished();
@@ -257,7 +254,8 @@ void Worker::Test6()
                 WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
             std::sort(peak.begin(), peak.end());
-            m_result[i - 1].test6 = peak.last();
+            //m_result[i - 1].test6 = peak.last();
+            MesureModel::self->setTest6(i - 1, peak.last());
         }
     }
     emit ShowMessage(TEST_6);
@@ -284,10 +282,11 @@ void Worker::Test7()
         while (!mi::man->GetMeasuredValue(m_list))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
-        for (int i = 0; i < m_list.size(); ++i) {
-            m_result[i].test7 = m_list[i].Value1;
-            qDebug() << i << m_list[i].Value1;
-        }
+        MesureModel::self->setTest7(m_list);
+        //        for (int i = 0; i < m_list.size(); ++i) {
+        //            //m_result[i].test7 = m_list[i].Value1;
+        //            qDebug() << i << m_list[i].Value1;
+        //        }
         CheckFinished();
 
     } while (m_list.size() != 8);

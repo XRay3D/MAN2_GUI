@@ -67,9 +67,9 @@ QVariant DeviceModel::data(const QModelIndex& index, int role) const
                 case 10:
                     return m_data[m_index].RestrictionsTest7Max;
                 case 11:
-                    return m_data[m_index].Voltageerrortest3_4U1; // Voltageerrortest5U1
+                    return m_data[m_index].Voltageerrortest5U1;
                 case 12:
-                    return m_data[m_index].Voltageerrortest3_4U2; //       Voltageerrortest5U2
+                    return m_data[m_index].Voltageerrortest3_4U1;
                 case 13:
                     return m_data[m_index].VoltageErrorTest7;
                 case 14:
@@ -81,9 +81,9 @@ QVariant DeviceModel::data(const QModelIndex& index, int role) const
             else
                 switch (index.row()) {
                 case 11:
-                    return m_data[m_index].Voltageerrortest5U1;
-                case 12:
                     return m_data[m_index].Voltageerrortest5U2;
+                case 12:
+                    return m_data[m_index].Voltageerrortest3_4U2;
                 default:
                     return QVariant();
                 }

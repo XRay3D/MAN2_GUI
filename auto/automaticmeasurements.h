@@ -10,16 +10,6 @@
 #include <QTimer>
 #include <shdocvw.h>
 
-typedef struct {
-    double test1;
-    double test2;
-    double test3;
-    double test4;
-    double test5;
-    double test6;
-    double test7;
-} Result_t;
-
 enum {
     SET_INPUT_VOLTAGE_0,
     SET_INPUT_VOLTAGE_1,
@@ -46,7 +36,7 @@ enum {
 };
 
 class Worker;
-class MeasureModel;
+class ManDataModel;
 
 class AutomaticMeasurements : public QWidget, private Ui::AutomaticMeasurements {
     Q_OBJECT
@@ -72,7 +62,7 @@ private:
     bool m_doNotSkip[8];
     //    const QString m_cipher;
     //    const QString m_type;
-    Result_t m_result[8];
+//    Result_t m_result[8];
     QVector<QString> m_paths;
     QVector<QString> m_serNum;
     QList<QCheckBox*> m_listCheckBox;
@@ -90,7 +80,7 @@ private:
 
     QTimer m_timerRms;
 
-    MeasureModel* m_model;
+    ManDataModel* m_model;
 
 private slots:
     void on_pbStartStop_clicked(bool checked);

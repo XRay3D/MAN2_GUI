@@ -5,10 +5,10 @@
 
 #include <hw/man2.h>
 
-class MeasureModel : public QAbstractTableModel {
+class ManDataModel : public QAbstractTableModel {
     Q_OBJECT
 public:
-    explicit MeasureModel(QObject* parent = nullptr);
+    explicit ManDataModel(QObject* parent = nullptr);
 
     // QAbstractItemModel interface
 public:
