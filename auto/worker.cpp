@@ -26,11 +26,6 @@ void Worker::FinishMeasurements()
     m_semaphore.release(2);
 }
 
-void Worker::Quit()
-{
-    mi::man->DisableAll();
-}
-
 void Worker::run()
 {
     m_counter = 0;
@@ -44,7 +39,8 @@ void Worker::run()
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
         // 3 Измерение выходного напряжения под номинальной нагрузкой Номинальное (220) Да
-        SetVoltage(SET_INPUT_VOLTAGE_2);
+        SetVoltage(SET_INPUT_VOLTAGE_2); ///////////////////
+
         Test1();
         // 4 Измерение выходного напряжения без нагрузки Номинальное (220) Нет
         Test5();
@@ -53,16 +49,18 @@ void Worker::run()
         // 6 Тест К.З. - восстановление напряжения при подключенной нагрузке Номинальное (220) Да
         Test7();
         // 8 Измерение выходного напряжения под номинальной нагрузкой Минимальное (130) Да
-        SetVoltage(SET_INPUT_VOLTAGE_1);
+        SetVoltage(SET_INPUT_VOLTAGE_1); ///////////////////
+
         Test3();
         // 7 Измерение Пульсации выходного напряжения под номинальной нагрузкой Минимальное (130) Да
         Test2();
         // 2 Измерение выходного напряжения под номинальной нагрузкой Максимальное (249) Да
-        SetVoltage(SET_INPUT_VOLTAGE_0);
+        SetVoltage(SET_INPUT_VOLTAGE_0); ///////////////////
+
         Test4();
     } catch (int i) {
         Q_UNUSED(i)
-        emit ShowMessage(VERIFICATION_IS_COMPLETE);
+        //        emit ShowMessage(VERIFICATION_IS_COMPLETE);
         m_semaphore.acquire(m_semaphore.available());
         terminate();
     }
@@ -70,7 +68,7 @@ void Worker::run()
 
 void Worker::WaitSolutionOrEnd(int question)
 {
-    emit ShowMessage(question);
+    emit showMessage(question);
     while (!m_semaphore.tryAcquire(1, 100))
         mi::man->GetMeasuredValue(m_list);
     if (m_semaphore.available()) {
@@ -92,12 +90,12 @@ void Worker::SetVoltage(int voltage)
 {
     switch (voltage) {
     case SET_INPUT_VOLTAGE_0:
-        m_minInVoltage = DeviceModel::self->scanSettings().Voltageerrortest5U1 - DeviceModel::self->scanSettings().Voltageerrortest5U2 /** 1.5*/;
-        m_maxInVoltage = DeviceModel::self->scanSettings().Voltageerrortest5U1 + DeviceModel::self->scanSettings().Voltageerrortest5U2 /** 1.5*/;
+        m_minInVoltage = DeviceModel::self->scanSettings().Voltageerrortest5U1 - (DeviceModel::self->scanSettings().Voltageerrortest5U2 + 2) /** 1.5*/;
+        m_maxInVoltage = DeviceModel::self->scanSettings().Voltageerrortest5U1 + DeviceModel::self->scanSettings().Voltageerrortest5U2 + 2 /** 1.5*/;
         break;
     case SET_INPUT_VOLTAGE_1:
-        m_minInVoltage = DeviceModel::self->scanSettings().Voltageerrortest3_4U1 - DeviceModel::self->scanSettings().Voltageerrortest3_4U2 /** 1.5*/;
-        m_maxInVoltage = DeviceModel::self->scanSettings().Voltageerrortest3_4U1 + DeviceModel::self->scanSettings().Voltageerrortest3_4U2 /** 1.5*/;
+        m_minInVoltage = DeviceModel::self->scanSettings().Voltageerrortest3_4U1 - (DeviceModel::self->scanSettings().Voltageerrortest3_4U2 + 2) /** 1.5*/;
+        m_maxInVoltage = DeviceModel::self->scanSettings().Voltageerrortest3_4U1 + DeviceModel::self->scanSettings().Voltageerrortest3_4U2 + 2 /** 1.5*/;
         break;
     case SET_INPUT_VOLTAGE_2:
         m_minInVoltage = 220 - 4.4;
@@ -106,7 +104,7 @@ void Worker::SetVoltage(int voltage)
     default:
         break;
     }
-    return WaitSolutionOrEnd(voltage);
+    WaitSolutionOrEnd(voltage);
 }
 
 void Worker::Test1()
@@ -118,14 +116,11 @@ void Worker::Test1()
         while (!mi::man->GetMeasuredValue(m_list))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
         MesureModel::self->setTest1(m_list);
-        //        for (int i = 0; i < m_list.size(); ++i) {
-        //           //m_result[i].test1 = m_list[i].Value1;
-        //            qDebug() << i << m_list[i].Value1;
-        //        }
         CheckFinished();
     } while (m_list.size() != 8);
     CheckFinished();
-    emit ShowMessage(TEST_1);
+    emit showMessage(TEST_1);
+    emit updateProgresBar();
 }
 
 void Worker::Test2()
@@ -138,13 +133,15 @@ void Worker::Test2()
             while (!mi::man->Oscilloscope(i + 1))
                 WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
             WaitSolutionOrEnd(i + PULSATIONS_ON_THE_CHANNEL_1);
+            emit updateProgresBar();
         }
     }
 
     while (!mi::man->Oscilloscope(0))
         WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
-    emit ShowMessage(TEST_2);
+    emit showMessage(TEST_2);
+    emit updateProgresBar();
 }
 
 void Worker::Test3()
@@ -157,14 +154,11 @@ void Worker::Test3()
         while (!mi::man->GetMeasuredValue(m_list))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
         MesureModel::self->setTest3(m_list);
-        //        for (int i = 0; i < m_list.size(); ++i) {
-        //            //m_result[i].test3 = m_list[i].Value1;
-        //            qDebug() << i << m_list[i].Value1;
-        //        }
         CheckFinished();
     } while (m_list.size() != 8);
     CheckFinished();
-    emit ShowMessage(TEST_3);
+    emit showMessage(TEST_3);
+    emit updateProgresBar();
 }
 
 void Worker::Test4()
@@ -181,12 +175,11 @@ void Worker::Test4()
         while (!mi::man->GetMeasuredValue(m_list))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
         MesureModel::self->setTest4(m_list);
-        //        for (int i = 0; i < m_list.size(); ++i)
-        //            m_result[i].test4 = m_list[i].Value1;
         CheckFinished();
     } while (m_list.size() != 8);
     CheckFinished();
-    emit ShowMessage(TEST_4);
+    emit showMessage(TEST_4);
+    emit updateProgresBar();
 }
 
 void Worker::Test5()
@@ -203,14 +196,11 @@ void Worker::Test5()
         while (!mi::man->GetMeasuredValue(m_list))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
         MesureModel::self->setTest5(m_list);
-        //        for (int i = 0; i < m_list.size(); ++i) {
-        //            //m_result[i].test5 = m_list[i].Value1;
-        //            qDebug() << i << m_list[i].Value1;
-        //        }
         CheckFinished();
     } while (m_list.size() != 8);
     CheckFinished();
-    emit ShowMessage(TEST_5);
+    emit showMessage(TEST_5);
+    emit updateProgresBar();
 }
 
 void Worker::Test6()
@@ -248,18 +238,20 @@ void Worker::Test6()
 
                 peak.append(value.Value2);
                 CheckFinished();
+                emit updateProgresBar();
+                MesureModel::self->setTest6(i - 1, value.Value2);
             }
 
             while (!mi::man->SetCurrent(0, i))
                 WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
             std::sort(peak.begin(), peak.end());
-            //m_result[i - 1].test6 = peak.last();
             MesureModel::self->setTest6(i - 1, peak.last());
         }
     }
-    emit ShowMessage(TEST_6);
+    emit showMessage(TEST_6);
     WaitSolutionOrEnd(RESTORE_THE_OPERATION_OF_CHANNELS);
+    emit updateProgresBar();
 }
 
 void Worker::Test7()
@@ -283,15 +275,11 @@ void Worker::Test7()
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
         MesureModel::self->setTest7(m_list);
-        //        for (int i = 0; i < m_list.size(); ++i) {
-        //            //m_result[i].test7 = m_list[i].Value1;
-        //            qDebug() << i << m_list[i].Value1;
-        //        }
         CheckFinished();
-
     } while (m_list.size() != 8);
-    emit ShowMessage(TEST_7);
+    emit showMessage(TEST_7);
     WaitSolutionOrEnd(RESTORE_THE_OPERATION_OF_CHANNELS);
+    emit updateProgresBar();
 }
 
 void Worker::Msleep(unsigned long time)
@@ -299,7 +287,6 @@ void Worker::Msleep(unsigned long time)
     QElapsedTimer timer;
     timer.start();
     while (timer.elapsed() < time) {
-        emit UpdateProgresBar();
         msleep(10);
         CheckFinished();
 

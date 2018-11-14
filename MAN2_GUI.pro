@@ -77,7 +77,6 @@ FORMS    += \
     measurements.ui \
     auto/automaticmeasurements.ui \
     mainwindow.ui \
-    man.ui \
     preparation\preparation.ui \
     preparation/prepareform.ui
 

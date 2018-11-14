@@ -6,38 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1056</width>
-    <height>641</height>
+    <width>1022</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="2" colspan="2">
-    <widget class="QTableView" name="tvMeasure"/>
-   </item>
-   <item row="0" column="1">
-    <widget class="QTableView" name="tvSerNum">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" colspan="3">
-    <widget class="QTableView" name="tableView"/>
-   </item>
-   <item row="3" column="1" colspan="3">
-    <widget class="QProgressBar" name="progressBar">
-     <property name="value">
-      <number>24</number>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1" colspan="3">
+  <layout class="QGridLayout" name="gridLayout" rowstretch="2,3,0,0" columnstretch="1,4">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <item row="3" column="0" colspan="2">
     <widget class="QPushButton" name="pbStartStop">
      <property name="minimumSize">
       <size>
@@ -53,63 +42,86 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1" colspan="3">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="font">
-      <font>
-       <pointsize>6</pointsize>
-      </font>
+   <item row="2" column="0" colspan="2">
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>24</number>
      </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
-      <string>GroupBox</string>
+      <string>Данные МАН</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
       <item>
-       <widget class="QCheckBox" name="checkBox_1">
-        <property name="text">
-         <string>Измерение выходного напряжения при номинальной нагрузке и входном напряжении 220В.</string>
-        </property>
-       </widget>
+       <widget class="QTableView" name="tvMeasure"/>
       </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="title">
+      <string>Измеренные значения</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
       <item>
-       <widget class="QCheckBox" name="checkBox_2">
-        <property name="text">
-         <string>Проверка пульсаций выходного напряжения  при номинальной нагрузке и входном напряжении 130В.</string>
-        </property>
-       </widget>
+       <widget class="QTableView" name="tableView"/>
       </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0" rowspan="2">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Серийные номера</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
       <item>
-       <widget class="QCheckBox" name="checkBox_3">
-        <property name="text">
-         <string>Измерение отклонения выходного напряжения от номинального при номинальной нагрузке и входном напряжении 130В.</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_4">
-        <property name="text">
-         <string>Измерение отклонения выходного напряжения от номинального при номинальной нагрузке и входном напряжении 250В.</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_5">
-        <property name="text">
-         <string>Измерение отклонения выходного напряжения холостого хода от номинального при входном напряжении 220В.</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_6">
-        <property name="text">
-         <string>Ток срабатывания электронной защиты</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_7">
-        <property name="text">
-         <string>Срабатывание электронной защиты при коротком замыкании</string>
+       <widget class="QTableView" name="tvSerNum">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
        </widget>
       </item>

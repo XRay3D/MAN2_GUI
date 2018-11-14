@@ -9,16 +9,13 @@ class Worker : public QThread {
 public:
     Worker(bool* doNotSkip, /*Result_t* result,*/ QObject* parent = Q_NULLPTR);
     ~Worker();
-    void SetMan();
     void Continue();
     void FinishMeasurements();
-    void Quit();
-    void Setup();
     void run() override;
 
 signals:
-    void ShowMessage(int num);
-    void UpdateProgresBar();
+    void showMessage(int num);
+    void updateProgresBar();
 
 private:
     void WaitSolutionOrEnd(int question);

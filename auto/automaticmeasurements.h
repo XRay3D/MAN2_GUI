@@ -24,7 +24,6 @@ enum {
     PULSATIONS_ON_THE_CHANNEL_6,
     PULSATIONS_ON_THE_CHANNEL_7,
     PULSATIONS_ON_THE_CHANNEL_8,
-    VERIFICATION_IS_COMPLETE,
     TEST_1,
     TEST_2,
     TEST_3,
@@ -44,39 +43,22 @@ class AutomaticMeasurements : public QWidget, private Ui::AutomaticMeasurements 
 public:
     explicit AutomaticMeasurements(QWidget* parent = 0);
     ~AutomaticMeasurements();
-    void SerialNumberChanged(const QString& serialNumber, int index);
 
 signals:
     void SetTabBarEnabled(bool);
 
 private:
-    void ShowMessage(int num);
-    void ShowProtocol(int num);
-    //    void ItemDoubleClicked(QListWidgetItem* item);
-    //    void UpdateProgresBar();
-    void SaveProtokol(const QString& serialNumber, int number);
-    void GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& list);
+    void showMessage(int num);
+    void updateProgresBar();
+    void endSlot();
 
     Worker* m_worker = nullptr;
-    //    QThread m_workerThread;
     bool m_doNotSkip[8];
-    //    const QString m_cipher;
-    //    const QString m_type;
-//    Result_t m_result[8];
-    QVector<QString> m_paths;
+
     QVector<QString> m_serNum;
-    QList<QCheckBox*> m_listCheckBox;
 
     int m_measureTimerId = 0;
     int m_stage = 0;
-
-    bool Test1();
-    bool Test2();
-    bool Test3();
-    bool Test4();
-    bool Test5();
-    bool Test6();
-    bool Test7();
 
     QTimer m_timerRms;
 
@@ -87,7 +69,6 @@ private slots:
 
     // QWidget interface
 protected:
-    //    void paintEvent(QPaintEvent* event);
     void showEvent(QShowEvent* event);
     void hideEvent(QHideEvent* event);
 };

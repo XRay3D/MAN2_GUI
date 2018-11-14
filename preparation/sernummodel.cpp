@@ -51,6 +51,7 @@ bool SerNumModel::setData(const QModelIndex& index, const QVariant& value, int r
             return false;
         } else {
             m_data[index.row()] = value.toString();
+            serNumCount();
             return true;
         }
     default:
@@ -114,6 +115,23 @@ int SerNumModel::count() const
     return m_count;
 }
 
+int SerNumModel::serNumCount() /*const*/
+{
+    int i = !m_data[0].isEmpty()
+        + !m_data[1].isEmpty()
+        + !m_data[2].isEmpty()
+        + !m_data[3].isEmpty()
+        + !m_data[4].isEmpty()
+        + !m_data[5].isEmpty()
+        + !m_data[6].isEmpty()
+        + !m_data[7].isEmpty();
+
+    std::sort(m_data.begin(), m_data.end());
+    std::rotate(m_data.begin(), m_data.end() - i, m_data.end());
+    dataChanged(createIndex(0, 0), createIndex(7, 0), { Qt::DisplayRole });
+    return i;
+}
+
 void SerNumModel::setCount(int count)
 {
     if (m_count < count) {
@@ -123,6 +141,8 @@ void SerNumModel::setCount(int count)
     } else if (m_count > count) {
         beginRemoveRows(QModelIndex(), count, m_count - 1);
         m_count = count;
+        for (int i = m_count; i < 8; ++i)
+            m_data[i].clear();
         endRemoveRows();
     }
 }

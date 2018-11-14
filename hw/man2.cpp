@@ -5,7 +5,7 @@
 #include <QTimer>
 
 #define Dbg 0
-#define Emu 1
+#define Emu 0
 
 enum { ChannelCount = 8 };
 

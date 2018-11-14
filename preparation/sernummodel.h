@@ -20,10 +20,12 @@ public:
 
     void clear();
     bool isEmpty();
+    QString serNum(int index) const { return m_data[index]; }
     //    int count() const;
     //    void setCount(int count);
 
     int count() const;
+    int serNumCount();
     void setCount(int count);
 
 private:
@@ -32,7 +34,6 @@ private:
 
     void readSerNum();
     void writeSerNum();
-
 };
 
 #endif // SERNUMMODEL_H
