@@ -65,7 +65,7 @@ QVariant ManDataModel::headerData(int section, Qt::Orientation orientation, int 
     switch (role) {
     case Qt::DisplayRole:
         if (orientation == Qt::Horizontal)
-            return QString::number(section + 1);
+            return QString("Канал №%1").arg(section + 1);
         else
             switch (section) {
             case 0:

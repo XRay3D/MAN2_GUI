@@ -34,21 +34,21 @@ public:
     QString Fio;
     QString Type;
     QString Cipher;
-    double RatedVoltage;
-    int NumberOfChannels;
-    double RatedCurrent;
-    double RestrictionTest2;
-    double VisualControl;
-    double LimitationsTest4_5;
-    double LimitTest6;
-    double RestrictionsTest7Min;
-    double RestrictionsTest7Max;
-    double Voltageerrortest3_4U1;
-    double Voltageerrortest3_4U2;
-    double Voltageerrortest5U1;
-    double Voltageerrortest5U2;
-    double VoltageErrorTest7;
-    double ParameterDLTest7;
+    double RatedVoltage = 0.0;
+    int NumberOfChannels = 0;
+    double RatedCurrent = 0.0;
+    double RestrictionTest2 = 0.0;
+    double VisualControl = 0.0;
+    double LimitationsTest4_5 = 0.0;
+    double LimitTest6 = 0.0;
+    double RestrictionsTest7Min = 0.0;
+    double RestrictionsTest7Max = 0.0;
+    double Voltageerrortest3_4U1 = 0.0;
+    double Voltageerrortest3_4U2 = 0.0;
+    double Voltageerrortest5U1 = 0.0;
+    double Voltageerrortest5U2 = 0.0;
+    double VoltageErrorTest7 = 0.0;
+    double ParameterDLTest7 = 0.0;
 
     //    ScanSettings& operator=(const ScanSettings& right)
     //    {

@@ -23,7 +23,7 @@ public:
 
     int index() const;
     void setIndex(int index);
-    ScanSettings scanSettings() { return m_data[m_index]; }
+    ScanSettings scanSettings() { return m_data.value(m_index); }
 
 private:
     QList<ScanSettings> m_data;

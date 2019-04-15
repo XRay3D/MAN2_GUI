@@ -42,48 +42,48 @@ QVariant DeviceModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case Qt::DisplayRole:
         if (m_data.size()) {
+            ScanSettings s(m_data.value(m_index));
             if (!index.column())
                 switch (index.row()) {
                 case 0:
-                    return m_data[m_index].Type;
+                    return s.Type;
                 case 1:
-                    return m_data[m_index].Cipher;
+                    return s.Cipher;
                 case 2:
-                    return m_data[m_index].RatedVoltage;
+                    return s.RatedVoltage;
                 case 3:
-                    return m_data[m_index].NumberOfChannels;
+                    return s.NumberOfChannels;
                 case 4:
-                    return m_data[m_index].RatedCurrent;
+                    return s.RatedCurrent;
                 case 5:
-                    return m_data[m_index].RestrictionTest2;
+                    return s.RestrictionTest2;
                 case 6:
-                    return m_data[m_index].VisualControl;
+                    return s.VisualControl;
                 case 7:
-                    return m_data[m_index].LimitationsTest4_5;
+                    return s.LimitationsTest4_5;
                 case 8:
-                    return m_data[m_index].LimitTest6;
+                    return s.LimitTest6;
                 case 9:
-                    return m_data[m_index].RestrictionsTest7Min;
+                    return s.RestrictionsTest7Min;
                 case 10:
-                    return m_data[m_index].RestrictionsTest7Max;
+                    return s.RestrictionsTest7Max;
                 case 11:
-                    return m_data[m_index].Voltageerrortest5U1;
+                    return s.Voltageerrortest5U1;
                 case 12:
-                    return m_data[m_index].Voltageerrortest3_4U1;
+                    return s.Voltageerrortest3_4U1;
                 case 13:
-                    return m_data[m_index].VoltageErrorTest7;
+                    return s.VoltageErrorTest7;
                 case 14:
-                    return m_data[m_index].ParameterDLTest7;
-
+                    return s.ParameterDLTest7;
                 default:
                     return QVariant();
                 }
             else
                 switch (index.row()) {
                 case 11:
-                    return m_data[m_index].Voltageerrortest5U2;
+                    return s.Voltageerrortest5U2;
                 case 12:
-                    return m_data[m_index].Voltageerrortest3_4U2;
+                    return s.Voltageerrortest3_4U2;
                 default:
                     return QVariant();
                 }

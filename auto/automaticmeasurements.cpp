@@ -58,7 +58,7 @@ void AutomaticMeasurements::showMessage(int num)
                           .arg(DeviceModel::self->scanSettings().Voltageerrortest5U2)
                           .replace('.', ',');
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-            m_worker->FinishMeasurements();
+            on_pbStartStop_clicked(false);
         else
             m_worker->Continue();
         return;
@@ -69,7 +69,7 @@ void AutomaticMeasurements::showMessage(int num)
                           .arg(DeviceModel::self->scanSettings().Voltageerrortest3_4U2)
                           .replace('.', ',');
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-            m_worker->FinishMeasurements();
+            on_pbStartStop_clicked(false);
         else
             m_worker->Continue();
         return;
@@ -77,7 +77,7 @@ void AutomaticMeasurements::showMessage(int num)
         stage = num;
         messageText = "Установите входное напряжение 220±4,4В";
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-            m_worker->FinishMeasurements();
+            on_pbStartStop_clicked(false);
 
         else
             m_worker->Continue();
@@ -85,14 +85,14 @@ void AutomaticMeasurements::showMessage(int num)
     case NO_CONNECTION_WITH_MAN:
         messageText = "Нет связи с МАНом 2!";
         if (QMessageBox::critical(this, "", messageText, "Повторить", "Остановить измерения"))
-            m_worker->FinishMeasurements();
+            on_pbStartStop_clicked(false);
         else
             m_worker->Continue();
         return;
     case RESTORE_THE_OPERATION_OF_CHANNELS:
         messageText = "Восстановите работу каналов блока питания";
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-            m_worker->FinishMeasurements();
+            on_pbStartStop_clicked(false);
         else
             m_worker->Continue();
         return;
@@ -120,7 +120,7 @@ void AutomaticMeasurements::showMessage(int num)
             m_worker->Continue();
             return;
         case 2:
-            m_worker->FinishMeasurements();
+            on_pbStartStop_clicked(false);
             return;
         }
         return;
@@ -141,7 +141,7 @@ void AutomaticMeasurements::showMessage(int num)
                               .arg(DeviceModel::self->scanSettings().Voltageerrortest5U2)
                               .replace('.', ',');
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-                m_worker->FinishMeasurements();
+                on_pbStartStop_clicked(false);
             else
                 m_worker->Continue();
             return;
@@ -151,14 +151,14 @@ void AutomaticMeasurements::showMessage(int num)
                               .arg(DeviceModel::self->scanSettings().Voltageerrortest3_4U2)
                               .replace('.', ',');
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-                m_worker->FinishMeasurements();
+                on_pbStartStop_clicked(false);
             else
                 m_worker->Continue();
             return;
         case 2:
             messageText = "Установите входное напряжение 220±4,4В";
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-                m_worker->FinishMeasurements();
+                on_pbStartStop_clicked(false);
             else
                 m_worker->Continue();
             return;
@@ -211,6 +211,10 @@ void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
     } else {
         pbStartStop->setText("Начать измерения");
         m_worker->FinishMeasurements();
+        for (int i = 0; i < SerNumModel::self->serNumCount(); ++i) {
+            MesureModel::self->saveProtokol(SerNumModel::self->serNum(i), i);
+            MesureModel::self->showProtocol(i);
+        }
     }
 }
 
