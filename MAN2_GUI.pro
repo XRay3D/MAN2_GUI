@@ -25,7 +25,6 @@ TEMPLATE = app
 
 #win32:RC_FILE = myapp.rc
 
-
 SOURCES += \
     auto/automaticmeasurements.cpp \
     communications.cpp \

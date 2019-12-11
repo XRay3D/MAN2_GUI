@@ -69,8 +69,10 @@ double SCPI::GetDcCurrent()
     QMutexLocker locker(&m_mutex);
     if (IsConnected()) {
         WriteRead("MEASure:CURRent:DC?");
-        if (m_data.endsWith("\r\n"))
+        if (m_data.endsWith("\r\n")) {
+            qDebug() << "GetDcCurrent" << m_data;
             return QString(m_data).toDouble();
+        }
     }
     return 0.0;
 }

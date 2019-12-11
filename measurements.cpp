@@ -73,7 +73,7 @@ Measurements::Measurements(QWidget* parent)
 
 void Measurements::on_cbOsc_currentIndexChanged(int index)
 {
-    cbOsc->setCurrentIndex(index);
+    //    cbOsc->setCurrentIndex(index);
     for (int i = 0; i < m_listPbOsc.size(); ++i) {
         if (i == index - 1) {
             m_listPbOsc[i]->setChecked(true);
@@ -185,9 +185,9 @@ void Measurements::PbOscClicked(int channel)
 {
     QPushButton* btn = m_listPbOsc[channel];
     if (btn->isChecked())
-        on_cbOsc_currentIndexChanged(channel + 1);
+        cbOsc->setCurrentIndex(channel + 1); //   on_cbOsc_currentIndexChanged(channel + 1);
     else
-        on_cbOsc_currentIndexChanged(0);
+        cbOsc->setCurrentIndex(0); //        on_cbOsc_currentIndexChanged(0);
 }
 
 void Measurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& list)

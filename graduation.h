@@ -10,12 +10,12 @@ class Graduation : public QWidget, private Ui::Graduation {
     friend class MainWindow;
 
 public:
-    explicit Graduation(QWidget* parent = 0);
+    explicit Graduation(QWidget* parent = nullptr);
 
     ~Graduation();
 
 private:
-    int m_channel = 0;
+    uint8_t m_channel = 0;
     QVector<QCheckBox*> m_chbxs;
 
     // QWidget interface

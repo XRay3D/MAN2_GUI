@@ -170,7 +170,7 @@ void Graduation::on_pbStartGrad_clicked()
             if ((0.04f < GradCoeff.AdcCh1Scale) && (GradCoeff.AdcCh1Scale < 0.06f) && (0.04f < GradCoeff.AdcCh2Scale) && (GradCoeff.AdcCh2Scale < 0.06f))
                 mi::man->SetCalibrationCoefficients(GradCoeff, m_channel);
             else
-                QMessageBox::critical(this, "", "Что-то пошло не так, коэффициенты выходят за пределы!");
+                QMessageBox::critical(this, "", "Коэффициенты выходят за пределы!");
 
             m_chbxs[5]->setChecked(true);
         }
@@ -179,8 +179,8 @@ void Graduation::on_pbStartGrad_clicked()
             Meas1,
             Meas2
         };
-        double measure[2] = { 0.0, 0.0 };
-        double reference[2] = { 0.0, 0.0 };
+        double msr[2] = { 0.0, 0.0 };
+        double ref[2] = { 0.0, 0.0 };
 
         QMessageBox::information(this, "", "Подключите источник тока 3 ампера.");
 
@@ -190,58 +190,63 @@ void Graduation::on_pbStartGrad_clicked()
         m_chbxs[0]->setChecked(true);
         m_chbxs[1]->setChecked(true);
 
-        const double i1 = 0.08;
-        const double i2 = 3.0;
+        const double i1 = 0.1; // A
+        const double i2 = 3.0; // A
 
-        //0.2 A
+        //0.1 A
         mi::man->SetCurrent(i1 * 1000, m_channel);
         mi::man->SwitchCurrent(true, m_channel);
         thread()->sleep(10);
-        mi::man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
         qApp->processEvents();
-        for (int i = 0; i < count; ++i) {
+        mi::man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
+        for (int i = 0; i < count;) {
             mi::man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
-            measure[Meas1] += value.Value1;
-            reference[Meas1] += mi::scpi->GetDcCurrent();
-            dsbxMeasure_1->setValue(measure[Meas1] / (i + 1));
-            dsbxSet_1->setValue(reference[Meas1] / (i + 1));
+            msr[Meas1] += static_cast<double>(value.Value1);
+            ref[Meas1] += mi::scpi->GetDcCurrent();
+            dsbxMeasure_1->setValue(msr[Meas1] / ++i);
+            dsbxSet_1->setValue(ref[Meas1] / i);
             qApp->processEvents();
         }
-        measure[Meas1] /= count;
-        reference[Meas1] /= count;
+        msr[Meas1] /= count;
+        ref[Meas1] /= count;
 
         m_chbxs[2]->setChecked(true);
         m_chbxs[3]->setChecked(true);
         //3 A
         mi::man->SetCurrent(i2 * 1000, m_channel);
         thread()->sleep(10);
-        mi::man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
         qApp->processEvents();
-        for (int i = 0; i < count; ++i) {
+        mi::man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
+        for (int i = 0; i < count;) {
             mi::man->GetMeasuredValue(value, m_channel, CALIB_CURRENT);
-            measure[Meas2] += value.Value1;
-            reference[Meas2] += mi::scpi->GetDcCurrent();
-            dsbxMeasure_1->setValue(measure[Meas2] / (i + 1));
-            dsbxSet_1->setValue(reference[Meas2] / (i + 1));
+            msr[Meas2] += static_cast<double>(value.Value1);
+            ref[Meas2] += mi::scpi->GetDcCurrent();
+            dsbxMeasure_1->setValue(msr[Meas2] / ++i);
+            dsbxSet_1->setValue(ref[Meas2] / i);
             qApp->processEvents();
         }
-        measure[Meas2] /= count;
-        reference[Meas2] /= count;
+        msr[Meas2] /= count;
+        ref[Meas2] /= count;
 
         mi::man->SetCurrent(0, m_channel);
         mi::man->SwitchCurrent(false, m_channel);
 
-        GradCoeff.AdcCh3Scale = ((reference[Meas2] - reference[Meas1]) / (measure[Meas2] - measure[Meas1])) * 0.01;
-        GradCoeff.DacOffset = (i1 - reference[Meas1]) /*- 0.00075*/ /*- (3 - dValue2) / 2*/;
-        GradCoeff.DacScale = ((i2 - i1) / (reference[Meas2] - reference[Meas1])) * 36000.0;
+        const double scale = (i2 - i1) / (ref[Meas2] - ref[Meas1]);
+        GradCoeff.AdcCh3Scale = static_cast<float>(((ref[Meas2] - ref[Meas1]) / (msr[Meas2] - msr[Meas1])) * 0.01);
+        GradCoeff.DacOffset = static_cast<float>((i1 / scale) - ref[Meas1]);
+        GradCoeff.DacScale = static_cast<float>(scale * 36000.0);
         m_chbxs[4]->setChecked(true);
+
+        qDebug() << "AdcCh3Scale" << GradCoeff.AdcCh3Scale;
+        qDebug() << "DacOffset" << GradCoeff.DacOffset;
+        qDebug() << "DacScale" << GradCoeff.DacScale;
 
         if ((0.009f < GradCoeff.AdcCh3Scale) && (GradCoeff.AdcCh3Scale < 0.011f)
             && (0.0f < GradCoeff.DacOffset) && (GradCoeff.DacOffset < 0.1f)
             && (35000.0f < GradCoeff.DacScale) && (GradCoeff.DacScale < 37000.0f))
             mi::man->SetCalibrationCoefficients(GradCoeff, m_channel);
         else
-            QMessageBox::critical(this, "", "Что-то пошло не так, коэффициенты выходят за пределы!");
+            QMessageBox::critical(this, "", "Коэффициенты выходят за пределы!");
 
         m_chbxs[5]->setChecked(true);
     }

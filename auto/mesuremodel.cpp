@@ -189,6 +189,7 @@ void MesureModel::saveProtokol(const QString& serialNumber, int number)
 
     const int rowCount = DeviceModel::self->scanSettings().NumberOfChannels;
 
+    bool ok = true;
     for (int row = 0; row < rowCount; ++row) {
         bool flags[7] = { false, false, false, false, false, false, false };
         QString str;
@@ -277,9 +278,13 @@ void MesureModel::saveProtokol(const QString& serialNumber, int number)
                             .arg(flags[4] ? "; color:red" : "")
                             .arg(flags[5] ? "; color:red" : "")
                             .arg(flags[6] ? "; color:red" : ""));
+        ok = ok && !flags[0] && !flags[1] && !flags[2] && !flags[3] && !flags[4] && !flags[5] && !flags[6];
     }
+
     protocol.append(strBot.arg(QDate::currentDate().toString("dd.MM.yyyy"))
-                        .arg(DeviceModel::self->scanSettings().Fio));
+                        .arg(DeviceModel::self->scanSettings().Fio)
+                        .arg(!ok ? "; color:red" : "")
+                        .arg(ok ? "Прибор соответствует требованиям ТУ" : "Прибор не соответствует требованиям ТУ"));
 
     QString path = qApp->applicationDirPath()
                        .append("/")

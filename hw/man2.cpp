@@ -4,15 +4,15 @@
 #include <QSerialPortInfo>
 #include <QTimer>
 
-#define Dbg 0
+#define Dbg 1
 #define Emu 0
 
 enum { ChannelCount = 8 };
 
-int id1 = qRegisterMetaType<MeasuredValue_t>("MeasuredValue_t");
-int id2 = qRegisterMetaType<ValuetypeEnum>("ValuetypeEnum");
-int id3 = qRegisterMetaType<uint8_t>("uint8_t");
-int id5 = qRegisterMetaType<QMap<int, MeasuredValue_t>>("QMap<int, MeasuredValue_t>");
+const int id1 = qRegisterMetaType<MeasuredValue_t>("MeasuredValue_t");
+const int id2 = qRegisterMetaType<ValuetypeEnum>("ValuetypeEnum");
+const int id3 = qRegisterMetaType<uint8_t>("uint8_t");
+const int id5 = qRegisterMetaType<QMap<int, MeasuredValue_t>>("QMap<int, MeasuredValue_t>");
 
 MAN2::MAN2(QObject* parent)
     : QObject(parent)
@@ -53,7 +53,7 @@ bool MAN2::Ping(const QString& PortName)
         if (!m_semaphore.tryAcquire(1, 1000))
             break;
         emit Write(Parcel(PING));
-        if (!m_semaphore.tryAcquire(ChannelCount + 1, 1000)) {
+        if (!m_semaphore.tryAcquire(ChannelCount + 1, 1000)) { /////////////////////////////// witout rms
             emit Close();
             break;
         }
@@ -129,7 +129,7 @@ bool MAN2::GetMeasuredValue(QList<MeasuredValue_t>& value, ValuetypeEnum type)
 
 double MAN2::GetRmsValue()
 {
-    if (Emu) {
+    if (Emu) { //////////////////////////////////////////////////////////////////////
         return 220.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
     }
     QMutexLocker Locker(&m_mutex);
@@ -152,7 +152,7 @@ bool MAN2::SetCurrent(float Current, uint8_t channel)
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
-        Current /= 1000.0;
+        Current /= 1000.0f;
         emit Write(Parcel(SET_CURRENT, Current, channel));
         const int delay[] = { 5000, 500 };
         if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delay[channel == 0 ? 0 : 1]))
@@ -228,13 +228,15 @@ bool MAN2::SetDefaultCalibrationCoefficients(uint8_t channel)
     }
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
-        Reset();
-        emit Write(Parcel(SET_DEFAULT_CALIBRATION_COEFFICIENTS, channel));
-        if (m_semaphore.tryAcquire(1, 500)) {
+        if (channel == 9) {
+            m_rmsCoeff.AdcCh1Offset = 0.0;
+            m_rmsCoeff.AdcCh2Offset = 1.0;
             m_result = true;
-            if (channel == 9) {
-                m_rmsCoeff.AdcCh1Offset = 0.0;
-                m_rmsCoeff.AdcCh2Offset = 1.0;
+        } else {
+            Reset();
+            emit Write(Parcel(SET_DEFAULT_CALIBRATION_COEFFICIENTS, channel));
+            if (m_semaphore.tryAcquire(1, 500)) {
+                m_result = true;
             }
         }
     }
@@ -360,8 +362,7 @@ void MAN2::Reset()
 
 void MAN2::RxPing(const Parcel_t& data)
 {
-    if (Dbg)
-        qDebug() << "PING" << data.addres;
+    qDebug() << "PING" << data.addres;
     Q_UNUSED(data)
     m_semaphore.release();
 }
@@ -580,6 +581,7 @@ void SerialPort::Close()
 
 void SerialPort::Write(const QByteArray& data)
 {
+    //qDebug() << "Write" << data.toHex().toUpper();
     write(data);
 }
 
@@ -592,6 +594,7 @@ void SerialPort::ReadyRead()
         if (parcel->start == RX) {
             if ((parcel->length + i) <= m_data.size()) {
                 m_tmpData = m_data.mid(i, parcel->length);
+                //qDebug() << "Read" << m_tmpData.toHex().toUpper();
                 if (CheckData(m_tmpData))
                     (m_man->*m_f[parcel->command])(*parcel);
                 else {
