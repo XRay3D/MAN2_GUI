@@ -4,7 +4,7 @@
 #include <QSerialPortInfo>
 #include <QTimer>
 
-#define Dbg 1
+#define Dbg 0
 #define Emu 0
 
 enum { ChannelCount = 8 };

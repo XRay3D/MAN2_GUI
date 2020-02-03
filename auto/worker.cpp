@@ -271,7 +271,7 @@ void Worker::Test7()
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
         Msleep(100);
-        while (!mi::man->GetMeasuredValue(m_list))
+        while (!mi::man->GetMeasuredValue(m_list, RAW_DATA))
             WaitSolutionOrEnd(NO_CONNECTION_WITH_MAN);
 
         MesureModel::self->setTest7(m_list);

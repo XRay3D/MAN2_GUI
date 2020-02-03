@@ -43,12 +43,12 @@ Measurements::Measurements(QWidget* parent)
     QPen pen(axisY->gridLinePen().color(), 0.0, Qt::DotLine);
     axisY->setMinorGridLinePen(pen);
     axisY->setMinorTickCount(4);
-    chart->setAxisY(axisY);
+    chart->addAxis(axisY, Qt::AlignLeft);
 
     QDateTimeAxis* axisX = new QDateTimeAxis;
     axisX->setFormat("h:mm:ss");
     axisX->setTickCount(7);
-    chart->setAxisX(axisX);
+    chart->addAxis(axisX, Qt::AlignBottom);
     for (int i = 0; i < 8; ++i) {
         QLineSeries* series = new QLineSeries(chart);
         m_series.append(series);
@@ -229,37 +229,36 @@ void Measurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& list)
     }
     if (flag) {
         if (m_series[0]->count() == MaxCount)
-            m_minX = QDateTime::fromMSecsSinceEpoch(m_series[0]->at(0).x());
+            m_minX = QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(m_series[0]->at(0).x()));
 
-        graphicsView->chart()->axisX()->setRange(m_minX, m_keyX);
-        graphicsView->chart()->axisY()->setRange(minY, maxY);
+        graphicsView->chart()->axes(Qt::Horizontal).at(0) /*axisX()*/->setRange(m_minX, m_keyX);
+        graphicsView->chart()->axes(Qt::Vertical).at(0) /*axisY()*/->setRange(minY, maxY);
     }
     //    qDebug() << "GetMeasuredValueSlot" << timer.elapsed();
     m_keyX = QDateTime::currentDateTime();
     m_semaphore.release();
 }
 
-void Measurements::showEvent(QShowEvent* event)
+void Measurements::showEvent(QShowEvent* /*event*/)
 {
-    Q_UNUSED(event);
-    qDebug() << "showEvent";
     if (mi::man->IsConnected()) {
         QList<MeasuredValue_t> list;
         if (mi::man->GetMeasuredValue(list)) {
             m_disableSlots = true;
             for (int i = 0; i < list.size(); ++i) {
-                m_listDsbVoltage[i]->setValue(list[i].Value1);
-                m_listDsbCurrent[i]->setValue(list[i].Value2);
-                m_listDsbSetCurrent[i]->setValue(list[i].Value3);
+                const auto& mv = list[i];
+                m_listDsbVoltage[i]->setValue(static_cast<double>(mv.Value1));
+                m_listDsbCurrent[i]->setValue(static_cast<double>(mv.Value2));
+                m_listDsbSetCurrent[i]->setValue(static_cast<double>(mv.Value3));
 
-                m_listPbCurrent[i]->setChecked(list[i].ManState.Load);
-                m_listPbCurrent[i]->setText(list[i].ManState.Load ? "Выкл." : "Вкл.");
+                m_listPbCurrent[i]->setChecked(mv.ManState.Load);
+                m_listPbCurrent[i]->setText(mv.ManState.Load ? "Выкл." : "Вкл.");
 
-                m_listPbShort[i]->setChecked(list[i].ManState.ShortCircuit);
-                m_listPbShort[i]->setText(list[i].ManState.ShortCircuit ? "Выкл." : "Вкл.");
+                m_listPbShort[i]->setChecked(mv.ManState.ShortCircuit);
+                m_listPbShort[i]->setText(mv.ManState.ShortCircuit ? "Выкл." : "Вкл.");
 
-                m_listPbOsc[i]->setChecked(list[i].ManState.Oscilloscope);
-                m_listPbOsc[i]->setText(list[i].ManState.Oscilloscope ? "Выкл." : "Вкл.");
+                m_listPbOsc[i]->setChecked(mv.ManState.Oscilloscope);
+                m_listPbOsc[i]->setText(mv.ManState.Oscilloscope ? "Выкл." : "Вкл.");
             }
             m_disableSlots = false;
         }
@@ -270,9 +269,8 @@ void Measurements::showEvent(QShowEvent* event)
     setEnabled(false);
 }
 
-void Measurements::hideEvent(QHideEvent* event)
+void Measurements::hideEvent(QHideEvent* /*event*/)
 {
-    Q_UNUSED(event);
     on_pbStart_clicked(false);
     disconnect(this, &Measurements::StartMeasure, mi::man, &MAN2::GetMeasuredValueSlot);
     disconnect(mi::man, &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
@@ -281,7 +279,6 @@ void Measurements::hideEvent(QHideEvent* event)
 void Measurements::GbChanneClicked(int channel)
 {
     graphicsView->chart()->series()[channel]->setVisible(m_listGroupBox[channel]->isChecked());
-
     m_listPbCurrent[channel]->setEnabled(true);
     m_listPbShort[channel]->setEnabled(true);
     m_listPbOsc[channel]->setEnabled(true);

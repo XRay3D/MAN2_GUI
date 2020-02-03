@@ -23,6 +23,8 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 TARGET = MAN2_GUI
 TEMPLATE = app
 
+win32:RC_FILE = main_icon/myapp.rc
+
 #win32:RC_FILE = myapp.rc
 
 SOURCES += \

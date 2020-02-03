@@ -32,10 +32,17 @@ QVariant ManDataModel::data(const QModelIndex& index, int role) const
         }
     case Qt::TextAlignmentRole:
         return Qt::AlignCenter;
-    default:
-        QVariant();
+    case Qt::FontRole:
+        if (index.row() == 2) {
+            QFont f;
+            f.setPointSize(40);
+            return f;
+        }
+        return {};
+    default: {
     }
-    return QVariant();
+    }
+    return {};
 }
 
 Qt::ItemFlags ManDataModel::flags(const QModelIndex& /*index*/) const
@@ -69,7 +76,7 @@ QVariant ManDataModel::headerData(int section, Qt::Orientation orientation, int 
         else
             switch (section) {
             case 0:
-                return "Входное\nнапряжение";
+                return "Выходное\nнапряжение";
             case 1:
                 return "Ток\nнагрузки";
             case 2:

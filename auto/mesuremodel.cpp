@@ -151,7 +151,7 @@ void MesureModel::setTest6(int ch, double value)
 void MesureModel::setTest7(const QList<MeasuredValue_t>& list)
 {
     for (int i = 0; i < list.size(); ++i)
-        m_data[i].test7 = list[i].Value1;
+        m_data[i].test7 = std::min(list[i].Value1, list[i].Value2);
     dataChanged(createIndex(6, 0), createIndex(6, 7), { Qt::DisplayRole });
 }
 
@@ -167,9 +167,9 @@ void MesureModel::saveProtokol(const QString& serialNumber, int number)
     qDebug() << fileBot.open(QFile::ReadOnly);
 
     QString protocol;
-    QString strTop = QString().fromLocal8Bit(fileTop.readAll());
-    QString strRow = QString().fromLocal8Bit(fileRow.readAll());
-    QString strBot = QString().fromLocal8Bit(fileBot.readAll());
+    QString strTop(QString().fromLocal8Bit(fileTop.readAll()));
+    QString strRow(QString().fromLocal8Bit(fileRow.readAll()));
+    QString strBot(QString().fromLocal8Bit(fileBot.readAll()));
 
     fileTop.close();
     fileRow.close();
@@ -316,6 +316,4 @@ void MesureModel::showProtocol(int num)
     }
     MyDialog* Dialog = new MyDialog(reinterpret_cast<QWidget*>(parent()), m_serNum[num]);
     Dialog->LoadFile(m_paths[num]);
-    // Dialog->exec();
-    // Dialog->deleteLater();
 }

@@ -23,9 +23,9 @@ int main(int argc, char* argv[])
     //    w.setFont(QFont(QFontDatabase::applicationFontFamilies(f_id).first()));
     //    int f_id = QFontDatabase::addApplicationFont(":/ubuntu-font-family-0.83/Ubuntu-R.ttf");
     //    QFont f(QFontDatabase::applicationFontFamilies(f_id).first());
-//    QFont f;
-//    f.setPointSize(12);
-//    a.setFont(f);
+    QFont f;
+    f.setPointSize(12);
+    a.setFont(f);
 
     mi mi_;
     Q_UNUSED(mi_)
