@@ -6,10 +6,11 @@
 
 class DeviceModel : public QAbstractTableModel {
     Q_OBJECT
+    static DeviceModel* instance;
+
 public:
     explicit DeviceModel(QObject* parent = nullptr);
-    ~DeviceModel();
-    static DeviceModel* self;
+    ~DeviceModel() override;
 
     // QAbstractItemModel interface
 public:
@@ -19,11 +20,11 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    QList<QString> cbxData() const;
+    static QList<QString> cbxData();
 
-    int index() const;
-    void setIndex(int index);
-    ScanSettings scanSettings() { return m_data.value(m_index); }
+    static int index();
+    static void setIndex(int index);
+    static ScanSettings scanSettings();
 
 private:
     QList<ScanSettings> m_data;

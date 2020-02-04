@@ -1,19 +1,19 @@
 #ifndef MY_PROTOCOL_H
 #define MY_PROTOCOL_H
 
-#include <QObject>
-#include <QVector>
-#include <QDebug>
-#include <QThread>
-#include <QSerialPort>
-#include <stdint.h>
-#include <QComboBox>
-#include <QSemaphore>
-#include <QMutex>
-#include <QWaitCondition>
-#include <QElapsedTimer>
 #include "common_interfaces.h"
 #include "myprotokol.h"
+#include <QComboBox>
+#include <QDebug>
+#include <QElapsedTimer>
+#include <QMutex>
+#include <QObject>
+#include <QSemaphore>
+#include <QSerialPort>
+#include <QThread>
+#include <QVector>
+#include <QWaitCondition>
+#include <stdint.h>
 
 enum StateEnum {
     Off,
@@ -135,7 +135,7 @@ public:
     bool SwitchCurrent(uint8_t Enable, uint8_t Channel = 0);
     bool TripCurrentTest();
     bool ShortCircuitTest(uint8_t Enable, uint8_t Channel = 0);
-    bool Oscilloscope(uint8_t Channel);
+    bool Oscilloscope(int Channel);
     bool SetDefaultCalibrationCoefficients(uint8_t Channel);
     bool GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t Channel);
     bool SetCalibrationCoefficients(const GradCoeff_t& GradCoeff, uint8_t Channel);

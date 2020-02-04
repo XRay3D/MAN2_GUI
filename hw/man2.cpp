@@ -5,7 +5,6 @@
 #include <QTimer>
 
 #define Dbg 0
-#define Emu 0
 
 enum { ChannelCount = 8 };
 
@@ -206,7 +205,7 @@ bool MAN2::ShortCircuitTest(uint8_t Enable, uint8_t channel)
     return m_result;
 }
 
-bool MAN2::Oscilloscope(uint8_t channel)
+bool MAN2::Oscilloscope(int channel)
 {
     if (Emu) {
         return true;
@@ -214,7 +213,7 @@ bool MAN2::Oscilloscope(uint8_t channel)
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
-        emit Write(Parcel(OSCILLOSCOPE, channel));
+        emit Write(Parcel(OSCILLOSCOPE, static_cast<uint8_t>(channel)));
         if (m_semaphore.tryAcquire(ChannelCount, 500))
             m_result = true;
     }

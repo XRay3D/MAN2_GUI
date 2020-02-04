@@ -24,9 +24,10 @@ PrepareForm::PrepareForm(QWidget* parent)
     tvParams->setSpan(13, 0, 1, 2);
     tvParams->setSpan(14, 0, 1, 2);
     tvParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tvParams->horizontalHeader()->setVisible(false);
     tvParams->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 
-    cbxDevice->addItems(DeviceModel::self->cbxData());
+    cbxDevice->addItems(DeviceModel::cbxData());
 
     tvSerNum->setModel(SerNumModel::self);
     tvSerNum->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -36,8 +37,9 @@ PrepareForm::PrepareForm(QWidget* parent)
     connect(pbStatrtMeasure, &QPushButton::clicked, this, &PrepareForm::statrtMeasure_clicked);
     //connect(cbxDevice, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), DeviceModel::self, &DeviceModel::setIndex);
     connect(cbxDevice, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [](int index) {
-        DeviceModel::self->setIndex(index);
-        SerNumModel::self->setCount(8 / DeviceModel::self->scanSettings().NumberOfChannels);
+        DeviceModel::setIndex(index);
+        if (DeviceModel::scanSettings().NumberOfChannels > 0)
+            SerNumModel::self->setCount(8 / DeviceModel::scanSettings().NumberOfChannels);
     });
 }
 

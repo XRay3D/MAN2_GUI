@@ -11,37 +11,30 @@
 #include <shdocvw.h>
 
 enum {
-    SET_INPUT_VOLTAGE_0,
-    SET_INPUT_VOLTAGE_1,
-    SET_INPUT_VOLTAGE_2,
-    NO_CONNECTION_WITH_MAN,
-    RESTORE_THE_OPERATION_OF_CHANNELS,
-    PULSATIONS_ON_THE_CHANNEL_1,
-    PULSATIONS_ON_THE_CHANNEL_2,
-    PULSATIONS_ON_THE_CHANNEL_3,
-    PULSATIONS_ON_THE_CHANNEL_4,
-    PULSATIONS_ON_THE_CHANNEL_5,
-    PULSATIONS_ON_THE_CHANNEL_6,
-    PULSATIONS_ON_THE_CHANNEL_7,
-    PULSATIONS_ON_THE_CHANNEL_8,
-    TEST_1,
-    TEST_2,
-    TEST_3,
-    TEST_4,
-    TEST_5,
-    TEST_6,
-    TEST_7,
-    CHECK_INPUT_VOLTAGE
+    SetInputVoltageUpper,
+    SetInputVoltageLower,
+    SetInputVoltageNormal,
+    NoConnectionWithMan,
+    RestoreTheOperationOfChannels,
+    PulsationsOnTheChannel_1,
+    PulsationsOnTheChannel_2,
+    PulsationsOnTheChannel_3,
+    PulsationsOnTheChannel_4,
+    PulsationsOnTheChannel_5,
+    PulsationsOnTheChannel_6,
+    PulsationsOnTheChannel_7,
+    PulsationsOnTheChannel_8,
+    CheckInputVoltage
 };
 
 class Worker;
-class ManDataModel;
+class ManModel;
 
 class AutomaticMeasurements : public QWidget, private Ui::AutomaticMeasurements {
     Q_OBJECT
 
 public:
-    explicit AutomaticMeasurements(QWidget* parent = 0);
+    explicit AutomaticMeasurements(QWidget* parent = nullptr);
     ~AutomaticMeasurements();
 
 signals:
@@ -62,7 +55,7 @@ private:
 
     QTimer m_timerRms;
 
-    ManDataModel* m_model;
+    ManModel* m_model;
 
 private slots:
     void on_pbStartStop_clicked(bool checked);

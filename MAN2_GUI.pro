@@ -18,7 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
+DEFINES += "Emu=0"
 
 TARGET = MAN2_GUI
 TEMPLATE = app
@@ -29,6 +29,7 @@ win32:RC_FILE = main_icon/myapp.rc
 
 SOURCES += \
     auto/automaticmeasurements.cpp \
+    auto/manmodel.cpp \
     communications.cpp \
     graduation.cpp \
     main.cpp \
@@ -45,12 +46,12 @@ SOURCES += \
     preparation/devicemodel.cpp \
     preparation/prepareform.cpp \
     preparation/sernummodel.cpp \
-    auto/mandatamodel.cpp \
     auto/mesuremodel.cpp
 
 
 HEADERS  += \
     auto/automaticmeasurements.h \
+    auto/manmodel.h \
     communications.h \
     graduation.h \
     mainwindow.h \
@@ -68,7 +69,6 @@ HEADERS  += \
     preparation/devicemodel.h \
     preparation/prepareform.h \
     preparation/sernummodel.h \
-    auto/mandatamodel.h \
     auto/mesuremodel.h
 
 

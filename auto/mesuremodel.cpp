@@ -9,21 +9,21 @@
 
 #include <preparation/devicemodel.h>
 
-int id4 = qRegisterMetaType<QVector<int>>("QVector<int>");
+const int id4 = qRegisterMetaType<QVector<int>>("QVector<int>");
 
-MesureModel* MesureModel::self = nullptr;
+MesureModel* MesureModel::instance = nullptr;
 
 MesureModel::MesureModel(QObject* parent)
     : QAbstractTableModel(parent)
     , m_paths(8)
     , m_serNum(8)
 {
-    self = this;
+    instance = this;
 }
 
 MesureModel::~MesureModel()
 {
-    self = nullptr;
+    instance = nullptr;
 }
 
 int MesureModel::rowCount(const QModelIndex& /*parent*/) const
@@ -44,7 +44,14 @@ QVariant MesureModel::data(const QModelIndex& index, int role) const
         case 0:
             return m_data[index.column()].test1;
         case 1:
-            return m_data[index.column()].test2;
+            switch (m_data[index.column()].test2) {
+            case Result_t::Undefined:
+                return "";
+            case Result_t::True:
+                return "в норме";
+            case Result_t::False:
+                return "отказ";
+            }
         case 2:
             return m_data[index.column()].test3;
         case 3:
@@ -74,7 +81,10 @@ QVariant MesureModel::data(const QModelIndex& index, int role) const
             return "Срабатывание электронной защиты при коротком замыкании";
         }
     case Qt::BackgroundColorRole:
-        return QVariant();
+        if (m_currentTest == index.row())
+            return QColor(255, 127, 127);
+        else
+            return QVariant();
     case Qt::TextAlignmentRole:
         return Qt::AlignCenter;
     }
@@ -88,7 +98,34 @@ QVariant MesureModel::headerData(int section, Qt::Orientation orientation, int r
         if (orientation == Qt::Horizontal)
             return QString("Канал №%1").arg(section + 1);
         else
-            return QString("Тест №%1").arg(section + 1);
+            switch (section) {
+            case 0:
+                return "Измерение выходного\n"
+                       "напряжения при номинальной\n"
+                       "нагрузке и входном напряжении 220В.";
+            case 1:
+                return "Проверка пульсаций\n"
+                       "выходного напряжения  при\n"
+                       "номинальной нагрузке и входном напряжении 130В.";
+            case 2:
+                return "Измерение отклонения\n"
+                       "выходного напряжения от номинального\n"
+                       "при номинальной нагрузке и входном напряжении 130В.";
+            case 3:
+                return "Измерение отклонения\n"
+                       "выходного напряжения от номинального\n"
+                       "при номинальной нагрузке и входном напряжении 250В.";
+            case 4:
+                return "Измерение отклонения\n"
+                       "выходного напряжения холостого хода\n"
+                       "от номинального при входном напряжении 220В.";
+            case 5:
+                return "Ток срабатывания\n"
+                       "электронной защиты";
+            case 6:
+                return "Срабатывание\n"
+                       "электронной защиты при коротком замыкании";
+            }
     }
     return QVariant();
 }
@@ -100,64 +137,88 @@ Qt::ItemFlags MesureModel::flags(const QModelIndex& /*index*/) const
 
 void MesureModel::reset()
 {
+    if (!instance)
+        return;
     for (int i = 0; i < 8; ++i) {
-        m_data[i].reset();
-        m_paths[i].clear();
-        m_serNum[i].clear();
+        instance->m_data[i].reset();
+        instance->m_paths[i].clear();
+        instance->m_serNum[i].clear();
     }
-    dataChanged(createIndex(0, 0), createIndex(6, 7), { Qt::DisplayRole });
+    instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(6, 7), { Qt::DisplayRole });
+}
+
+void MesureModel::setCurrentTest(int val)
+{
+    if (!instance)
+        return;
+    instance->m_currentTest = val;
+    instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(6, 7));
 }
 
 void MesureModel::setTest1(const QList<MeasuredValue_t>& list)
 {
+    if (!instance)
+        return;
     for (int i = 0; i < list.size(); ++i)
-        m_data[i].test1 = list[i].Value1;
-    dataChanged(createIndex(0, 0), createIndex(0, 7), { Qt::DisplayRole });
+        instance->m_data[i].test1 = static_cast<double>(list[i].Value1);
+    instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(0, 7), { Qt::DisplayRole });
 }
 
 void MesureModel::setTest2(int ch, bool result)
 {
-    m_data[ch].test2 = result;
-    dataChanged(createIndex(1, ch), createIndex(1, ch), { Qt::DisplayRole });
+    if (!instance)
+        return;
+    instance->m_data[ch].test2 = result ? Result_t::True : Result_t::False;
+    instance->dataChanged(instance->createIndex(1, ch), instance->createIndex(1, ch), { Qt::DisplayRole });
 }
 
 void MesureModel::setTest3(const QList<MeasuredValue_t>& list)
 {
+    if (!instance)
+        return;
     for (int i = 0; i < list.size(); ++i)
-        m_data[i].test3 = list[i].Value1;
-    dataChanged(createIndex(2, 0), createIndex(2, 7), { Qt::DisplayRole });
+        instance->m_data[i].test3 = static_cast<double>(list[i].Value1);
+    instance->dataChanged(instance->createIndex(2, 0), instance->createIndex(2, 7), { Qt::DisplayRole });
 }
 
 void MesureModel::setTest4(const QList<MeasuredValue_t>& list)
 {
+    if (!instance)
+        return;
     for (int i = 0; i < list.size(); ++i)
-        m_data[i].test4 = list[i].Value1;
-    dataChanged(createIndex(3, 0), createIndex(3, 7), { Qt::DisplayRole });
+        instance->m_data[i].test4 = static_cast<double>(list[i].Value1);
+    instance->dataChanged(instance->createIndex(3, 0), instance->createIndex(3, 7), { Qt::DisplayRole });
 }
 
 void MesureModel::setTest5(const QList<MeasuredValue_t>& list)
 {
+    if (!instance)
+        return;
     for (int i = 0; i < list.size(); ++i)
-        m_data[i].test5 = list[i].Value1;
-    dataChanged(createIndex(4, 0), createIndex(4, 7), { Qt::DisplayRole });
+        instance->m_data[i].test5 = static_cast<double>(list[i].Value1);
+    instance->dataChanged(instance->createIndex(4, 0), instance->createIndex(4, 7), { Qt::DisplayRole });
 }
 
 void MesureModel::setTest6(int ch, double value)
 {
-    m_data[ch].test6 = value;
-    dataChanged(createIndex(5, ch), createIndex(5, ch), { Qt::DisplayRole });
+    if (!instance)
+        return;
+    instance->m_data[ch].test6 = value;
+    instance->dataChanged(instance->createIndex(5, ch), instance->createIndex(5, ch), { Qt::DisplayRole });
 }
 
 void MesureModel::setTest7(const QList<MeasuredValue_t>& list)
 {
+    if (!instance)
+        return;
     for (int i = 0; i < list.size(); ++i)
-        m_data[i].test7 = std::min(list[i].Value1, list[i].Value2);
-    dataChanged(createIndex(6, 0), createIndex(6, 7), { Qt::DisplayRole });
+        instance->m_data[i].test7 = static_cast<double>(std::min(list[i].Value1, list[i].Value2));
+    instance->dataChanged(instance->createIndex(6, 0), instance->createIndex(6, 7), { Qt::DisplayRole });
 }
 
 void MesureModel::saveProtokol(const QString& serialNumber, int number)
 {
-    m_serNum[number] = serialNumber;
+    instance->m_serNum[number] = serialNumber;
     QFile fileTop("Шапка.htm");
     QFile fileRow("Строка.htm");
     QFile fileBot("Подвал.htm");
@@ -175,19 +236,19 @@ void MesureModel::saveProtokol(const QString& serialNumber, int number)
     fileRow.close();
     fileBot.close();
 
-    protocol.append(strTop.arg(DeviceModel::self->scanSettings().Cipher)
+    protocol.append(strTop.arg(DeviceModel::scanSettings().Cipher)
                         .arg(serialNumber)
-                        .arg(QString::number(DeviceModel::self->scanSettings().RatedVoltage - DeviceModel::self->scanSettings().RestrictionTest2).replace('.', ','))
-                        .arg(QString::number(DeviceModel::self->scanSettings().RatedVoltage + DeviceModel::self->scanSettings().RestrictionTest2).replace('.', ','))
-                        .arg(QString::number(DeviceModel::self->scanSettings().VisualControl).replace('.', ','))
-                        .arg(QString::number(DeviceModel::self->scanSettings().LimitationsTest4_5).replace('.', ','))
-                        .arg(QString::number(DeviceModel::self->scanSettings().LimitationsTest4_5).replace('.', ','))
-                        .arg(QString::number(DeviceModel::self->scanSettings().RestrictionsTest7Min).replace('.', ','))
-                        .arg(QString::number(DeviceModel::self->scanSettings().RestrictionsTest7Max).replace('.', ','))
-                        .arg(QString::number(DeviceModel::self->scanSettings().Voltageerrortest3_4U1).replace('.', ','))
-                        .arg(QString::number(DeviceModel::self->scanSettings().Voltageerrortest5U1).replace('.', ',')));
+                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage - DeviceModel::scanSettings().RestrictionTest2).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage + DeviceModel::scanSettings().RestrictionTest2).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().VisualControl).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().LimitationsTest4_5).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().LimitationsTest4_5).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().RestrictionsTest7Min).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().RestrictionsTest7Max).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().Voltageerrortest3_4U1).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().Voltageerrortest5U1).replace('.', ',')));
 
-    const int rowCount = DeviceModel::self->scanSettings().NumberOfChannels;
+    const int rowCount = DeviceModel::scanSettings().NumberOfChannels;
 
     bool ok = true;
     for (int row = 0; row < rowCount; ++row) {
@@ -202,46 +263,46 @@ void MesureModel::saveProtokol(const QString& serialNumber, int number)
                 str = QString::number(row + 1);
                 break;
             case 1:
-                val = m_data[row + number * rowCount].test1;
+                val = instance->m_data[row + number * rowCount].test1;
                 str = QString::number(val, 'f', 4).replace('.', ',');
-                if (qAbs(DeviceModel::self->scanSettings().RatedVoltage - val) > DeviceModel::self->scanSettings().RestrictionTest2) {
+                if (qAbs(DeviceModel::scanSettings().RatedVoltage - val) > DeviceModel::scanSettings().RestrictionTest2) {
                     flags[col - 1] = true;
                 }
                 break;
-            case 2:
-                val = m_data[row + number * rowCount].test2;
-                if (val > 0) {
+            case 2: {
+                int val = instance->m_data[row + number * rowCount].test2;
+                if (val == Result_t::True) {
                     str = "в норме";
                 } else {
                     flags[col - 1] = true;
                     str = "отказ";
                 }
-                break;
+            } break;
             case 3:
-                val = m_data[row + number * rowCount].test1 - m_data[row + number * rowCount].test3;
+                val = instance->m_data[row + number * rowCount].test1 - instance->m_data[row + number * rowCount].test3;
                 str = QString::number(val, 'f', 4).replace('.', ',');
-                if (qAbs(val) > DeviceModel::self->scanSettings().LimitationsTest4_5) {
+                if (qAbs(val) > DeviceModel::scanSettings().LimitationsTest4_5) {
                     flags[col - 1] = true;
                 }
                 break;
             case 4:
-                val = m_data[row + number * rowCount].test1 - m_data[row + number * rowCount].test4;
+                val = instance->m_data[row + number * rowCount].test1 - instance->m_data[row + number * rowCount].test4;
                 str = QString::number(val, 'f', 4).replace('.', ',');
-                if (qAbs(val) > DeviceModel::self->scanSettings().LimitationsTest4_5) {
+                if (qAbs(val) > DeviceModel::scanSettings().LimitationsTest4_5) {
                     flags[col - 1] = true;
                 }
                 break;
             case 5:
-                val = m_data[row + number * rowCount].test1 - m_data[row + number * rowCount].test5;
+                val = instance->m_data[row + number * rowCount].test1 - instance->m_data[row + number * rowCount].test5;
                 str = QString::number(val, 'f', 4).replace('.', ',');
-                if (qAbs(val) > DeviceModel::self->scanSettings().LimitationsTest4_5) {
+                if (qAbs(val) > DeviceModel::scanSettings().LimitationsTest4_5) {
                     flags[col - 1] = true;
                 }
                 break;
             case 6:
-                val = m_data[row + number * rowCount].test6;
+                val = instance->m_data[row + number * rowCount].test6;
                 str = QString::number(val, 'f', 1).replace('.', ',');
-                if ((DeviceModel::self->scanSettings().RestrictionsTest7Min) > val || val > (DeviceModel::self->scanSettings().RestrictionsTest7Max)) {
+                if (DeviceModel::scanSettings().RestrictionsTest7Min > val || val > DeviceModel::scanSettings().RestrictionsTest7Max) {
                     flags[col - 1] = true;
                 }
                 if (0.0 > val) {
@@ -250,11 +311,12 @@ void MesureModel::saveProtokol(const QString& serialNumber, int number)
                 }
                 break;
             case 7:
-                val = m_data[row + number * rowCount].test7;
-                str = QString::number(val, 'f', 3).replace('.', ',');
-                if (val > DeviceModel::self->scanSettings().VoltageErrorTest7) {
+                val = instance->m_data[row + number * rowCount].test7;
+                if (val > DeviceModel::scanSettings().VoltageErrorTest7) {
                     flags[col - 1] = true;
-                    //str = "отказ";
+                    str = "отказ";
+                } else {
+                    str = "в норме";
                 }
                 break;
             default:
@@ -282,25 +344,25 @@ void MesureModel::saveProtokol(const QString& serialNumber, int number)
     }
 
     protocol.append(strBot.arg(QDate::currentDate().toString("dd.MM.yyyy"))
-                        .arg(DeviceModel::self->scanSettings().Fio)
+                        .arg(DeviceModel::scanSettings().Fio)
                         .arg(!ok ? "; color:red" : "")
                         .arg(ok ? "Прибор соответствует требованиям ТУ" : "Прибор не соответствует требованиям ТУ"));
 
     QString path = qApp->applicationDirPath()
                        .append("/")
-                       .append(DeviceModel::self->scanSettings().Type)
+                       .append(DeviceModel::scanSettings().Type)
                        .append(QDate::currentDate().toString("/yyyy"));
 
     if (!QDir().mkpath(path)) {
-        QMessageBox::critical(reinterpret_cast<QWidget*>(parent()), "", "Не удaётся записать на диск файл протокола!");
+        QMessageBox::critical(reinterpret_cast<QWidget*>(instance->parent()), "", "Не удaётся записать на диск файл протокола!");
         return;
     }
     path = path.append("/")
                .append(serialNumber)
-               .append(QDateTime::currentDateTime().toString(" dd.MM.yyyy H.mm.ss"))
+               .append(QDateTime::currentDateTime().toString(" dd.MM.yyyy" /* H.mm.ss"*/))
                .append(".htm");
 
-    m_paths[number] = path;
+    instance->m_paths[number] = path;
 
     QFile file4(path);
     qDebug() << file4.open(QFile::WriteOnly);
@@ -310,10 +372,12 @@ void MesureModel::saveProtokol(const QString& serialNumber, int number)
 
 void MesureModel::showProtocol(int num)
 {
-    if (m_serNum[num].isEmpty()) {
-        QMessageBox::warning(reinterpret_cast<QWidget*>(parent()), "", "Протокол не создан!");
+    if (!instance)
+        return;
+    if (instance->m_serNum[num].isEmpty()) {
+        QMessageBox::warning(reinterpret_cast<QWidget*>(instance->parent()), "", "Протокол не создан!");
         return;
     }
-    MyDialog* Dialog = new MyDialog(reinterpret_cast<QWidget*>(parent()), m_serNum[num]);
-    Dialog->LoadFile(m_paths[num]);
+    MyDialog* Dialog = new MyDialog(reinterpret_cast<QWidget*>(instance->parent()), instance->m_serNum[num]);
+    Dialog->LoadFile(instance->m_paths[num]);
 }

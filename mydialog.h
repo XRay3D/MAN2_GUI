@@ -11,7 +11,7 @@
 class MyDialog : public QDialog {
     Q_OBJECT
 public:
-    MyDialog(QWidget* parent = 0, QString windowTitle = "");
+    MyDialog(QWidget* parent = nullptr, QString windowTitle = "");
     virtual ~MyDialog();
     void LoadFile(const QString& file);
     QVBoxLayout* verticalLayout;

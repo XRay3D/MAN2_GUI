@@ -7,8 +7,8 @@
 class Worker : public QThread {
     Q_OBJECT
 public:
-    Worker(bool* doNotSkip, /*Result_t* result,*/ QObject* parent = Q_NULLPTR);
-    ~Worker();
+    Worker(bool* doNotSkip, QObject* parent = nullptr);
+    ~Worker() override;
     void Continue();
     void FinishMeasurements();
     void run() override;
@@ -18,7 +18,7 @@ signals:
     void updateProgresBar();
 
 private:
-    void WaitSolutionOrEnd(int question);
+    void WaitAnswer(int question);
     void CheckFinished();
     void SetVoltage(int voltage);
     void Test1();

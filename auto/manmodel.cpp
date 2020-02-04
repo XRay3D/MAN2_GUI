@@ -1,6 +1,6 @@
-#include "mandatamodel.h"
+#include "manmodel.h"
 
-ManDataModel::ManDataModel(QObject* parent)
+ManModel::ManModel(QObject* parent)
     : QAbstractTableModel(parent)
     , m_u{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
     , m_i{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
@@ -8,17 +8,17 @@ ManDataModel::ManDataModel(QObject* parent)
 {
 }
 
-int ManDataModel::rowCount(const QModelIndex& /*parent*/) const
+int ManModel::rowCount(const QModelIndex& /*parent*/) const
 {
     return 3;
 }
 
-int ManDataModel::columnCount(const QModelIndex& /*parent*/) const
+int ManModel::columnCount(const QModelIndex& /*parent*/) const
 {
     return 8;
 }
 
-QVariant ManDataModel::data(const QModelIndex& index, int role) const
+QVariant ManModel::data(const QModelIndex& index, int role) const
 {
     switch (role) {
     case Qt::DisplayRole:
@@ -45,18 +45,18 @@ QVariant ManDataModel::data(const QModelIndex& index, int role) const
     return {};
 }
 
-Qt::ItemFlags ManDataModel::flags(const QModelIndex& /*index*/) const
+Qt::ItemFlags ManModel::flags(const QModelIndex& /*index*/) const
 {
     return Qt::ItemIsEnabled;
 }
 
-void ManDataModel::setRms(double val)
+void ManModel::setRms(double val)
 {
     m_acU = val;
     dataChanged(createIndex(2, 0), createIndex(2, 7), { Qt::DisplayRole });
 }
 
-void ManDataModel::setMeasuredValueSignal(const QMap<int, MeasuredValue_t>& data)
+void ManModel::setMeasuredValueSignal(const QMap<int, MeasuredValue_t>& data)
 {
     QMapIterator<int, MeasuredValue_t> iterator(data);
     while (iterator.hasNext()) {
@@ -67,7 +67,7 @@ void ManDataModel::setMeasuredValueSignal(const QMap<int, MeasuredValue_t>& data
     dataChanged(createIndex(0, 0), createIndex(1, 7), { Qt::DisplayRole });
 }
 
-QVariant ManDataModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant ManModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     switch (role) {
     case Qt::DisplayRole:

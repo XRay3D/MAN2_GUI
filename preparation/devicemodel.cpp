@@ -4,15 +4,15 @@
 #include <QMessageBox>
 #include <QTextStream>
 
-DeviceModel* DeviceModel::self = nullptr;
+DeviceModel* DeviceModel::instance = nullptr;
 
 DeviceModel::DeviceModel(QObject* parent)
     : QAbstractTableModel(parent)
 {
-    self = this;
+    instance = this;
     QFile file("modify.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::critical(0, "", "Не найден файл \"modify.txt\" с параметрами блоков питания!");
+        QMessageBox::critical(nullptr, "", "Не найден файл \"modify.txt\" с параметрами блоков питания!");
         return;
     }
     QTextStream in(&file);
@@ -24,7 +24,7 @@ DeviceModel::DeviceModel(QObject* parent)
 
 DeviceModel::~DeviceModel()
 {
-    self = nullptr;
+    instance = nullptr;
 }
 
 int DeviceModel::rowCount(const QModelIndex& /*parent*/) const
@@ -100,7 +100,8 @@ QVariant DeviceModel::data(const QModelIndex& index, int role) const
 QVariant DeviceModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     static const QStringList horizontal({ "", "" }); //({ "value", "delta" });
-    static const QStringList vertical({ "Тип",
+    static const QStringList vertical({
+        "Тип",
         "Шифр",
         "Номинальное напряжение",
         "Количество каналов",
@@ -114,7 +115,8 @@ QVariant DeviceModel::headerData(int section, Qt::Orientation orientation, int r
         "Напряжение и ошибка для тестов №3 и №4",
         "Напряжение и ошибка для теста №5",
         "Ошибка напряжения для теста №7",
-        "Параметр dL для теста №7" });
+        "Параметр dL для теста №7",
+    });
     if (role == Qt::DisplayRole) {
         if (orientation == Qt::Horizontal) {
             return horizontal[section];
@@ -130,18 +132,31 @@ Qt::ItemFlags DeviceModel::flags(const QModelIndex& /*index*/) const
     return Qt::ItemIsEnabled;
 }
 
-QList<QString> DeviceModel::cbxData() const
+QList<QString> DeviceModel::cbxData()
 {
-    return m_cbxData;
+    if (!instance)
+        return {};
+    return instance->m_cbxData;
 }
 
-int DeviceModel::index() const
+int DeviceModel::index()
 {
-    return m_index;
+    if (!instance)
+        return -1;
+    return instance->m_index;
 }
 
 void DeviceModel::setIndex(int index)
 {
-    m_index = index;
-    dataChanged(createIndex(0, 0), createIndex(14, 1), { Qt::DisplayRole });
+    if (!instance)
+        return;
+    instance->m_index = index;
+    instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(14, 1), { Qt::DisplayRole });
+}
+
+ScanSettings DeviceModel::scanSettings()
+{
+    //    if (!instance)
+    //        return {};
+    return instance->m_data.value(instance->m_index);
 }
