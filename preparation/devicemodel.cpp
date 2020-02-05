@@ -2,6 +2,7 @@
 
 #include <QFile>
 #include <QMessageBox>
+#include <QTextCodec>
 #include <QTextStream>
 
 DeviceModel* DeviceModel::instance = nullptr;
@@ -16,6 +17,7 @@ DeviceModel::DeviceModel(QObject* parent)
         return;
     }
     QTextStream in(&file);
+    in.setCodec(QTextCodec::codecForName("UTF-8"));
     while (!in.atEnd()) {
         m_data.append(ScanSettings(in.readLine().split(';')));
         m_cbxData.append(m_data.last().Type + " (" + m_data.last().Cipher + ")");

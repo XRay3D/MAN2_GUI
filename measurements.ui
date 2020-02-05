@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>998</width>
+    <width>1027</width>
     <height>323</height>
    </rect>
   </property>
@@ -351,6 +351,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="dsbSetCurrent_1">
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <property name="suffix">
          <string> мA</string>
         </property>

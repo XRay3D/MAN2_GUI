@@ -28,58 +28,55 @@ win32:RC_FILE = main_icon/myapp.rc
 #win32:RC_FILE = myapp.rc
 
 SOURCES += \
-    auto/automaticmeasurements.cpp \
+    auto/automeasure.cpp \
     auto/manmodel.cpp \
+    auto/mesuremodel.cpp \
+    auto/worker.cpp \
     communications.cpp \
     graduation.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    measurements.cpp \
+    hw/interface.cpp \
     hw/man2.cpp \
     hw/myprotokol.cpp \
     hw/scpi.cpp \
+    main.cpp \
+    mainwindow.cpp \
+    measurements.cpp \
     mydialog.cpp \
-    shdocvw.cpp \
-    auto/worker.cpp \
-    hw/interface.cpp \
-    preparation\preparation.cpp \
     preparation/devicemodel.cpp \
     preparation/prepareform.cpp \
     preparation/sernummodel.cpp \
-    auto/mesuremodel.cpp
+    shdocvw.cpp \
 
 
 HEADERS  += \
-    auto/automaticmeasurements.h \
+    auto/automeasure.h \
     auto/manmodel.h \
+    auto/mesuremodel.h \
+    auto/worker.h \
     communications.h \
     graduation.h \
-    mainwindow.h \
-    measurements.h \
     hw/common_interfaces.h \
     hw/common_interfaces.h \
+    hw/interface.h \
     hw/man2.h \
     hw/myprotokol.h \
     hw/scpi.h \
+    mainwindow.h \
+    measurements.h \
     mydialog.h \
-    shdocvw.h \
-    auto/worker.h \
-    hw/interface.h \
-    preparation\preparation.h \
     preparation/devicemodel.h \
     preparation/prepareform.h \
     preparation/sernummodel.h \
-    auto/mesuremodel.h
+    shdocvw.h \
 
 
 FORMS    += \
-    graduation.ui \
+    auto/automeasure.ui \
     communications.ui \
-    measurements.ui \
-    auto/automaticmeasurements.ui \
+    graduation.ui \
     mainwindow.ui \
-    preparation\preparation.ui \
-    preparation/prepareform.ui
+    measurements.ui \
+    preparation/prepareform.ui \
 
 DISTFILES += \
     modify.txt \

@@ -19,7 +19,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
     void setRms(double val);
-    void setMeasuredValueSignal(const QMap<int, MeasuredValue_t>&);
+    void setMeasuredValueSignal(const QMap<int, MeasuredValue>&);
 
 private:
     double m_u[8];

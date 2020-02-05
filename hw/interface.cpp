@@ -32,7 +32,7 @@ mi::~mi()
 {
     semafore.acquire();
     if (!semafore.available()) {
-        man->DisableAll();
+        man->disableAll();
         thread.quit();
         thread.wait();
         //        thread.terminate();

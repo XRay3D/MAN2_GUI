@@ -1,7 +1,7 @@
 #ifndef DEVICEMODEL_H
 #define DEVICEMODEL_H
 
-#include "preparation.h"
+#include "scansettings.h"
 #include <QAbstractTableModel>
 
 class DeviceModel : public QAbstractTableModel {

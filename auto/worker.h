@@ -1,7 +1,7 @@
 #ifndef WORKER_H
 #define WORKER_H
 
-#include "automaticmeasurements.h"
+#include "automeasure.h"
 #include <QThread>
 
 class Worker : public QThread {
@@ -31,7 +31,7 @@ private:
 
     void Msleep(unsigned long time);
 
-    QList<MeasuredValue_t> m_list;
+    QList<MeasuredValue> m_list;
     double m_inVoltage;
     double m_minInVoltage;
     double m_maxInVoltage;

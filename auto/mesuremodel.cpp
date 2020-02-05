@@ -155,7 +155,7 @@ void MesureModel::setCurrentTest(int val)
     instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(6, 7));
 }
 
-void MesureModel::setTest1(const QList<MeasuredValue_t>& list)
+void MesureModel::setTest1(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;
@@ -172,7 +172,7 @@ void MesureModel::setTest2(int ch, bool result)
     instance->dataChanged(instance->createIndex(1, ch), instance->createIndex(1, ch), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest3(const QList<MeasuredValue_t>& list)
+void MesureModel::setTest3(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;
@@ -181,7 +181,7 @@ void MesureModel::setTest3(const QList<MeasuredValue_t>& list)
     instance->dataChanged(instance->createIndex(2, 0), instance->createIndex(2, 7), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest4(const QList<MeasuredValue_t>& list)
+void MesureModel::setTest4(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;
@@ -190,7 +190,7 @@ void MesureModel::setTest4(const QList<MeasuredValue_t>& list)
     instance->dataChanged(instance->createIndex(3, 0), instance->createIndex(3, 7), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest5(const QList<MeasuredValue_t>& list)
+void MesureModel::setTest5(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;
@@ -207,7 +207,7 @@ void MesureModel::setTest6(int ch, double value)
     instance->dataChanged(instance->createIndex(5, ch), instance->createIndex(5, ch), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest7(const QList<MeasuredValue_t>& list)
+void MesureModel::setTest7(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;

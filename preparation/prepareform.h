@@ -1,7 +1,7 @@
 #ifndef PREPAREFORM_H
 #define PREPAREFORM_H
 
-#include "preparation.h"
+#include "scansettings.h"
 #include "ui_prepareform.h"
 #include <QWidget>
 

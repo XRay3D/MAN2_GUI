@@ -10,7 +10,7 @@ Worker::Worker(bool* doNotSkip, QObject* parent)
 
 Worker::~Worker()
 {
-    mi::man->DisableAll();
+    mi::man->disableAll();
     m_semaphore.acquire(m_semaphore.available());
 }
 
@@ -21,7 +21,7 @@ void Worker::Continue()
 
 void Worker::FinishMeasurements()
 {
-    mi::man->DisableAll();
+    mi::man->disableAll();
     m_semaphore.release(2);
 }
 
@@ -31,10 +31,10 @@ void Worker::run()
     setTerminationEnabled();
     m_semaphore.acquire(m_semaphore.available());
     try {
-        while (!mi::man->DisableAll())
+        while (!mi::man->disableAll())
             WaitAnswer(NoConnectionWithMan);
 
-        while (!mi::man->SwitchCurrent(On))
+        while (!mi::man->switchCurrent(On))
             WaitAnswer(NoConnectionWithMan);
 
         SetVoltage(SetInputVoltageUpper);
@@ -50,7 +50,6 @@ void Worker::run()
 
     } catch (int i) {
         Q_UNUSED(i)
-        //        emit ShowMessage(VERIFICATION_IS_COMPLETE);
         m_semaphore.acquire(m_semaphore.available());
         terminate();
     }
@@ -60,20 +59,14 @@ void Worker::WaitAnswer(int question)
 {
     emit showMessage(question);
     while (!m_semaphore.tryAcquire(1, 100))
-        mi::man->GetMeasuredValue(m_list);
-    if (m_semaphore.available()) {
-        qDebug() << "IsBreak";
-        m_semaphore.acquire(m_semaphore.available());
-        throw int(1);
-    }
+        mi::man->getMeasuredValue(m_list);
+    CheckFinished();
 }
 
 void Worker::CheckFinished()
 {
-    if (m_semaphore.available()) {
-        m_semaphore.acquire(m_semaphore.available());
+    if (m_semaphore.available())
         throw int(1);
-    }
 }
 
 void Worker::SetVoltage(int voltage)
@@ -104,7 +97,7 @@ void Worker::Test1()
     Msleep(5000);
     do {
         Msleep(500);
-        while (!mi::man->GetMeasuredValue(m_list))
+        while (!mi::man->getMeasuredValue(m_list))
             WaitAnswer(NoConnectionWithMan);
         MesureModel::setTest1(m_list);
         CheckFinished();
@@ -119,16 +112,16 @@ void Worker::Test2()
     qDebug() << "Test2";
     for (int i = 0; i < 8; ++i) {
         if (m_doNotSkip[i]) {
-            while (!mi::man->Oscilloscope(0))
+            while (!mi::man->oscilloscope(0))
                 WaitAnswer(NoConnectionWithMan);
-            while (!mi::man->Oscilloscope(i + 1))
+            while (!mi::man->oscilloscope(i + 1))
                 WaitAnswer(NoConnectionWithMan);
             WaitAnswer(i + PulsationsOnTheChannel_1);
         }
         emit updateProgresBar();
     }
 
-    while (!mi::man->Oscilloscope(0))
+    while (!mi::man->oscilloscope(0))
         WaitAnswer(NoConnectionWithMan);
 
     emit updateProgresBar();
@@ -142,7 +135,7 @@ void Worker::Test3()
     do {
         Msleep(500);
 
-        while (!mi::man->GetMeasuredValue(m_list))
+        while (!mi::man->getMeasuredValue(m_list))
             WaitAnswer(NoConnectionWithMan);
         MesureModel::setTest3(m_list);
         CheckFinished();
@@ -156,14 +149,14 @@ void Worker::Test4()
     MesureModel::setCurrentTest(3);
     qDebug() << "Test4";
 
-    while (!mi::man->SetCurrent(DeviceModel::scanSettings().RatedCurrent))
+    while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         WaitAnswer(NoConnectionWithMan);
 
     Msleep(5000);
     do {
         Msleep(500);
 
-        while (!mi::man->GetMeasuredValue(m_list))
+        while (!mi::man->getMeasuredValue(m_list))
             WaitAnswer(NoConnectionWithMan);
         MesureModel::setTest4(m_list);
         CheckFinished();
@@ -177,14 +170,14 @@ void Worker::Test5()
     MesureModel::setCurrentTest(4);
     qDebug() << "Test5";
 
-    while (!mi::man->SetCurrent(0))
+    while (!mi::man->setCurrent(0))
         WaitAnswer(NoConnectionWithMan);
 
     Msleep(5000);
     do {
         Msleep(500);
 
-        while (!mi::man->GetMeasuredValue(m_list))
+        while (!mi::man->getMeasuredValue(m_list))
             WaitAnswer(NoConnectionWithMan);
         MesureModel::setTest5(m_list);
         CheckFinished();
@@ -197,9 +190,9 @@ void Worker::Test6()
 {
     MesureModel::setCurrentTest(5);
     qDebug() << "Test6";
-    MeasuredValue_t value;
+    MeasuredValue value;
 
-    while (!mi::man->SetCurrent(0))
+    while (!mi::man->setCurrent(0))
         WaitAnswer(NoConnectionWithMan);
 
     QList<double> peak;
@@ -207,7 +200,7 @@ void Worker::Test6()
         if (m_doNotSkip[i - 1]) {
             peak.append(-1.0);
 
-            while (!mi::man->SetCurrent(DeviceModel::scanSettings().RestrictionsTest7Min, i))
+            while (!mi::man->setCurrent(DeviceModel::scanSettings().RestrictionsTest7Min, i))
                 WaitAnswer(NoConnectionWithMan);
 
             Msleep(5000);
@@ -216,12 +209,12 @@ void Worker::Test6()
                  current += step) {
                 Msleep(100);
 
-                while (!mi::man->SetCurrent(current, i))
+                while (!mi::man->setCurrent(current, i))
                     WaitAnswer(NoConnectionWithMan);
 
                 Msleep(100);
 
-                while (!mi::man->GetMeasuredValue(value, i))
+                while (!mi::man->getMeasuredValue(value, i))
                     WaitAnswer(NoConnectionWithMan);
 
                 qDebug() << i << value.Value2 << value.Value1;
@@ -232,7 +225,7 @@ void Worker::Test6()
                 CheckFinished();
                 MesureModel::setTest6(i - 1, value.Value2);
             }
-            while (!mi::man->SetCurrent(0, i))
+            while (!mi::man->setCurrent(0, i))
                 WaitAnswer(NoConnectionWithMan);
 
             std::sort(peak.begin(), peak.end());
@@ -248,21 +241,21 @@ void Worker::Test7()
 {
     MesureModel::setCurrentTest(6);
     qDebug() << "Test7";
-    while (!mi::man->SetCurrent(DeviceModel::scanSettings().RatedCurrent)) {
+    while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent)) {
         WaitAnswer(NoConnectionWithMan);
     }
     Msleep(5000);
     do {
         Msleep(500);
-        while (!mi::man->ShortCircuitTest(1))
+        while (!mi::man->thortCircuitTest(1))
             WaitAnswer(NoConnectionWithMan);
 
         Msleep(200);
-        while (!mi::man->ShortCircuitTest(0))
+        while (!mi::man->thortCircuitTest(0))
             WaitAnswer(NoConnectionWithMan);
 
         Msleep(50);
-        while (!mi::man->GetMeasuredValue(m_list, RAW_DATA))
+        while (!mi::man->getMeasuredValue(m_list, RawData))
             WaitAnswer(NoConnectionWithMan);
 
         MesureModel::setTest7(m_list);
@@ -280,14 +273,14 @@ void Worker::Msleep(unsigned long time)
         msleep(10);
         CheckFinished();
 
-        while (!mi::man->GetMeasuredValue(m_list))
+        while (!mi::man->getMeasuredValue(m_list))
             WaitAnswer(NoConnectionWithMan);
 
-        while ((m_inVoltage = mi::man->GetRmsValue()) == 0.0)
+        while ((m_inVoltage = mi::man->getRmsValue()) == 0.0)
             WaitAnswer(NoConnectionWithMan);
     }
 
-    while (!mi::man->GetMeasuredValue(m_list))
+    while (!mi::man->getMeasuredValue(m_list))
         WaitAnswer(NoConnectionWithMan);
 
     while (m_minInVoltage > m_inVoltage || m_inVoltage > m_maxInVoltage) {
@@ -295,6 +288,6 @@ void Worker::Msleep(unsigned long time)
             WaitAnswer(NoConnectionWithMan);
 
         WaitAnswer(CheckInputVoltage);
-        m_inVoltage = mi::man->GetRmsValue();
+        m_inVoltage = mi::man->getRmsValue();
     }
 }

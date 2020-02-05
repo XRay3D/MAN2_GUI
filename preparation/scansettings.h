@@ -1,9 +1,7 @@
 #ifndef INPUTPARAMETERS_H
 #define INPUTPARAMETERS_H
 
-//#include <QSignalMapper>
 #include <QWidget>
-//#include "ui_inputparameters.h"
 
 class ScanSettings {
 public:
@@ -79,34 +77,5 @@ public:
 };
 
 Q_DECLARE_METATYPE(ScanSettings)
-
-//class MainWindow;
-
-//class Preparation : public QWidget, private Ui::Preparation {
-//    Q_OBJECT
-
-//    friend class MainWindow;
-
-//public:
-//    explicit Preparation(QWidget* parent = 0);
-//    ~Preparation();
-
-//signals:
-//    void CurrentTabIndex(int);
-//    void ScanSettingsSignal(const ScanSettings*);
-//    void SerialNumberChanged(const QString&, int);
-
-//private slots:
-//    void on_pbClearSerialNumber_clicked();
-//    void on_pbStatrtMeasure_clicked();
-//    void on_cbDevice_currentIndexChanged(int index);
-
-//private:
-//    void DeviceSerNumChange(QLineEdit *lineEdit);
-
-//    QVector<QLineEdit*> m_listLeSerNumDevice;
-//    //    QSignalMapper* smSerialNumberDevice;
-//    QVector<ScanSettings*> m_listScanSettings;
-//};
 
 #endif // INPUTPARAMETERS_H

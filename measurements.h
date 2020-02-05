@@ -29,14 +29,14 @@ private slots:
     void PbShortClicked(int channel);
     void PbOscClicked(int channel);
 
-    void GetMeasuredValueSlot(const QMap<int, MeasuredValue_t>& list);
+    void GetMeasuredValueSlot(const QMap<int, MeasuredValue>& list);
 
     void GbChanneClicked(int channel);
 
     void on_pbClear_clicked();
 
 signals:
-    void StartMeasure(ValuetypeEnum type = CURRENT_MEASURED_VALUE, uint8_t channel = 0);
+    void StartMeasure(ValuetypeEnum type = CurrentMeasuredValue, uint8_t channel = 0);
     //public:
     //    bool eventFilter(QObject* watched, QEvent* event);
 

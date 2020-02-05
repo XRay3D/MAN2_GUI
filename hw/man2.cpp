@@ -8,10 +8,10 @@
 
 enum { ChannelCount = 8 };
 
-const int id1 = qRegisterMetaType<MeasuredValue_t>("MeasuredValue_t");
+const int id1 = qRegisterMetaType<MeasuredValue>("MeasuredValue");
 const int id2 = qRegisterMetaType<ValuetypeEnum>("ValuetypeEnum");
 const int id3 = qRegisterMetaType<uint8_t>("uint8_t");
-const int id5 = qRegisterMetaType<QMap<int, MeasuredValue_t>>("QMap<int, MeasuredValue_t>");
+const int id5 = qRegisterMetaType<QMap<int, MeasuredValue>>("QMap<int, MeasuredValue>");
 
 MAN2::MAN2(QObject* parent)
     : QObject(parent)
@@ -31,7 +31,7 @@ MAN2::~MAN2()
     m_portThread.wait();
 }
 
-bool MAN2::Ping(const QString& PortName)
+bool MAN2::ping(const QString& PortName)
 {
     if (Emu) {
         m_connected = true;
@@ -51,7 +51,7 @@ bool MAN2::Ping(const QString& PortName)
         emit Open(QIODevice::ReadWrite);
         if (!m_semaphore.tryAcquire(1, 1000))
             break;
-        emit Write(Parcel(PING));
+        emit Write(createParcel(Ping));
         if (!m_semaphore.tryAcquire(ChannelCount + 1, 1000)) { /////////////////////////////// witout rms
             emit Close();
             break;
@@ -63,7 +63,7 @@ bool MAN2::Ping(const QString& PortName)
     return m_connected;
 }
 
-bool MAN2::GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, ValuetypeEnum type)
+bool MAN2::getMeasuredValue(MeasuredValue& value, uint8_t channel, ValuetypeEnum type)
 {
     if (Emu) {
         m_measuredValue.clear();
@@ -78,7 +78,7 @@ bool MAN2::GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, ValuetypeEn
     if (IsConnected()) {
         Reset();
         m_measuredValue.clear();
-        emit Write(Parcel(GET_MEASURED_VALUE, static_cast<uint8_t>(type), channel));
+        emit Write(createParcel(GetMeasuredValue, static_cast<uint8_t>(type), channel));
         int delay[] = { 1000, 1000, 10000, 10000, 1000 };
         if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delay[type])) {
             value = m_value;
@@ -88,14 +88,14 @@ bool MAN2::GetMeasuredValue(MeasuredValue_t& value, uint8_t channel, ValuetypeEn
     return m_result;
 }
 
-bool MAN2::GetMeasuredValue(QList<MeasuredValue_t>& value, ValuetypeEnum type)
+bool MAN2::getMeasuredValue(QList<MeasuredValue>& value, ValuetypeEnum type)
 {
     if (Emu) {
         value.clear();
         m_measuredValue.clear();
 
         for (int i = 0; i < 8; ++i) {
-            MeasuredValue_t val;
+            MeasuredValue val;
             val.Value1 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
             val.Value2 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
             val.Value3 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
@@ -111,11 +111,11 @@ bool MAN2::GetMeasuredValue(QList<MeasuredValue_t>& value, ValuetypeEnum type)
         Reset();
         m_measuredValue.clear();
         value.clear();
-        emit Write(Parcel(GET_MEASURED_VALUE, static_cast<uint8_t>(type), 0));
+        emit Write(createParcel(GetMeasuredValue, static_cast<uint8_t>(type), 0));
         const int delay[] = { 1000, 1000, 10000, 10000, 1000 };
         if (m_semaphore.tryAcquire(ChannelCount, delay[type])) {
             emit GetMeasuredValueSignal(m_measuredValue);
-            QMapIterator<int, MeasuredValue_t> iterator(m_measuredValue);
+            QMapIterator<int, MeasuredValue> iterator(m_measuredValue);
             while (iterator.hasNext()) {
                 iterator.next();
                 value.insert(iterator.key() - 1, iterator.value());
@@ -126,7 +126,7 @@ bool MAN2::GetMeasuredValue(QList<MeasuredValue_t>& value, ValuetypeEnum type)
     return m_result;
 }
 
-double MAN2::GetRmsValue()
+double MAN2::getRmsValue()
 {
     if (Emu) { //////////////////////////////////////////////////////////////////////
         return 220.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX);
@@ -134,7 +134,7 @@ double MAN2::GetRmsValue()
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
-        emit Write(Parcel(GetRmsMeasuredValue, 9));
+        emit Write(createParcel(GetRmsMeasuredValue, 9));
         if (m_semaphore.tryAcquire(1, 500)) {
             m_result = true;
             return m_rms;
@@ -143,7 +143,7 @@ double MAN2::GetRmsValue()
     return 0.0;
 }
 
-bool MAN2::SetCurrent(float Current, uint8_t channel)
+bool MAN2::setCurrent(float Current, uint8_t channel)
 {
     if (Emu) {
         return true;
@@ -152,7 +152,7 @@ bool MAN2::SetCurrent(float Current, uint8_t channel)
     if (IsConnected()) {
         Reset();
         Current /= 1000.0f;
-        emit Write(Parcel(SET_CURRENT, Current, channel));
+        emit Write(createParcel(SetCurrent, Current, channel));
         const int delay[] = { 5000, 500 };
         if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delay[channel == 0 ? 0 : 1]))
             m_result = true;
@@ -160,7 +160,7 @@ bool MAN2::SetCurrent(float Current, uint8_t channel)
     return m_result;
 }
 
-bool MAN2::SwitchCurrent(uint8_t Enable, uint8_t channel)
+bool MAN2::switchCurrent(uint8_t Enable, uint8_t channel)
 {
     if (Emu) {
         return true;
@@ -168,14 +168,14 @@ bool MAN2::SwitchCurrent(uint8_t Enable, uint8_t channel)
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
-        emit Write(Parcel(SWITCH_CURRENT, Enable, channel));
+        emit Write(createParcel(SwitchCurrent, Enable, channel));
         if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, 500))
             m_result = true;
     }
     return m_result;
 }
 
-bool MAN2::TripCurrentTest()
+bool MAN2::tripCurrentTest()
 {
     if (Emu) {
         return true;
@@ -183,14 +183,14 @@ bool MAN2::TripCurrentTest()
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
-        emit Write(Parcel(TRIP_CURRENT_TEST));
+        emit Write(createParcel(TripCurrentTest));
         if (m_semaphore.tryAcquire(1, 500))
             m_result = true;
     }
     return m_result;
 }
 
-bool MAN2::ShortCircuitTest(uint8_t Enable, uint8_t channel)
+bool MAN2::thortCircuitTest(uint8_t Enable, uint8_t channel)
 {
     if (Emu) {
         return true;
@@ -198,14 +198,14 @@ bool MAN2::ShortCircuitTest(uint8_t Enable, uint8_t channel)
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
-        emit Write(Parcel(SHORT_CIRCUIT_TEST, Enable, channel));
+        emit Write(createParcel(ShortCircuitTest, Enable, channel));
         if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, 500))
             m_result = true;
     }
     return m_result;
 }
 
-bool MAN2::Oscilloscope(int channel)
+bool MAN2::oscilloscope(int channel)
 {
     if (Emu) {
         return true;
@@ -213,14 +213,14 @@ bool MAN2::Oscilloscope(int channel)
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
-        emit Write(Parcel(OSCILLOSCOPE, static_cast<uint8_t>(channel)));
+        emit Write(createParcel(Oscilloscope, static_cast<uint8_t>(channel)));
         if (m_semaphore.tryAcquire(ChannelCount, 500))
             m_result = true;
     }
     return m_result;
 }
 
-bool MAN2::SetDefaultCalibrationCoefficients(uint8_t channel)
+bool MAN2::setDefaultCalibrationCoefficients(uint8_t channel)
 {
     if (Emu) {
         return true;
@@ -233,7 +233,7 @@ bool MAN2::SetDefaultCalibrationCoefficients(uint8_t channel)
             m_result = true;
         } else {
             Reset();
-            emit Write(Parcel(SET_DEFAULT_CALIBRATION_COEFFICIENTS, channel));
+            emit Write(createParcel(SetDefaultCalibCoeffi, channel));
             if (m_semaphore.tryAcquire(1, 500)) {
                 m_result = true;
             }
@@ -242,7 +242,7 @@ bool MAN2::SetDefaultCalibrationCoefficients(uint8_t channel)
     return m_result;
 }
 
-bool MAN2::GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t channel)
+bool MAN2::getCalibrationCoefficients(GradCoeff& GradCoeff, uint8_t channel)
 {
     if (Emu) {
         return true;
@@ -250,7 +250,7 @@ bool MAN2::GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t channel)
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
-        emit Write(Parcel(GET_CALIBRATION_COEFFICIENTS, channel));
+        emit Write(createParcel(GetCalibCoeff, channel));
         if (m_semaphore.tryAcquire(1, 1000)) {
             GradCoeff = m_coeff;
             m_result = true;
@@ -259,7 +259,7 @@ bool MAN2::GetCalibrationCoefficients(GradCoeff_t& GradCoeff, uint8_t channel)
     return m_result;
 }
 
-bool MAN2::SetCalibrationCoefficients(const GradCoeff_t& GradCoeff, uint8_t channel)
+bool MAN2::setCalibrationCoefficients(const GradCoeff& GradCoeff, uint8_t channel)
 {
     if (Emu) {
         return true;
@@ -269,9 +269,9 @@ bool MAN2::SetCalibrationCoefficients(const GradCoeff_t& GradCoeff, uint8_t chan
         Reset();
         float data[2]{ GradCoeff.AdcCh1Offset, GradCoeff.AdcCh1Scale };
         if (channel == 9)
-            emit Write(Parcel(SET_CALIBRATION_COEFFICIENTS, data, channel));
+            emit Write(createParcel(SetCalibCoeff, data, channel));
         else
-            emit Write(Parcel(SET_CALIBRATION_COEFFICIENTS, GradCoeff, channel));
+            emit Write(createParcel(SetCalibCoeff, GradCoeff, channel));
         if (m_semaphore.tryAcquire(1, 500)) {
             if (channel == 9)
                 m_rmsCoeff = GradCoeff;
@@ -281,7 +281,7 @@ bool MAN2::SetCalibrationCoefficients(const GradCoeff_t& GradCoeff, uint8_t chan
     return m_result;
 }
 
-bool MAN2::SaveCalibrationCoefficients(uint8_t channel)
+bool MAN2::saveToEepromCalibrationCoefficients(uint8_t channel)
 {
     if (Emu) {
         return true;
@@ -289,27 +289,27 @@ bool MAN2::SaveCalibrationCoefficients(uint8_t channel)
     QMutexLocker Locker(&m_mutex);
     if (IsConnected()) {
         Reset();
-        emit Write(Parcel(SAVE_CALIBRATION_COEFFICIENTS, channel));
+        emit Write(createParcel(SaveCalibCoeff, channel));
         if (m_semaphore.tryAcquire(1, 500))
             m_result = true;
     }
     return m_result;
 }
 
-bool MAN2::DisableAll()
+bool MAN2::disableAll()
 {
     if (Emu) {
         return true;
     }
     while (IsConnected()) {
         Reset();
-        if (!ShortCircuitTest(Off))
+        if (!thortCircuitTest(Off))
             break;
-        if (!SwitchCurrent(Off))
+        if (!switchCurrent(Off))
             break;
-        if (!SetCurrent(0.0))
+        if (!setCurrent(0.0))
             break;
-        if (!Oscilloscope(Off))
+        if (!oscilloscope(Off))
             break;
         m_result = true;
         break;
@@ -322,7 +322,7 @@ void MAN2::GetMeasuredValueSlot(ValuetypeEnum type, uint8_t channel)
     if (Emu) {
         m_measuredValue.clear();
         for (int i = 0; i < 8; ++i) {
-            MeasuredValue_t val;
+            MeasuredValue val;
             val.Value1 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX * 100);
             val.Value2 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX * 100);
             val.Value3 = 24.0 + (qrand() - RAND_MAX / 2) / static_cast<double>(RAND_MAX * 100);
@@ -336,7 +336,7 @@ void MAN2::GetMeasuredValueSlot(ValuetypeEnum type, uint8_t channel)
 
         uint8_t tmp = type;
         m_measuredValue.clear();
-        emit Write(Parcel(GET_MEASURED_VALUE, tmp, channel));
+        emit Write(createParcel(GetMeasuredValue, tmp, channel));
         const int delay[] = { 1000, 1000, 10000, 10000, 1000 };
         if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delay[type]))
             m_result = true;
@@ -346,7 +346,7 @@ void MAN2::GetMeasuredValueSlot(ValuetypeEnum type, uint8_t channel)
 
 void MAN2::Init()
 {
-    GetCalibrationCoefficients(m_rmsCoeff, 9);
+    getCalibrationCoefficients(m_rmsCoeff, 9);
     qDebug() << m_rmsCoeff.AdcCh1Offset; //-46.0562
     qDebug() << m_rmsCoeff.AdcCh1Scale; //0.402455
     //-46.3256
@@ -359,59 +359,59 @@ void MAN2::Reset()
     m_semaphore.acquire(m_semaphore.available());
 }
 
-void MAN2::RxPing(const Parcel_t& data)
+void MAN2::RxPing(const Parcel& data)
 {
     qDebug() << "PING" << data.addres;
     Q_UNUSED(data)
     m_semaphore.release();
 }
 
-void MAN2::RxGetMeasuredValue(const Parcel_t& data)
+void MAN2::RxGetMeasuredValue(const Parcel& data)
 {
-    m_value = data.value<MeasuredValue_t>();
+    m_value = data.value<MeasuredValue>();
     switch (m_value.Type) {
-    case CURRENT_MEASURED_VALUE: // Напряжение, ток и уставка.
-        m_value.Value2 *= 1000.0;
-        m_value.Value3 *= 1000.0;
+    case CurrentMeasuredValue: // Напряжение, ток и уставка.
+        m_value.Value2 *= 1000.0f;
+        m_value.Value3 *= 1000.0f;
         break;
-    case VALUE_TRIP_CURRENT:
-    case CALIB_VOLTAGE:
-    case CALIB_CURRENT:
+    case ValueTripCurrent:
+    case CalibVoltage:
+    case CalibCurrent:
         break;
-    case RAW_DATA:
-        m_value.Value3 *= 1000.0;
+    case RawData:
+        m_value.Value3 *= 1000.0f;
         break;
     default:
         return;
     }
     m_measuredValue[data.addres] = m_value;
     if (Dbg)
-        qDebug() << "GET_MEASURED_VALUE" /*<< data.toHex().toUpper()*/ << m_value.Value1 << m_value.Value2 << m_value.Value3;
+        qDebug() << "GET_MEASURED_VALUE" /* << data.toHex().toUpper()*/ << m_value.Value1 << m_value.Value2 << m_value.Value3;
     m_semaphore.release();
 }
 
-void MAN2::RxSetCurrent(const Parcel_t& data)
+void MAN2::RxSetCurrent(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "SET_CURRENT" << data.addres;
-    m_value = data.value<MeasuredValue_t>();
+    m_value = data.value<MeasuredValue>();
     switch (m_value.Type) {
-    case CURRENT_MEASURED_VALUE: // Напряжение, ток и уставка.
-        m_value.Value2 *= 1000.0;
-        m_value.Value3 *= 1000.0;
+    case CurrentMeasuredValue: // Напряжение, ток и уставка.
+        m_value.Value2 *= 1000.0f;
+        m_value.Value3 *= 1000.0f;
         break;
-    case VALUE_TRIP_CURRENT:
+    case ValueTripCurrent:
         //        m_value.Value1 = 123;
         //        m_value.Value2 = 456;
         //        m_value.Value3 = 789;
         break;
-    case CALIB_VOLTAGE:
+    case CalibVoltage:
         break;
-    case CALIB_CURRENT:
+    case CalibCurrent:
         //        m_value.Value1 = Ad779xSingleConversionFloat() * 0.01;
         break;
-    case RAW_DATA:
-        m_value.Value3 *= 1000.0;
+    case RawData:
+        m_value.Value3 *= 1000.0f;
         break;
     default:
         return;
@@ -419,7 +419,7 @@ void MAN2::RxSetCurrent(const Parcel_t& data)
     m_semaphore.release();
 }
 
-void MAN2::RxSwitchCurrent(const Parcel_t& data)
+void MAN2::RxSwitchCurrent(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "SWITCH_CURRENT" << data.addres;
@@ -427,7 +427,7 @@ void MAN2::RxSwitchCurrent(const Parcel_t& data)
     m_semaphore.release();
 }
 
-void MAN2::RxTripCurrentTest(const Parcel_t& data)
+void MAN2::RxTripCurrentTest(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "TRIP_CURRENT_TEST" << data.addres;
@@ -435,7 +435,7 @@ void MAN2::RxTripCurrentTest(const Parcel_t& data)
     m_semaphore.release();
 }
 
-void MAN2::RxShortCircuitTest(const Parcel_t& data)
+void MAN2::RxShortCircuitTest(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "SHORT_CIRCUIT_TEST" << data.addres;
@@ -443,7 +443,7 @@ void MAN2::RxShortCircuitTest(const Parcel_t& data)
     m_semaphore.release();
 }
 
-void MAN2::RxOscilloscope(const Parcel_t& data)
+void MAN2::RxOscilloscope(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "OSCILLOSCOPE" << data.addres;
@@ -451,7 +451,7 @@ void MAN2::RxOscilloscope(const Parcel_t& data)
     m_semaphore.release();
 }
 
-void MAN2::RxSetDefaultCalibrationCoefficients(const Parcel_t& data)
+void MAN2::RxSetDefaultCalibCoeff(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "SET_DEFAULT_CALIBRATION_COEFFICIENTS" << data.addres;
@@ -459,15 +459,15 @@ void MAN2::RxSetDefaultCalibrationCoefficients(const Parcel_t& data)
     m_semaphore.release();
 }
 
-void MAN2::RxGetCalibrationCoefficients(const Parcel_t& data)
+void MAN2::RxGetCalibCoeff(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "GET_CALIBRATION_COEFFICIENTS" << data.addres;
-    m_coeff = data.value<GradCoeff_t>();
+    m_coeff = data.value<GradCoeff>();
     m_semaphore.release();
 }
 
-void MAN2::RxSetCalibrationCoefficients(const Parcel_t& data)
+void MAN2::RxSetCalibCoeff(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "SET_CALIBRATION_COEFFICIENTS" << data.addres;
@@ -475,7 +475,7 @@ void MAN2::RxSetCalibrationCoefficients(const Parcel_t& data)
     m_semaphore.release();
 }
 
-void MAN2::RxSaveCalibrationCoefficients(const Parcel_t& data)
+void MAN2::RxSaveCalibCoeff(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "SAVE_CALIBRATION_COEFFICIENTS" << data.addres;
@@ -483,7 +483,7 @@ void MAN2::RxSaveCalibrationCoefficients(const Parcel_t& data)
     m_semaphore.release();
 }
 
-void MAN2::RxGetRmsValue(const Parcel_t& data)
+void MAN2::RxGetRmsValue(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "GET_RMS_MEASURED_VALUE" << data.addres;
@@ -492,7 +492,7 @@ void MAN2::RxGetRmsValue(const Parcel_t& data)
     m_semaphore.release();
 }
 
-void MAN2::RxBufferOverflow(const Parcel_t& data)
+void MAN2::RxBufferOverflow(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "BUFFER_OVERFLOW" << data.addres;
@@ -500,7 +500,7 @@ void MAN2::RxBufferOverflow(const Parcel_t& data)
     //m_semaphore.release();
 }
 
-void MAN2::RxWrongCommand(const Parcel_t& data)
+void MAN2::RxWrongCommand(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "WRONG_COMMAND" << data.addres;
@@ -508,7 +508,7 @@ void MAN2::RxWrongCommand(const Parcel_t& data)
     //m_semaphore.release();
 }
 
-void MAN2::RxTextualParcel(const Parcel_t& data)
+void MAN2::RxTextualParcel_t(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "TEXTUAL_PARCEL" << data.addres << data.text();
@@ -516,7 +516,7 @@ void MAN2::RxTextualParcel(const Parcel_t& data)
     //m_semaphore.release();
 }
 
-void MAN2::RxCrcError(const Parcel_t& data)
+void MAN2::RxCrcError(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "CRC_ERROR" << data.addres;
@@ -524,7 +524,7 @@ void MAN2::RxCrcError(const Parcel_t& data)
     //m_semaphore.release();
 }
 
-void MAN2::RxNullFunction(const Parcel_t& data)
+void MAN2::RxNullFunction(const Parcel& data)
 {
     if (Dbg)
         qDebug() << "RxNullFunction" << data.addres;
@@ -541,22 +541,22 @@ SerialPort::SerialPort(MAN2* manInterface)
     , m_man(manInterface)
     , m_f(QVector<SerialPort::func>(0x100, &MAN2::RxNullFunction))
 {
-    m_f[PING] = &MAN2::RxPing;
-    m_f[GET_MEASURED_VALUE] = &MAN2::RxGetMeasuredValue;
-    m_f[SET_CURRENT] = &MAN2::RxSetCurrent;
-    m_f[SWITCH_CURRENT] = &MAN2::RxSwitchCurrent;
-    m_f[TRIP_CURRENT_TEST] = &MAN2::RxTripCurrentTest;
-    m_f[SHORT_CIRCUIT_TEST] = &MAN2::RxShortCircuitTest;
-    m_f[OSCILLOSCOPE] = &MAN2::RxOscilloscope;
-    m_f[SET_DEFAULT_CALIBRATION_COEFFICIENTS] = &MAN2::RxSetDefaultCalibrationCoefficients;
-    m_f[GET_CALIBRATION_COEFFICIENTS] = &MAN2::RxGetCalibrationCoefficients;
-    m_f[SET_CALIBRATION_COEFFICIENTS] = &MAN2::RxSetCalibrationCoefficients;
-    m_f[SAVE_CALIBRATION_COEFFICIENTS] = &MAN2::RxSaveCalibrationCoefficients;
+    m_f[Ping] = &MAN2::RxPing;
+    m_f[GetMeasuredValue] = &MAN2::RxGetMeasuredValue;
+    m_f[SetCurrent] = &MAN2::RxSetCurrent;
+    m_f[SwitchCurrent] = &MAN2::RxSwitchCurrent;
+    m_f[TripCurrentTest] = &MAN2::RxTripCurrentTest;
+    m_f[ShortCircuitTest] = &MAN2::RxShortCircuitTest;
+    m_f[Oscilloscope] = &MAN2::RxOscilloscope;
+    m_f[SetDefaultCalibCoeffi] = &MAN2::RxSetDefaultCalibCoeff;
+    m_f[GetCalibCoeff] = &MAN2::RxGetCalibCoeff;
+    m_f[SetCalibCoeff] = &MAN2::RxSetCalibCoeff;
+    m_f[SaveCalibCoeff] = &MAN2::RxSaveCalibCoeff;
     m_f[GetRmsMeasuredValue] = &MAN2::RxGetRmsValue;
-    m_f[BUFFER_OVERFLOW] = &MAN2::RxBufferOverflow;
-    m_f[WRONG_COMMAND] = &MAN2::RxWrongCommand;
-    m_f[TEXTUAL_PARCEL] = &MAN2::RxTextualParcel;
-    m_f[CRC_ERROR] = &MAN2::RxCrcError;
+    m_f[BufferOverflow] = &MAN2::RxBufferOverflow;
+    m_f[WrongCommand] = &MAN2::RxWrongCommand;
+    m_f[TextualParcel] = &MAN2::RxTextualParcel_t;
+    m_f[CrcError] = &MAN2::RxCrcError;
 
     setBaudRate(QSerialPort::Baud57600);
     setParity(QSerialPort::NoParity);
@@ -589,15 +589,14 @@ void SerialPort::ReadyRead()
     QMutexLocker locker(&m_mutex);
     m_data.append(readAll());
     for (int i = 0; i < m_data.size() - 3; ++i) {
-        const Parcel_t* const parcel = reinterpret_cast<const Parcel_t*>(m_data.constData() + i);
+        const Parcel* const parcel = reinterpret_cast<const Parcel*>(m_data.constData() + i);
         if (parcel->start == RX) {
             if ((parcel->length + i) <= m_data.size()) {
                 m_tmpData = m_data.mid(i, parcel->length);
-                //qDebug() << "Read" << m_tmpData.toHex().toUpper();
-                if (CheckData(m_tmpData))
+                if (checkData(m_tmpData))
                     (m_man->*m_f[parcel->command])(*parcel);
                 else {
-                    (m_man->*m_f[CRC_ERROR])(*parcel);
+                    (m_man->*m_f[CrcError])(*parcel);
                     m_data.clear();
                 }
                 m_data.remove(0, i + parcel->length);

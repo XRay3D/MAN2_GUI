@@ -46,7 +46,7 @@
         <string>Ввод параметров</string>
        </attribute>
       </widget>
-      <widget class="AutomaticMeasurements" name="tabAutomaticMeasurements">
+      <widget class="AutoMeasure" name="tabAutomaticMeasurements">
        <attribute name="title">
         <string>Автоматические измерения</string>
        </attribute>
@@ -108,9 +108,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>AutomaticMeasurements</class>
+   <class>AutoMeasure</class>
    <extends>QWidget</extends>
-   <header>auto/automaticmeasurements.h</header>
+   <header>auto/automeasure.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

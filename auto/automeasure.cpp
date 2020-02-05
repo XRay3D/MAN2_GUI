@@ -1,15 +1,15 @@
-#include "automaticmeasurements.h"
+#include "automeasure.h"
 #include "hw/interface.h"
 #include "manmodel.h"
 #include "mesuremodel.h"
 #include "mydialog.h"
 #include "preparation/devicemodel.h"
-#include "preparation/preparation.h"
+#include "preparation/scansettings.h"
 #include "preparation/sernummodel.h"
 #include "worker.h"
 #include <QMessageBox>
 
-AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
+AutoMeasure::AutoMeasure(QWidget* parent)
     : QWidget(parent)
     , m_model(new ManModel(this))
 {
@@ -19,12 +19,14 @@ AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
     tvMeasure->setSpan(2, 0, 1, 8);
 
     tvMeasure->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    tvMeasure->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tvMeasure->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    tvMeasure->verticalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
 
     tvSerNum->setModel(SerNumModel::self);
     tvSerNum->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tvSerNum->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     tvSerNum->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
     connect(tvSerNum, &QTableView::doubleClicked, [](const QModelIndex& index) {
         if (index.row() < SerNumModel::self->serNumCount())
             MesureModel::showProtocol(index.row());
@@ -32,16 +34,16 @@ AutomaticMeasurements::AutomaticMeasurements(QWidget* parent)
 
     tableView->setModel(new MesureModel);
     tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    connect(&m_timerRms, &QTimer::timeout, [&]() { m_model->setRms(mi::man->GetRmsValue()); });
+    connect(&m_timerRms, &QTimer::timeout, [&]() { m_model->setRms(mi::man->getRmsValue()); });
 }
 
-AutomaticMeasurements::~AutomaticMeasurements()
+AutoMeasure::~AutoMeasure()
 {
 }
 
-void AutomaticMeasurements::showMessage(int num)
+void AutoMeasure::showMessage(int num)
 {
     static int stage = 0;
     QString messageText;
@@ -153,16 +155,16 @@ void AutomaticMeasurements::showMessage(int num)
     return;
 }
 
-void AutomaticMeasurements::updateProgresBar()
+void AutoMeasure::updateProgresBar()
 {
     if (progressBar->value() == progressBar->maximum())
         progressBar->setValue(0);
     progressBar->setValue(progressBar->value() + 1);
 }
 
-void AutomaticMeasurements::endSlot() { on_pbStartStop_clicked(false); }
+void AutoMeasure::endSlot() { on_pbStartStop_clicked(false); }
 
-void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
+void AutoMeasure::on_pbStartStop_clicked(bool checked)
 {
     pbStartStop->setChecked(checked);
     if (checked) {
@@ -179,10 +181,10 @@ void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
         MesureModel::reset();
         pbStartStop->setText("Остановить измерения");
         m_worker = new Worker(m_doNotSkip);
-        connect(m_worker, &QThread::finished, this, &AutomaticMeasurements::endSlot);
+        connect(m_worker, &QThread::finished, this, &AutoMeasure::endSlot);
         connect(m_worker, &QThread::finished, m_worker, &QObject::deleteLater);
-        connect(m_worker, &Worker::showMessage, this, &AutomaticMeasurements::showMessage);
-        connect(m_worker, &Worker::updateProgresBar, this, &AutomaticMeasurements::updateProgresBar);
+        connect(m_worker, &Worker::showMessage, this, &AutoMeasure::showMessage);
+        connect(m_worker, &Worker::updateProgresBar, this, &AutoMeasure::updateProgresBar);
         progressBar->setValue(0);
         progressBar->setMaximum(7 + SerNumModel::self->serNumCount() * DeviceModel::scanSettings().NumberOfChannels * 2);
         m_worker->start();
@@ -198,17 +200,18 @@ void AutomaticMeasurements::on_pbStartStop_clicked(bool checked)
     }
 }
 
-void AutomaticMeasurements::showEvent(QShowEvent* /*event*/)
+void AutoMeasure::showEvent(QShowEvent* /*event*/)
 {
     if (mi::man->IsConnected()) {
         connect(mi::man, &MAN2::GetMeasuredValueSignal, m_model, &ManModel::setMeasuredValueSignal);
         m_timerRms.start(100);
+        setEnabled(true);
         return;
     }
     setEnabled(false);
 }
 
-void AutomaticMeasurements::hideEvent(QHideEvent* /*event*/)
+void AutoMeasure::hideEvent(QHideEvent* /*event*/)
 {
     disconnect(mi::man, &MAN2::GetMeasuredValueSignal, m_model, &ManModel::setMeasuredValueSignal);
     m_timerRms.stop();

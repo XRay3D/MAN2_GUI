@@ -9,7 +9,7 @@ SCPI::SCPI(QObject* parent)
     setFlowControl(QSerialPort::NoFlowControl);
 }
 
-bool SCPI::Ping(const QString& potName)
+bool SCPI::ping(const QString& potName)
 {
     QMutexLocker locker(&m_mutex);
     close();

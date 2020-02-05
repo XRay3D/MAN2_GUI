@@ -2,7 +2,7 @@
 #define AUTOMATICMEASUREMENTS_H
 
 #include "hw/man2.h"
-#include "preparation/preparation.h"
+#include "preparation/scansettings.h"
 #include "ui_automaticmeasurements.h"
 #include <QAxWidget>
 #include <QDialog>
@@ -30,12 +30,12 @@ enum {
 class Worker;
 class ManModel;
 
-class AutomaticMeasurements : public QWidget, private Ui::AutomaticMeasurements {
+class AutoMeasure : public QWidget, private Ui::AutoMeasure {
     Q_OBJECT
 
 public:
-    explicit AutomaticMeasurements(QWidget* parent = nullptr);
-    ~AutomaticMeasurements();
+    explicit AutoMeasure(QWidget* parent = nullptr);
+    ~AutoMeasure() override;
 
 signals:
     void SetTabBarEnabled(bool);
@@ -62,8 +62,8 @@ private slots:
 
     // QWidget interface
 protected:
-    void showEvent(QShowEvent* event);
-    void hideEvent(QHideEvent* event);
+    void showEvent(QShowEvent* event) override;
+    void hideEvent(QHideEvent* event) override;
 };
 
 #endif // AUTOMATICMEASUREMENTS_H

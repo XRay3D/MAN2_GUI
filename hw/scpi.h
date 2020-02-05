@@ -10,7 +10,7 @@ class SCPI : public QSerialPort, public CommonInterfaces {
     Q_OBJECT
 public:
     explicit SCPI(QObject* parent = 0);
-    bool Ping(const QString& potName = QString());
+    bool ping(const QString& potName = QString());
     double GetDcVoltage();
     double GetAcVoltage();
     double GetDcCurrent();
