@@ -1,4 +1,4 @@
-#include "mesuremodel.h"
+#include "testmodel.h"
 
 #include <QCoreApplication>
 #include <QDate>
@@ -11,32 +11,47 @@
 
 const int id4 = qRegisterMetaType<QVector<int>>("QVector<int>");
 
-MesureModel* MesureModel::instance = nullptr;
+TestModel* TestModel::instance = nullptr;
 
-MesureModel::MesureModel(QObject* parent)
+TestModel::TestModel(QObject* parent, const QVector<bool>* hChecked, const QVector<bool>* vChecked)
     : QAbstractTableModel(parent)
+    , m_hChecked(hChecked)
+    , m_vChecked(vChecked)
     , m_paths(8)
     , m_serNum(8)
 {
+    reset();
+    QFile file("TestModel.dat");
+    if (file.open(QIODevice::ReadOnly)) {
+        QDataStream in(&file); // read the data serialized from the file
+        for (auto& var : m_data)
+            in >> var;
+    }
     instance = this;
 }
 
-MesureModel::~MesureModel()
+TestModel::~TestModel()
 {
     instance = nullptr;
+    QFile file("TestModel.dat");
+    if (file.open(QIODevice::WriteOnly)) {
+        QDataStream out(&file); // we will serialize the data into the file
+        for (const auto& var : m_data)
+            out << var;
+    }
 }
 
-int MesureModel::rowCount(const QModelIndex& /*parent*/) const
+int TestModel::rowCount(const QModelIndex& /*parent*/) const
 {
-    return 7;
+    return TestCount;
 }
 
-int MesureModel::columnCount(const QModelIndex& /*parent*/) const
+int TestModel::columnCount(const QModelIndex& /*parent*/) const
 {
-    return 8;
+    return Channels;
 }
 
-QVariant MesureModel::data(const QModelIndex& index, int role) const
+QVariant TestModel::data(const QModelIndex& index, int role) const
 {
     switch (role) {
     case Qt::DisplayRole:
@@ -83,6 +98,8 @@ QVariant MesureModel::data(const QModelIndex& index, int role) const
     case Qt::BackgroundColorRole:
         if (m_currentTest == index.row())
             return QColor(255, 127, 127);
+        else if (!(flags(index) & Qt::ItemIsEnabled))
+            return QColor(240, 240, 240);
         else
             return QVariant();
     case Qt::TextAlignmentRole:
@@ -91,7 +108,7 @@ QVariant MesureModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-QVariant MesureModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant TestModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     switch (role) {
     case Qt::DisplayRole:
@@ -100,54 +117,64 @@ QVariant MesureModel::headerData(int section, Qt::Orientation orientation, int r
         else
             switch (section) {
             case 0:
-                return "Измерение выходного\n"
-                       "напряжения при номинальной\n"
-                       "нагрузке и входном напряжении 220В.";
+                return "       Измерение выходного\n"
+                       "       напряжения при номинальной\n"
+                       "       нагрузке и входном напряжении 220В.";
             case 1:
-                return "Проверка пульсаций\n"
-                       "выходного напряжения  при\n"
-                       "номинальной нагрузке и входном напряжении 130В.";
+                return "       Проверка пульсаций\n"
+                       "       выходного напряжения  при\n"
+                       "       номинальной нагрузке и входном напряжении 130В.";
             case 2:
-                return "Измерение отклонения\n"
-                       "выходного напряжения от номинального\n"
-                       "при номинальной нагрузке и входном напряжении 130В.";
+                return "       Измерение отклонения\n"
+                       "       выходного напряжения от номинального\n"
+                       "       при номинальной нагрузке и входном напряжении 130В.";
             case 3:
-                return "Измерение отклонения\n"
-                       "выходного напряжения от номинального\n"
-                       "при номинальной нагрузке и входном напряжении 250В.";
+                return "       Измерение отклонения\n"
+                       "       выходного напряжения от номинального\n"
+                       "       при номинальной нагрузке и входном напряжении 250В.";
             case 4:
-                return "Измерение отклонения\n"
-                       "выходного напряжения холостого хода\n"
-                       "от номинального при входном напряжении 220В.";
+                return "       Измерение отклонения\n"
+                       "       выходного напряжения холостого хода\n"
+                       "       от номинального при входном напряжении 220В.";
             case 5:
-                return "Ток срабатывания\n"
-                       "электронной защиты";
+                return "       Ток срабатывания\n"
+                       "       электронной защиты";
             case 6:
-                return "Срабатывание\n"
-                       "электронной защиты при коротком замыкании";
+                return "       Срабатывание\n"
+                       "       электронной защиты при коротком замыкании";
             }
     }
     return QVariant();
 }
 
-Qt::ItemFlags MesureModel::flags(const QModelIndex& /*index*/) const
+Qt::ItemFlags TestModel::flags(const QModelIndex& index) const
 {
+    Qt::ItemFlags flags{}; // = Qt::ItemIsEditable;
+    bool enabled = false;
+    if (m_hChecked && m_vChecked)
+        enabled = m_hChecked->value(index.column()) & m_vChecked->value(index.row());
+    else if (m_hChecked)
+        enabled = m_hChecked->value(index.column());
+    else if (m_vChecked)
+        enabled = m_vChecked->value(index.row());
+    else
+        enabled = true;
+    return flags | (enabled ? Qt::ItemIsEnabled /*| Qt::ItemIsSelectable */ : Qt::NoItemFlags);
+
     return Qt::ItemIsEnabled;
 }
 
-void MesureModel::reset()
+void TestModel::reset()
 {
-    if (!instance)
-        return;
     for (int i = 0; i < 8; ++i) {
-        instance->m_data[i].reset();
-        instance->m_paths[i].clear();
-        instance->m_serNum[i].clear();
+        m_data[i].reset();
+        m_paths[i].clear();
+        m_serNum[i].clear();
     }
-    instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(6, 7), { Qt::DisplayRole });
+    //    dataChanged(createIndex(0, 0), createIndex(6, 7), { Qt::DisplayRole });
 }
 
-void MesureModel::setCurrentTest(int val)
+void TestModel::setCurrentTest(int val)
 {
     if (!instance)
         return;
@@ -155,7 +182,7 @@ void MesureModel::setCurrentTest(int val)
     instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(6, 7));
 }
 
-void MesureModel::setTest1(const QList<MeasuredValue>& list)
+void TestModel::setTest1(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;
@@ -164,7 +191,7 @@ void MesureModel::setTest1(const QList<MeasuredValue>& list)
     instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(0, 7), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest2(int ch, bool result)
+void TestModel::setTest2(int ch, bool result)
 {
     if (!instance)
         return;
@@ -172,7 +199,7 @@ void MesureModel::setTest2(int ch, bool result)
     instance->dataChanged(instance->createIndex(1, ch), instance->createIndex(1, ch), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest3(const QList<MeasuredValue>& list)
+void TestModel::setTest3(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;
@@ -181,7 +208,7 @@ void MesureModel::setTest3(const QList<MeasuredValue>& list)
     instance->dataChanged(instance->createIndex(2, 0), instance->createIndex(2, 7), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest4(const QList<MeasuredValue>& list)
+void TestModel::setTest4(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;
@@ -190,7 +217,7 @@ void MesureModel::setTest4(const QList<MeasuredValue>& list)
     instance->dataChanged(instance->createIndex(3, 0), instance->createIndex(3, 7), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest5(const QList<MeasuredValue>& list)
+void TestModel::setTest5(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;
@@ -199,7 +226,7 @@ void MesureModel::setTest5(const QList<MeasuredValue>& list)
     instance->dataChanged(instance->createIndex(4, 0), instance->createIndex(4, 7), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest6(int ch, double value)
+void TestModel::setTest6(int ch, double value)
 {
     if (!instance)
         return;
@@ -207,7 +234,7 @@ void MesureModel::setTest6(int ch, double value)
     instance->dataChanged(instance->createIndex(5, ch), instance->createIndex(5, ch), { Qt::DisplayRole });
 }
 
-void MesureModel::setTest7(const QList<MeasuredValue>& list)
+void TestModel::setTest7(const QList<MeasuredValue>& list)
 {
     if (!instance)
         return;
@@ -216,7 +243,7 @@ void MesureModel::setTest7(const QList<MeasuredValue>& list)
     instance->dataChanged(instance->createIndex(6, 0), instance->createIndex(6, 7), { Qt::DisplayRole });
 }
 
-void MesureModel::saveProtokol(const QString& serialNumber, int number)
+void TestModel::saveProtokol(const QString& serialNumber, int number)
 {
     instance->m_serNum[number] = serialNumber;
     QFile fileTop("Шапка.htm");
@@ -370,7 +397,7 @@ void MesureModel::saveProtokol(const QString& serialNumber, int number)
     file4.close();
 }
 
-void MesureModel::showProtocol(int num)
+void TestModel::showProtocol(int num)
 {
     if (!instance)
         return;
@@ -380,4 +407,19 @@ void MesureModel::showProtocol(int num)
     }
     MyDialog* Dialog = new MyDialog(reinterpret_cast<QWidget*>(instance->parent()), instance->m_serNum[num]);
     Dialog->LoadFile(instance->m_paths[num]);
+}
+
+bool TestModel::dontSkip(int num)
+{
+    if (!instance)
+        return false;
+    return instance->m_vChecked->at(num);
+}
+
+void TestModel::onChecked(int index, int orientation)
+{
+    if (orientation == Qt::Horizontal)
+        emit dataChanged(createIndex(0, index), createIndex(m_row - 1, index), { Qt::DisplayRole });
+    else
+        emit dataChanged(createIndex(index, 0), createIndex(index, m_column - 1), { Qt::DisplayRole });
 }

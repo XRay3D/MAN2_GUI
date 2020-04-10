@@ -4,7 +4,8 @@
 #include <QTableView>
 
 class Header;
-class Model;
+class TestModel;
+class QCheckBox;
 class QAbstractButton;
 
 class TableView : public QTableView {
@@ -12,15 +13,18 @@ class TableView : public QTableView {
 public:
     explicit TableView(QWidget* parent = nullptr);
     ~TableView();
-    Model* model() const;
+    TestModel* model() const;
     void init();
     void initCheckBox();
     void initRadioButton();
     void initCheckBoxRadioButton();
 
+    QCheckBox *checkBox() const;
+
 private:
-    Model* m_model;
+    TestModel* m_model;
     void createCornerCheckBox(Header* header);
+    QCheckBox* m_checkBox = nullptr;
 };
 
 #endif // TABLE_H

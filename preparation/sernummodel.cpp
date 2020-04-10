@@ -126,8 +126,8 @@ int SerNumModel::serNumCount() /*const*/
         + !m_data[6].isEmpty()
         + !m_data[7].isEmpty();
 
-    std::sort(m_data.begin(), m_data.end());
-    std::rotate(m_data.begin(), m_data.end() - i, m_data.end());
+    //    std::sort(m_data.begin(), m_data.end());
+    //    std::rotate(m_data.begin(), m_data.end() - i, m_data.end());
     dataChanged(createIndex(0, 0), createIndex(7, 0), { Qt::DisplayRole });
     return i;
 }

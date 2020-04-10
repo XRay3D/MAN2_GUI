@@ -3,7 +3,7 @@
 
 #include "hw/man2.h"
 #include "preparation/scansettings.h"
-#include "ui_automaticmeasurements.h"
+#include "ui_automeasure.h"
 #include <QAxWidget>
 #include <QDialog>
 #include <QHideEvent>

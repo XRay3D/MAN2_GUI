@@ -55,9 +55,8 @@ void MainWindow::readSettings()
     settings.setIniCodec("UTF-8");
 
     settings.beginGroup("MainWindow");
-    //    resize(settings.value("size", QSize(400, 400)).toSize());
-    //    move(settings.value("pos", QPoint(200, 200)).toPoint());
     restoreState(settings.value("state").toByteArray());
+    restoreGeometry(settings.value("geometry").toByteArray());
     settings.endGroup();
 
     settings.beginGroup("Communications");
@@ -80,9 +79,8 @@ void MainWindow::writeSettings()
     settings.setIniCodec("UTF-8");
 
     settings.beginGroup("MainWindow");
-    //    settings.setValue("size", size());
-    //    settings.setValue("pos", pos());
     settings.setValue("state", saveState());
+    settings.setValue("geometry", saveGeometry());
     settings.endGroup();
 
     settings.beginGroup("Communications");

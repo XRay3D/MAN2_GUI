@@ -38,7 +38,7 @@
       <item>
        <widget class="QPushButton" name="pbManCheckConnection">
         <property name="text">
-         <string>Проверит связь</string>
+         <string>Проверить связь</string>
         </property>
        </widget>
       </item>

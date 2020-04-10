@@ -157,8 +157,7 @@ void DeviceModel::setIndex(int index)
 }
 
 ScanSettings DeviceModel::scanSettings()
-{
-    //    if (!instance)
+{ //    if (!instance)
     //        return {};
     return instance->m_data.value(instance->m_index);
 }

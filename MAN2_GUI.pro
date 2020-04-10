@@ -18,19 +18,35 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-DEFINES += "Emu=0"
+
+
+CONFIG(release, debug|release) {
+    message(Release)
+    DEFINES += "Emu=0"
+}
+
+CONFIG(debug, debug|release) {
+    message(Debug)
+    DEFINES += "Emu=1"
+}
+
+DESTDIR = $$_PRO_FILE_PWD_/bin
+
 
 TARGET = MAN2_GUI
 TEMPLATE = app
 
 win32:RC_FILE = main_icon/myapp.rc
 
-#win32:RC_FILE = myapp.rc
+CONFIG += c++17
+
 
 SOURCES += \
     auto/automeasure.cpp \
+    auto/header.cpp \
     auto/manmodel.cpp \
-    auto/mesuremodel.cpp \
+    auto/tableview.cpp \
+    auto/testmodel.cpp \
     auto/worker.cpp \
     communications.cpp \
     graduation.cpp \
@@ -50,8 +66,10 @@ SOURCES += \
 
 HEADERS  += \
     auto/automeasure.h \
+    auto/header.h \
     auto/manmodel.h \
-    auto/mesuremodel.h \
+    auto/tableview.h \
+    auto/testmodel.h \
     auto/worker.h \
     communications.h \
     graduation.h \

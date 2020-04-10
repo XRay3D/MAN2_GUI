@@ -1,12 +1,13 @@
 #include "automeasure.h"
 #include "hw/interface.h"
 #include "manmodel.h"
-#include "mesuremodel.h"
 #include "mydialog.h"
 #include "preparation/devicemodel.h"
 #include "preparation/scansettings.h"
 #include "preparation/sernummodel.h"
+#include "testmodel.h"
 #include "worker.h"
+#include <QCheckBox>
 #include <QMessageBox>
 
 AutoMeasure::AutoMeasure(QWidget* parent)
@@ -29,10 +30,10 @@ AutoMeasure::AutoMeasure(QWidget* parent)
 
     connect(tvSerNum, &QTableView::doubleClicked, [](const QModelIndex& index) {
         if (index.row() < SerNumModel::self->serNumCount())
-            MesureModel::showProtocol(index.row());
+            TestModel::showProtocol(index.row());
     });
-
-    tableView->setModel(new MesureModel);
+    tableView->initCheckBox();
+    //    tableView->setModel(new TestModel);
     tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
@@ -107,12 +108,12 @@ void AutoMeasure::showMessage(int num)
                           .replace('.', ',');
         switch (QMessageBox::question(this, "", messageText, "Да", "Нет", "Остановить измерения")) {
         case 0:
-            MesureModel::setTest2(num - PulsationsOnTheChannel_1, true);
+            TestModel::setTest2(num - PulsationsOnTheChannel_1, true);
             //m_result[num - PULSATIONS_ON_THE_CHANNEL_1].test2 = 1.0;
             m_worker->Continue();
             return;
         case 1:
-            MesureModel::setTest2(num - PulsationsOnTheChannel_1, false);
+            TestModel::setTest2(num - PulsationsOnTheChannel_1, false);
             //m_result[num - PULSATIONS_ON_THE_CHANNEL_1].test2 = -1.0;
             m_worker->Continue();
             return;
@@ -167,6 +168,9 @@ void AutoMeasure::endSlot() { on_pbStartStop_clicked(false); }
 void AutoMeasure::on_pbStartStop_clicked(bool checked)
 {
     pbStartStop->setChecked(checked);
+    tableView->verticalHeader()->setEnabled(!checked);
+    tableView->checkBox()->setEnabled(!checked);
+
     if (checked) {
         if (SerNumModel::self->isEmpty()) {
             QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
@@ -178,7 +182,6 @@ void AutoMeasure::on_pbStartStop_clicked(bool checked)
         for (bool& val : m_doNotSkip)
             val = i-- > 0;
 
-        MesureModel::reset();
         pbStartStop->setText("Остановить измерения");
         m_worker = new Worker(m_doNotSkip);
         connect(m_worker, &QThread::finished, this, &AutoMeasure::endSlot);
@@ -193,8 +196,8 @@ void AutoMeasure::on_pbStartStop_clicked(bool checked)
         m_worker->FinishMeasurements();
         progressBar->setValue(0);
         for (int i = 0; i < SerNumModel::self->serNumCount(); ++i) {
-            MesureModel::saveProtokol(SerNumModel::self->serNum(i), i);
-            MesureModel::showProtocol(i);
+            TestModel::saveProtokol(SerNumModel::self->serNum(i), i);
+            TestModel::showProtocol(i);
         }
         QMessageBox::information(nullptr, "", "Проверка закончена.");
     }

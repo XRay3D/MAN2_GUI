@@ -19,6 +19,7 @@ signals:
 
 private:
     void WaitAnswer(int question);
+    void WaitAnswerManConnErr();
     void CheckFinished();
     void SetVoltage(int voltage);
     void Test1();

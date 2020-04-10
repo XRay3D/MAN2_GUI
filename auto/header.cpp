@@ -3,18 +3,21 @@
 #include <QFile>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QSettings>
 
 Header::Header(Qt::Orientation orientation, QWidget* parent)
     : QHeaderView(orientation, parent)
 
 {
-    //    QFile file(orientation == Qt::Horizontal ? "Horizontal.data" : "Vertical.data");
-    //    if (file.open(QFile::ReadOnly)) {
-    //        QDataStream in(&file);
-    //        in >> m_checked;
-    //    }
     connect(this, &QHeaderView::sectionCountChanged, [this, orientation](int /*oldCount*/, int newCount) {
         m_checked.resize(newCount);
+        {
+            QSettings settings;
+            settings.beginGroup("Header");
+            for (int i = 0; i < m_checked.size(); ++i) {
+                m_checked[i] = settings.value("Header" + QString::number(i), false).toBool();
+            }
+        }
         m_checkRect.resize(newCount);
         emit onCheckedV(m_checked, orientation);
     });
@@ -24,11 +27,11 @@ Header::Header(Qt::Orientation orientation, QWidget* parent)
 
 Header::~Header()
 {
-    //    QFile file(orientation() == Qt::Horizontal ? "Horizontal.data" : "Vertical.data");
-    //    if (file.open(QFile::WriteOnly)) {
-    //        QDataStream out(&file);
-    //        out << m_checked;
-    //    }
+    QSettings settings;
+    settings.beginGroup("Header");
+    for (int i = 0; i < m_checked.size(); ++i) {
+        settings.setValue("Header" + QString::number(i), m_checked[i]);
+    }
 }
 
 void Header::setAll(bool checked)

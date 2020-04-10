@@ -4,8 +4,8 @@
 #include "hw/man2.h"
 #include <QAbstractTableModel>
 
-typedef struct Result_t {
-    enum Val{
+struct Result_t {
+    enum Val {
         Undefined,
         True,
         False
@@ -17,6 +17,7 @@ typedef struct Result_t {
     double test5 = 0.0;
     double test6 = 0.0;
     double test7 = 0.0;
+
     void reset()
     {
         test1 = 0.0;
@@ -27,14 +28,40 @@ typedef struct Result_t {
         test6 = 0.0;
         test7 = 0.0;
     }
-} Result_t;
 
-class MesureModel : public QAbstractTableModel {
-    static MesureModel* instance;
+    friend inline QDataStream& operator>>(QDataStream& s, Result_t& set)
+    {
+        s.readRawData(reinterpret_cast<char*>(&set), sizeof(Result_t));
+        return s;
+    }
+
+    friend inline QDataStream& operator<<(QDataStream& s, const Result_t& set)
+    {
+        s.writeRawData(reinterpret_cast<const char*>(&set), sizeof(Result_t));
+        return s;
+    }
+};
+
+class TestModel : public QAbstractTableModel {
+    static TestModel* instance;
 
 public:
-    MesureModel(QObject* parent = Q_NULLPTR);
-    ~MesureModel() override;
+    TestModel(QObject* parent = nullptr,
+        const QVector<bool>* hChecked = nullptr,
+        const QVector<bool>* vChecked = nullptr);
+    ~TestModel() override;
+
+    enum {
+        Test1,
+        Test2,
+        Test3,
+        Test4,
+        Test5,
+        Test6,
+        Test7,
+        TestCount,
+        Channels = 8
+    };
 
     // QAbstractItemModel interface
 public:
@@ -43,8 +70,6 @@ public:
     QVariant data(const QModelIndex& index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-
-    static void reset();
 
     static void setCurrentTest(int val);
 
@@ -58,8 +83,18 @@ public:
 
     static void saveProtokol(const QString& serialNumber, int number);
     static void showProtocol(int num);
+    static bool dontSkip(int num);
+
+    void onChecked(int index, int orientation);
 
 private:
+    void reset();
+
+    const QVector<bool>* m_hChecked;
+    const QVector<bool>* m_vChecked;
+    int m_row = 0;
+    int m_column = 0;
+
     int m_currentTest = -1;
     Result_t m_data[8];
     QVector<QString> m_paths;
