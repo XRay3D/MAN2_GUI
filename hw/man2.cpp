@@ -9,7 +9,7 @@
 enum { ChannelCount = 8 };
 
 const int id1 = qRegisterMetaType<MeasuredValue>("MeasuredValue");
-const int id2 = qRegisterMetaType<ValuetypeEnum>("ValuetypeEnum");
+const int id2 = qRegisterMetaType<ValueType>("ValuetypeEnum");
 const int id3 = qRegisterMetaType<uint8_t>("uint8_t");
 const int id5 = qRegisterMetaType<QMap<int, MeasuredValue>>("QMap<int, MeasuredValue>");
 
@@ -63,7 +63,7 @@ bool MAN2::ping(const QString& PortName)
     return m_connected;
 }
 
-bool MAN2::getMeasuredValue(MeasuredValue& value, uint8_t channel, ValuetypeEnum type)
+bool MAN2::getMeasuredValue(MeasuredValue& value, uint8_t channel, ValueType type)
 {
     if (Emu) {
         m_measuredValue.clear();
@@ -79,8 +79,7 @@ bool MAN2::getMeasuredValue(MeasuredValue& value, uint8_t channel, ValuetypeEnum
         Reset();
         m_measuredValue.clear();
         emit Write(createParcel(GetMeasuredValue, static_cast<uint8_t>(type), channel));
-        int delay[] = { 1000, 1000, 10000, 10000, 1000 };
-        if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delay[type])) {
+        if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delayMs[type])) {
             value = m_value;
             m_result = true;
         }
@@ -88,7 +87,7 @@ bool MAN2::getMeasuredValue(MeasuredValue& value, uint8_t channel, ValuetypeEnum
     return m_result;
 }
 
-bool MAN2::getMeasuredValue(QList<MeasuredValue>& value, ValuetypeEnum type)
+bool MAN2::getMeasuredValue(QVector<MeasuredValue>& value, ValueType type)
 {
     if (Emu) {
         value.clear();
@@ -112,8 +111,7 @@ bool MAN2::getMeasuredValue(QList<MeasuredValue>& value, ValuetypeEnum type)
         m_measuredValue.clear();
         value.clear();
         emit Write(createParcel(GetMeasuredValue, static_cast<uint8_t>(type), 0));
-        const int delay[] = { 1000, 1000, 10000, 10000, 1000 };
-        if (m_semaphore.tryAcquire(ChannelCount, delay[type])) {
+        if (m_semaphore.tryAcquire(ChannelCount, delayMs[type])) {
             emit GetMeasuredValueSignal(m_measuredValue);
             QMapIterator<int, MeasuredValue> iterator(m_measuredValue);
             while (iterator.hasNext()) {
@@ -190,7 +188,7 @@ bool MAN2::tripCurrentTest()
     return m_result;
 }
 
-bool MAN2::thortCircuitTest(uint8_t Enable, uint8_t channel)
+bool MAN2::shortCircuitTest(uint8_t Enable, uint8_t channel)
 {
     if (Emu) {
         return true;
@@ -303,7 +301,7 @@ bool MAN2::disableAll()
     }
     while (IsConnected()) {
         Reset();
-        if (!thortCircuitTest(Off))
+        if (!shortCircuitTest(Off))
             break;
         if (!switchCurrent(Off))
             break;
@@ -317,7 +315,7 @@ bool MAN2::disableAll()
     return m_result;
 }
 
-void MAN2::GetMeasuredValueSlot(ValuetypeEnum type, uint8_t channel)
+void MAN2::GetMeasuredValueSlot(ValueType type, uint8_t channel)
 {
     if (Emu) {
         m_measuredValue.clear();
@@ -337,8 +335,7 @@ void MAN2::GetMeasuredValueSlot(ValuetypeEnum type, uint8_t channel)
         uint8_t tmp = type;
         m_measuredValue.clear();
         emit Write(createParcel(GetMeasuredValue, tmp, channel));
-        const int delay[] = { 1000, 1000, 10000, 10000, 1000 };
-        if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delay[type]))
+        if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delayMs[type]))
             m_result = true;
         emit GetMeasuredValueSignal(m_measuredValue);
     }

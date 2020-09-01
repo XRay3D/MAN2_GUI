@@ -1,6 +1,7 @@
 #include "measurements.h"
 #include "hw/interface.h"
 #include <QChart>
+#include <QChartView>
 #include <QDateTimeAxis>
 #include <QEvent>
 #include <QLineSeries>
@@ -14,6 +15,10 @@ Measurements::Measurements(QWidget* parent)
     , m_timerMeasure(0)
 {
     setupUi(this);
+
+    graphicsView = new QChartView(this);
+    graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
+    gridLayout->addWidget(graphicsView, 2, 0, 1, 10);
 
     m_listPbCurrent = { pbCurrent_1, pbCurrent_2, pbCurrent_3, pbCurrent_4, pbCurrent_5, pbCurrent_6, pbCurrent_7, pbCurrent_8 };
     m_listPbShort = { pbShort_1, pbShort_2, pbShort_3, pbShort_4, pbShort_5, pbShort_6, pbShort_7, pbShort_8 };
@@ -146,7 +151,7 @@ void Measurements::on_pbShortAll_clicked(bool checked)
         button->setChecked(checked);
         button->setText(checked ? "Выкл." : "Вкл.");
     }
-    mi::man->thortCircuitTest(checked);
+    mi::man->shortCircuitTest(checked);
 }
 
 void Measurements::PbCurrentClicked(int channel)
@@ -178,7 +183,7 @@ void Measurements::PbShortClicked(int channel)
     else
         btn->setText("Вкл.");
 
-    mi::man->thortCircuitTest(checked, channel + 1);
+    mi::man->shortCircuitTest(checked, channel + 1);
 }
 
 void Measurements::PbOscClicked(int channel)
@@ -242,7 +247,7 @@ void Measurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue>& list)
 void Measurements::showEvent(QShowEvent* /*event*/)
 {
     if (mi::man->IsConnected()) {
-        QList<MeasuredValue> list;
+        QVector<MeasuredValue> list;
         if (mi::man->getMeasuredValue(list)) {
             m_disableSlots = true;
             for (int i = 0; i < list.size(); ++i) {

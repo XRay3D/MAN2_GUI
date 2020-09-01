@@ -32,7 +32,7 @@ private:
 
     void Msleep(unsigned long time);
 
-    QList<MeasuredValue> m_list;
+    QVector<MeasuredValue> m_list;
     double m_inVoltage;
     double m_minInVoltage;
     double m_maxInVoltage;

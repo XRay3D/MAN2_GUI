@@ -19,7 +19,7 @@ enum StateEnum {
     Off,
     On
 };
-enum CommandEnum {
+enum Command {
     Ping,
     GetMeasuredValue,
     SetCurrent,
@@ -46,7 +46,7 @@ enum CommandEnum {
 //    OVERHEAT_TEMPERATURE, //for overheat protection
 //};
 
-enum ValuetypeEnum {
+enum ValueType {
     CurrentMeasuredValue, // Напряжение, ток и уставка.
     ValueTripCurrent,
     CalibVoltage,
@@ -78,17 +78,10 @@ struct ManState {
 };
 
 struct MeasuredValue {
-    MeasuredValue()
-        : Value1(-9999.0)
-        , Value2(-9999.0)
-        , Value3(-9999.0)
-        , Type(0)
-    {
-    }
-    float Value1;
-    float Value2;
-    float Value3;
-    uint8_t Type;
+    float Value1 = 0.0;
+    float Value2 = 0.0;
+    float Value3 = 0.0;
+    uint8_t Type = 0;
     ManState ManState;
 };
 
@@ -129,13 +122,13 @@ public:
 
     bool ping(const QString& PortName = QString()) override;
 
-    bool getMeasuredValue(MeasuredValue& value, uint8_t channel, ValuetypeEnum type = CurrentMeasuredValue);
-    bool getMeasuredValue(QList<MeasuredValue>& value, ValuetypeEnum type = CurrentMeasuredValue);
+    bool getMeasuredValue(MeasuredValue& value, uint8_t channel, ValueType type = CurrentMeasuredValue);
+    bool getMeasuredValue(QVector<MeasuredValue>& value, ValueType type = CurrentMeasuredValue);
     double getRmsValue();
     bool setCurrent(float Current, uint8_t Channel = 0);
     bool switchCurrent(uint8_t Enable, uint8_t Channel = 0);
     bool tripCurrentTest();
-    bool thortCircuitTest(uint8_t Enable, uint8_t Channel = 0);
+    bool shortCircuitTest(uint8_t Enable, uint8_t Channel = 0);
     bool oscilloscope(int Channel);
     bool setDefaultCalibrationCoefficients(uint8_t Channel);
     bool getCalibrationCoefficients(GradCoeff& GradCoeff, uint8_t Channel);
@@ -144,7 +137,7 @@ public:
     bool disableAll();
 
 public slots:
-    void GetMeasuredValueSlot(ValuetypeEnum type = CurrentMeasuredValue, uint8_t channel = 0);
+    void GetMeasuredValueSlot(ValueType type = CurrentMeasuredValue, uint8_t channel = 0);
 
 signals:
     void Open(int mode);
@@ -164,6 +157,7 @@ private:
     int m_counter;
     mutable QSemaphore m_semaphore;
     mutable bool m_result;
+    static constexpr int delayMs[]{ 1000, 1000, 10000, 10000, 1000 };
 
     void Init();
     inline void Reset();

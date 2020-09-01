@@ -3,11 +3,12 @@
 
 #include "hw/man2.h"
 #include "ui_measurements.h"
-
 #include <QDate>
-#include <QLineSeries>
 
-QT_CHARTS_USE_NAMESPACE
+namespace QtCharts {
+class QChartView;
+class QLineSeries;
+}
 
 class Measurements : public QWidget, private Ui::Measurements {
     Q_OBJECT
@@ -36,7 +37,7 @@ private slots:
     void on_pbClear_clicked();
 
 signals:
-    void StartMeasure(ValuetypeEnum type = CurrentMeasuredValue, uint8_t channel = 0);
+    void StartMeasure(ValueType type = CurrentMeasuredValue, uint8_t channel = 0);
     //public:
     //    bool eventFilter(QObject* watched, QEvent* event);
 
@@ -48,7 +49,7 @@ private:
     QList<QDoubleSpinBox*> m_listDsbCurrent;
     QList<QDoubleSpinBox*> m_listDsbSetCurrent;
     QList<QGroupBox*> m_listGroupBox;
-    QList<QLineSeries*> m_series;
+    QList<QtCharts::QLineSeries*> m_series;
     int m_timerMeasure;
     bool m_disableSlots = false;
     QDateTime m_keyX;
@@ -58,6 +59,8 @@ private:
     //    QSignalMapper* smOsc;
     //    QSignalMapper* smSetCurrent;
     //    QSignalMapper* smGroupBox;
+
+    QtCharts::QChartView* graphicsView;
 
     QSemaphore m_semaphore;
     QMutex m_mutex;

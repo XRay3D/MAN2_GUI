@@ -54,7 +54,7 @@ void Graduation::on_pbStartGrad_clicked()
 
     m_channel = cbManCh->currentIndex() + 1;
 
-    mi::man->thortCircuitTest(false, m_channel);
+    mi::man->shortCircuitTest(false, m_channel);
     mi::man->switchCurrent(false, m_channel);
     mi::man->oscilloscope(0);
 

@@ -182,12 +182,12 @@ void TestModel::setCurrentTest(int val)
     instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(6, 7));
 }
 
-void TestModel::setTest1(const QList<MeasuredValue>& list)
+void TestModel::setTest1(const QVector<MeasuredValue>& data)
 {
     if (!instance)
         return;
-    for (int i = 0; i < list.size(); ++i)
-        instance->m_data[i].test1 = static_cast<double>(list[i].Value1);
+    for (int i = 0; i < data.size(); ++i)
+        instance->m_data[i].test1 = static_cast<double>(data[i].Value1);
     instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(0, 7), { Qt::DisplayRole });
 }
 
@@ -199,30 +199,30 @@ void TestModel::setTest2(int ch, bool result)
     instance->dataChanged(instance->createIndex(1, ch), instance->createIndex(1, ch), { Qt::DisplayRole });
 }
 
-void TestModel::setTest3(const QList<MeasuredValue>& list)
+void TestModel::setTest3(const QVector<MeasuredValue>& data)
 {
     if (!instance)
         return;
-    for (int i = 0; i < list.size(); ++i)
-        instance->m_data[i].test3 = static_cast<double>(list[i].Value1);
+    for (int i = 0; i < data.size(); ++i)
+        instance->m_data[i].test3 = static_cast<double>(data[i].Value1);
     instance->dataChanged(instance->createIndex(2, 0), instance->createIndex(2, 7), { Qt::DisplayRole });
 }
 
-void TestModel::setTest4(const QList<MeasuredValue>& list)
+void TestModel::setTest4(const QVector<MeasuredValue>& data)
 {
     if (!instance)
         return;
-    for (int i = 0; i < list.size(); ++i)
-        instance->m_data[i].test4 = static_cast<double>(list[i].Value1);
+    for (int i = 0; i < data.size(); ++i)
+        instance->m_data[i].test4 = static_cast<double>(data[i].Value1);
     instance->dataChanged(instance->createIndex(3, 0), instance->createIndex(3, 7), { Qt::DisplayRole });
 }
 
-void TestModel::setTest5(const QList<MeasuredValue>& list)
+void TestModel::setTest5(const QVector<MeasuredValue>& data)
 {
     if (!instance)
         return;
-    for (int i = 0; i < list.size(); ++i)
-        instance->m_data[i].test5 = static_cast<double>(list[i].Value1);
+    for (int i = 0; i < data.size(); ++i)
+        instance->m_data[i].test5 = static_cast<double>(data[i].Value1);
     instance->dataChanged(instance->createIndex(4, 0), instance->createIndex(4, 7), { Qt::DisplayRole });
 }
 
@@ -234,12 +234,12 @@ void TestModel::setTest6(int ch, double value)
     instance->dataChanged(instance->createIndex(5, ch), instance->createIndex(5, ch), { Qt::DisplayRole });
 }
 
-void TestModel::setTest7(const QList<MeasuredValue>& list)
+void TestModel::setTest7(const QVector<MeasuredValue>& data)
 {
     if (!instance)
         return;
-    for (int i = 0; i < list.size(); ++i)
-        instance->m_data[i].test7 = static_cast<double>(std::min(list[i].Value1, list[i].Value2));
+    for (int i = 0; i < data.size(); ++i)
+        instance->m_data[i].test7 = 0.0; ///////////////////static_cast<double>(std::min(data[i].Value1, data[i].Value2));
     instance->dataChanged(instance->createIndex(6, 0), instance->createIndex(6, 7), { Qt::DisplayRole });
 }
 
@@ -277,9 +277,9 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
 
     const int rowCount = DeviceModel::scanSettings().NumberOfChannels;
 
-    bool ok = true;
+    bool allOk = true;
     for (int row = 0; row < rowCount; ++row) {
-        bool flags[7] = { false, false, false, false, false, false, false };
+        bool flags[]{ false, false, false, false, false, false, false };
         QString str;
         QStringList m_list;
         m_list.clear();
@@ -367,13 +367,13 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
                             .arg(flags[4] ? "; color:red" : "")
                             .arg(flags[5] ? "; color:red" : "")
                             .arg(flags[6] ? "; color:red" : ""));
-        ok = ok && !flags[0] && !flags[1] && !flags[2] && !flags[3] && !flags[4] && !flags[5] && !flags[6];
+        allOk = allOk && !flags[0] && !flags[1] && !flags[2] && !flags[3] && !flags[4] && !flags[5] && !flags[6];
     }
 
     protocol.append(strBot.arg(QDate::currentDate().toString("dd.MM.yyyy"))
                         .arg(DeviceModel::scanSettings().Fio)
-                        .arg(!ok ? "; color:red" : "")
-                        .arg(ok ? "Прибор соответствует требованиям ТУ" : "Прибор не соответствует требованиям ТУ"));
+                        .arg(/*!ok ? "; color:red" : */ "")
+                        .arg(/*ok ? "Прибор соответствует требованиям ТУ" : "Прибор не соответствует требованиям ТУ"*/ ""));
 
     QString path = qApp->applicationDirPath()
                        .append("/")

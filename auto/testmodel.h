@@ -73,13 +73,13 @@ public:
 
     static void setCurrentTest(int val);
 
-    static void setTest1(const QList<MeasuredValue>& list);
+    static void setTest1(const QVector<MeasuredValue>& data);
     static void setTest2(int ch, bool result);
-    static void setTest3(const QList<MeasuredValue>& list);
-    static void setTest4(const QList<MeasuredValue>& list);
-    static void setTest5(const QList<MeasuredValue>& list);
+    static void setTest3(const QVector<MeasuredValue>& data);
+    static void setTest4(const QVector<MeasuredValue>& data);
+    static void setTest5(const QVector<MeasuredValue>& data);
     static void setTest6(int ch, double value);
-    static void setTest7(const QList<MeasuredValue>& list);
+    static void setTest7(const QVector<MeasuredValue>& data);
 
     static void saveProtokol(const QString& serialNumber, int number);
     static void showProtocol(int num);

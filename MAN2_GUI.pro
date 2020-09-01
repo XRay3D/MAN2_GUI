@@ -39,6 +39,7 @@ TEMPLATE = app
 win32:RC_FILE = main_icon/myapp.rc
 
 CONFIG += c++17
+CONFIG += console
 
 
 SOURCES += \

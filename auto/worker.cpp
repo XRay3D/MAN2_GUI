@@ -126,8 +126,8 @@ void Worker::SetVoltage(int voltage)
 
 void Worker::Test1()
 {
-    TestModel::setCurrentTest(TestModel::Test1);
     qDebug() << "Test1";
+    TestModel::setCurrentTest(TestModel::Test1);
     Msleep(5000);
     do {
         Msleep(500);
@@ -142,8 +142,8 @@ void Worker::Test1()
 
 void Worker::Test2()
 {
-    TestModel::setCurrentTest(TestModel::Test2);
     qDebug() << "Test2";
+    TestModel::setCurrentTest(TestModel::Test2);
     for (int i = 0; i < 8; ++i) {
         if (m_doNotSkip[i]) {
             while (!mi::man->oscilloscope(0))
@@ -163,8 +163,8 @@ void Worker::Test2()
 
 void Worker::Test3()
 {
-    TestModel::setCurrentTest(TestModel::Test3);
     qDebug() << "Test3";
+    TestModel::setCurrentTest(TestModel::Test3);
     Msleep(5000);
     do {
         Msleep(500);
@@ -179,8 +179,8 @@ void Worker::Test3()
 
 void Worker::Test4()
 {
-    TestModel::setCurrentTest(TestModel::Test4);
     qDebug() << "Test4";
+    TestModel::setCurrentTest(TestModel::Test4);
 
     while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         WaitAnswerManConnErr();
@@ -199,8 +199,8 @@ void Worker::Test4()
 
 void Worker::Test5()
 {
-    TestModel::setCurrentTest(TestModel::Test5);
     qDebug() << "Test5";
+    TestModel::setCurrentTest(TestModel::Test5);
 
     while (!mi::man->setCurrent(0))
         WaitAnswerManConnErr();
@@ -220,8 +220,8 @@ void Worker::Test5()
 
 void Worker::Test6()
 {
-    TestModel::setCurrentTest(TestModel::Test6);
     qDebug() << "Test6";
+    TestModel::setCurrentTest(TestModel::Test6);
     MeasuredValue value;
 
     while (!mi::man->setCurrent(0))
@@ -276,54 +276,60 @@ void Worker::Test6()
 
 void Worker::Test7()
 {
-    TestModel::setCurrentTest(TestModel::Test7);
     qDebug() << "Test7";
-    while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent)) {
+    TestModel::setCurrentTest(TestModel::Test7);
+
+    while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         WaitAnswerManConnErr();
-    }
+
     Msleep(5000);
 
     QSettings settings("Settings.ini", QSettings::IniFormat);
     settings.setIniCodec("UTF-8");
     settings.beginGroup("Test7");
+
     int t1 = settings.value("t1", 0).toInt();
     if (!t1)
         settings.setValue("t1", t1 = 200);
-    int t2 = settings.value("t1", 0).toInt();
+
+    int t2 = settings.value("t2", 0).toInt();
     if (!t2)
         settings.setValue("t2", t2 = 200);
-    int t3 = settings.value("t2", 0).toInt();
+
+    int t3 = settings.value("t3", 0).toInt();
     if (!t3)
         settings.setValue("t3", t3 = 50);
 
-    do {
+    m_list = { {}, {}, {}, {}, {}, {}, {}, {} };
+    for (uint8_t ch = 1; ch <= 8; ++ch) {
+        if (!m_doNotSkip[ch - 1])
+            continue;
+        Msleep(t1); // Добавить для каждого свои в будущем
+        while (!mi::man->shortCircuitTest(1, ch)) //вкл
+            WaitAnswerManConnErr();
+        qDebug() << QTime::currentTime();
+        msleep(t2); // Добавить для каждого свои в будущем
+        while (!mi::man->shortCircuitTest(0, ch)) //выкл
+            WaitAnswerManConnErr();
+        qDebug() << QTime::currentTime();
+        msleep(t3); // Добавить для каждого свои в будущем
+        while (!mi::man->getMeasuredValue(m_list[ch - 1], ch, RawData)) //измерение
+            WaitAnswerManConnErr();
+    }
 
-        for (uint8_t ch = 1; ch <= 8; ++ch) {
-            if (!m_doNotSkip[ch - 1])
-                continue;
-            Msleep(t1); // Добавить для каждого свои в будущем
-            while (!mi::man->thortCircuitTest(1, ch))
-                WaitAnswerManConnErr();
-            Msleep(t2); // Добавить для каждого свои в будущем
-            while (!mi::man->thortCircuitTest(0, ch))
-                WaitAnswerManConnErr();
-            msleep(t3);
-            while (!mi::man->getMeasuredValue(m_list[ch - 1], ch, RawData))
-                WaitAnswerManConnErr();
-        }
-        //        Msleep(500);
-        //        while (!mi::man->thortCircuitTest(1))
-        //            WaitAnswerManConnErr();
-        //        Msleep(200);
-        //        while (!mi::man->thortCircuitTest(0))
-        //            WaitAnswerManConnErr();
-        //        msleep(50);
-        //        while (!mi::man->getMeasuredValue(m_list, RawData))
-        //            WaitAnswerManConnErr();
+    //    qDebug() << "Data" << m_list;//Xr
+    //        Msleep(500);
+    //        while (!mi::man->thortCircuitTest(1))
+    //            WaitAnswerManConnErr();
+    //        Msleep(200);
+    //        while (!mi::man->thortCircuitTest(0))
+    //            WaitAnswerManConnErr();
+    //        msleep(50);
+    //        while (!mi::man->getMeasuredValue(m_list, RawData))
+    //            WaitAnswerManConnErr();
 
-        TestModel::setTest7(m_list);
-        CheckFinished();
-    } while (m_list.size() != 8);
+    TestModel::setTest7(m_list);
+    CheckFinished();
     WaitAnswer(RestoreTheOperationOfChannels);
     emit updateProgresBar();
 }
