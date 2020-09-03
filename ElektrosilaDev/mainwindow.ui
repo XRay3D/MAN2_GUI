@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>696</width>
+    <height>569</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Электросила</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>2</number>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+      <widget class="Communications" name="tabCommunications">
+       <attribute name="title">
+        <string>Связь</string>
+       </attribute>
+      </widget>
+      <widget class="Measurements" name="tabMeasurements">
+       <attribute name="title">
+        <string>Ручное управление</string>
+       </attribute>
+      </widget>
+      <widget class="TripTest" name="tab_2">
+       <attribute name="title">
+        <string>TripTest</string>
+       </attribute>
+      </widget>
+      <widget class="LinTest" name="tab">
+       <attribute name="title">
+        <string>LinTest</string>
+       </attribute>
+      </widget>
+      <widget class="Graduation" name="tabGraduation">
+       <attribute name="title">
+        <string>Градуировка</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>696</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Graduation</class>
+   <extends>QWidget</extends>
+   <header>graduation.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Measurements</class>
+   <extends>QWidget</extends>
+   <header>measurements.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Communications</class>
+   <extends>QWidget</extends>
+   <header>communications.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LinTest</class>
+   <extends>QWidget</extends>
+   <header>lintest.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TripTest</class>
+   <extends>QWidget</extends>
+   <header>triptest.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
