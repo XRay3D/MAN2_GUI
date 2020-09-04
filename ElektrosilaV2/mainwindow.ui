@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1600</width>
-    <height>900</height>
+    <width>857</width>
+    <height>443</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,11 +61,6 @@
         <string>Связь</string>
        </attribute>
       </widget>
-      <widget class="Graduation" name="tabGraduation">
-       <attribute name="title">
-        <string>Градуировка</string>
-       </attribute>
-      </widget>
      </widget>
     </item>
    </layout>
@@ -75,8 +70,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1600</width>
-     <height>22</height>
+     <width>857</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -87,12 +82,6 @@
    <class>PrepareForm</class>
    <extends>QWidget</extends>
    <header>preparation/prepareform.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Graduation</class>
-   <extends>QWidget</extends>
-   <header>graduation.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

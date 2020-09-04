@@ -1,4 +1,4 @@
-#-------------------------------------------------
+F#-------------------------------------------------
 #
 # Project created by QtCreator 2017-02-03T10:27:13
 #
@@ -6,41 +6,44 @@
 
 QT += core gui widgets serialport printsupport axcontainer
 QT += charts
+
 #FQMAKE_CXXFLAGS += vms
 
-# The following define makes your compiler emit warnings if you use
-# any feature of Qt which as been marked deprecated (the exact warnings
-# depend on your compiler). Please consult the documentation of the
-# deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += \
+    QT_DEPRECATED_WARNINGS \
+    QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+#TARGET = GGEasyr#GeFtber2Gcode
 
-
-CONFIG(release, debug|release) {
-    message(Release)
-    DEFINES += "Emu=0"
+contains(QT_ARCH, i386) {
+    TARGET = $$TARGET"_x32"
+    LIBS += \
+        -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc/" \
+        -lvisa32
+} else {
+    TARGET = $$TARGET"_x64"
+    LIBS += \
+        -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Lib_x64/msc/" \
+        -lnivisa64 \
+        -lvisa64
 }
 
-CONFIG(debug, debug|release) {
-    message(Debug)
-    DEFINES += "Emu=1"
-}
+#msvc* {
+#    LIBS += -lsetupapi -lAdvapi32
+#    RC_FILE = myapp.rc
+#    TARGET = $$TARGET"_msvc"
+#}
 
-DESTDIR = $$_PRO_FILE_PWD_/bin
+DESTDIR = $$_PRO_FILE_PWD_/../bin
 
-
-TARGET = MAN2_GUI
 TEMPLATE = app
 
 win32:RC_FILE = main_icon/myapp.rc
 
-CONFIG += c++17
-CONFIG += console
+CONFIG += c++17 \
+#    console \
 
+INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/include"
 
 SOURCES += \
     auto/automeasure.cpp \
@@ -50,7 +53,7 @@ SOURCES += \
     auto/testmodel.cpp \
     auto/worker.cpp \
     communications.cpp \
-    graduation.cpp \
+    hw/digitalosc.cpp \
     hw/interface.cpp \
     hw/man2.cpp \
     hw/myprotokol.cpp \
@@ -65,7 +68,7 @@ SOURCES += \
     shdocvw.cpp \
 
 
-HEADERS  += \
+HEADERS += \
     auto/automeasure.h \
     auto/header.h \
     auto/manmodel.h \
@@ -73,9 +76,9 @@ HEADERS  += \
     auto/testmodel.h \
     auto/worker.h \
     communications.h \
-    graduation.h \
     hw/common_interfaces.h \
     hw/common_interfaces.h \
+    hw/digitalosc.h \
     hw/interface.h \
     hw/man2.h \
     hw/myprotokol.h \
@@ -88,11 +91,9 @@ HEADERS  += \
     preparation/sernummodel.h \
     shdocvw.h \
 
-
-FORMS    += \
+FORMS += \
     auto/automeasure.ui \
     communications.ui \
-    graduation.ui \
     mainwindow.ui \
     measurements.ui \
     preparation/prepareform.ui \

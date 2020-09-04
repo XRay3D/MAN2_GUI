@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW2_H
 #define MAINWINDOW2_H
 
-#include "ui_mainwindow.h"
 #include "hw/interface.h"
+#include "ui_mainwindow.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow {
     Q_OBJECT

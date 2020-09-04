@@ -23,13 +23,13 @@ AutoMeasure::AutoMeasure(QWidget* parent)
     tvMeasure->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     tvMeasure->verticalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
 
-    tvSerNum->setModel(SerNumModel::self);
+    tvSerNum->setModel(SerNumModel::self_);
     tvSerNum->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tvSerNum->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     tvSerNum->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     connect(tvSerNum, &QTableView::doubleClicked, [](const QModelIndex& index) {
-        if (index.row() < SerNumModel::self->serNumCount())
+        if (index.row() < SerNumModel::serNumCount())
             TestModel::showProtocol(index.row());
     });
     tableView->initCheckBox();
@@ -172,13 +172,13 @@ void AutoMeasure::on_pbStartStop_clicked(bool checked)
     tableView->checkBox()->setEnabled(!checked);
 
     if (checked) {
-        if (SerNumModel::self->isEmpty()) {
+        if (SerNumModel::isEmpty()) {
             QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
             pbStartStop->setChecked(false);
             return;
         }
 
-        int i = SerNumModel::self->serNumCount() * DeviceModel::scanSettings().NumberOfChannels;
+        int i = SerNumModel::serNumCount() * DeviceModel::scanSettings().NumberOfChannels;
         for (bool& val : m_doNotSkip)
             val = i-- > 0;
 
@@ -189,33 +189,34 @@ void AutoMeasure::on_pbStartStop_clicked(bool checked)
         connect(m_worker, &Worker::showMessage, this, &AutoMeasure::showMessage);
         connect(m_worker, &Worker::updateProgresBar, this, &AutoMeasure::updateProgresBar);
         progressBar->setValue(0);
-        progressBar->setMaximum(7 + SerNumModel::self->serNumCount() * DeviceModel::scanSettings().NumberOfChannels * 2);
+        progressBar->setMaximum(7 + SerNumModel::serNumCount() * DeviceModel::scanSettings().NumberOfChannels * 2);
         m_worker->start();
     } else {
         pbStartStop->setText("Начать измерения");
         m_worker->FinishMeasurements();
         progressBar->setValue(0);
-        for (int i = 0; i < SerNumModel::self->serNumCount(); ++i) {
-            TestModel::saveProtokol(SerNumModel::self->serNum(i), i);
+        for (int i = 0; i < SerNumModel::serNumCount(); ++i) {
+            TestModel::saveProtokol(SerNumModel::serNum(i), i);
             TestModel::showProtocol(i);
         }
         QMessageBox::information(nullptr, "", "Проверка закончена.");
     }
 }
 
-void AutoMeasure::showEvent(QShowEvent* /*event*/)
+void AutoMeasure::showEvent(QShowEvent* event)
 {
-    if (mi::man->IsConnected()) {
-        connect(mi::man, &MAN2::GetMeasuredValueSignal, m_model, &ManModel::setMeasuredValueSignal);
+    if (mi::man->isConnected()) {
+        connect(mi::man, &MAN2::measuresCompleted, m_model, &ManModel::setMeasuredValueSignal);
         m_timerRms.start(100);
         setEnabled(true);
-        return;
-    }
-    setEnabled(false);
+    } else
+        setEnabled(false);
+    QWidget::showEvent(event);
 }
 
-void AutoMeasure::hideEvent(QHideEvent* /*event*/)
+void AutoMeasure::hideEvent(QHideEvent* event)
 {
-    disconnect(mi::man, &MAN2::GetMeasuredValueSignal, m_model, &ManModel::setMeasuredValueSignal);
+    disconnect(mi::man, &MAN2::measuresCompleted, m_model, &ManModel::setMeasuredValueSignal);
     m_timerRms.stop();
+    QWidget::hideEvent(event);
 }

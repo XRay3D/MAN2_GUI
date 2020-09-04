@@ -26,7 +26,7 @@ Communications::~Communications()
 void Communications::on_pbManCheckConnection_clicked()
 {
     mi::man->ping(cbManPort->currentText());
-    if (mi::man->IsConnected()) {
+    if (mi::man->isConnected()) {
         QMessageBox::information(this, "", " Связь установлена.");
         emit SetTabBarEnabled(true);
     } else {
@@ -39,7 +39,7 @@ void Communications::on_pbManCheckConnection_clicked()
 void Communications::CheckConnection()
 {
     mi::man->ping(cbManPort->currentText());
-    if (mi::man->IsConnected()) {
+    if (mi::man->isConnected()) {
         emit SetTabBarEnabled(true);
         return;
     } else {

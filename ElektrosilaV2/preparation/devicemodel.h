@@ -6,7 +6,7 @@
 
 class DeviceModel : public QAbstractTableModel {
     Q_OBJECT
-    static DeviceModel* instance;
+    inline static DeviceModel* instance;
 
 public:
     explicit DeviceModel(QObject* parent = nullptr);

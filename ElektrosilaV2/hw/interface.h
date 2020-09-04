@@ -1,16 +1,17 @@
 #ifndef MEASURINGINTERFACE_H
 #define MEASURINGINTERFACE_H
 
+#include "digitalosc.h"
 #include "man2.h"
-//#include "irt59xx.h"
 #include "scpi.h"
 
 class mi {
 public:
     mi();
     ~mi();
-    static MAN2* man;
-    static SCPI* scpi;
+    inline static MAN2* man;
+    inline static SCPI* scpi;
+    inline static DigitalOsc* osc;
 };
 
 #endif // MEASURINGINTERFACE_H

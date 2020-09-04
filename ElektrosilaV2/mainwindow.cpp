@@ -63,10 +63,6 @@ void MainWindow::readSettings()
     tabCommunications->cbManPort->setCurrentIndex(settings.value("cbManPort").toInt());
     settings.endGroup();
 
-    settings.beginGroup("Graduation");
-    tabGraduation->cbxScpi->setCurrentIndex(settings.value("cbxScpi").toInt());
-    settings.endGroup();
-
     settings.beginGroup("InputParameters");
     tabInputParameters->cbxDevice->setCurrentIndex(settings.value("cbDevice", 0).toInt());
     tabInputParameters->leFio->setText(settings.value("leFioOtk", "Ф.И.О.").toString());
@@ -85,10 +81,6 @@ void MainWindow::writeSettings()
 
     settings.beginGroup("Communications");
     settings.setValue("cbManPort", tabCommunications->cbManPort->currentIndex());
-    settings.endGroup();
-
-    settings.beginGroup("Graduation");
-    settings.setValue("cbxScpi", tabGraduation->cbxScpi->currentIndex());
     settings.endGroup();
 
     settings.beginGroup("InputParameters");

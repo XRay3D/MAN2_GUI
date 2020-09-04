@@ -6,7 +6,7 @@
 class CommonInterfaces {
 public:
     virtual bool ping(const QString& portName = QString()) = 0;
-    virtual bool IsConnected() const { return m_connected; }
+    virtual bool isConnected() const { return m_connected; }
 
 protected:
     bool m_connected = false;

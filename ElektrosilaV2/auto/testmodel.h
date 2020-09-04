@@ -43,7 +43,7 @@ struct Result_t {
 };
 
 class TestModel : public QAbstractTableModel {
-    static TestModel* instance;
+    inline static TestModel* instance;
 
 public:
     TestModel(QObject* parent = nullptr,

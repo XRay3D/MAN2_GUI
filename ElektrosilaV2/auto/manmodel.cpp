@@ -61,8 +61,8 @@ void ManModel::setMeasuredValueSignal(const QMap<int, MeasuredValue>& data)
     QMapIterator<int, MeasuredValue> iterator(data);
     while (iterator.hasNext()) {
         iterator.next();
-        m_u[iterator.key() - 1] = iterator.value().Value1;
-        m_i[iterator.key() - 1] = iterator.value().Value2;
+        m_u[iterator.key() - 1] = iterator.value().valCh1;
+        m_i[iterator.key() - 1] = iterator.value().valCh2;
     }
     dataChanged(createIndex(0, 0), createIndex(1, 7), { Qt::DisplayRole });
 }

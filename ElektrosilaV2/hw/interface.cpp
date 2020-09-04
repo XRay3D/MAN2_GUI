@@ -4,24 +4,25 @@
 QThread thread;
 QSemaphore semafore;
 
-MAN2* mi::man = nullptr;
-SCPI* mi::scpi = nullptr;
-//IRT59XX* irt_ = nullptr;
-
 mi::mi()
 {
     if (!semafore.available()) {
-        man = new MAN2;
-        scpi = new SCPI;
-        //irt_ = new IRT59XX;
 
-        man->moveToThread(&thread);
-        scpi->moveToThread(&thread);
+        //irt_ = new IRT59XX;
         //irt_->moveToThread(&thread);
+        //thread.connect(&thread, &QThread::finished, irt_, &QObject::deleteLater);
+        man = new MAN2;
+        man->moveToThread(&thread);
+
+        scpi = new SCPI;
+        scpi->moveToThread(&thread);
+
+        osc = new DigitalOsc;
+        osc->moveToThread(&thread);
 
         thread.connect(&thread, &QThread::finished, man, &QObject::deleteLater);
         thread.connect(&thread, &QThread::finished, scpi, &QObject::deleteLater);
-        //thread.connect(&thread, &QThread::finished, irt_, &QObject::deleteLater);
+        thread.connect(&thread, &QThread::finished, osc, &QObject::deleteLater);
 
         thread.start(QThread::NormalPriority);
     }

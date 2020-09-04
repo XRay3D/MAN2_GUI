@@ -11,8 +11,6 @@
 
 const int id4 = qRegisterMetaType<QVector<int>>("QVector<int>");
 
-TestModel* TestModel::instance = nullptr;
-
 TestModel::TestModel(QObject* parent, const QVector<bool>* hChecked, const QVector<bool>* vChecked)
     : QAbstractTableModel(parent)
     , m_hChecked(hChecked)
@@ -20,6 +18,7 @@ TestModel::TestModel(QObject* parent, const QVector<bool>* hChecked, const QVect
     , m_paths(8)
     , m_serNum(8)
 {
+    instance = this;
     reset();
     QFile file("TestModel.dat");
     if (file.open(QIODevice::ReadOnly)) {
@@ -27,7 +26,6 @@ TestModel::TestModel(QObject* parent, const QVector<bool>* hChecked, const QVect
         for (auto& var : m_data)
             in >> var;
     }
-    instance = this;
 }
 
 TestModel::~TestModel()
@@ -187,7 +185,7 @@ void TestModel::setTest1(const QVector<MeasuredValue>& data)
     if (!instance)
         return;
     for (int i = 0; i < data.size(); ++i)
-        instance->m_data[i].test1 = static_cast<double>(data[i].Value1);
+        instance->m_data[i].test1 = static_cast<double>(data[i].valCh1);
     instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(0, 7), { Qt::DisplayRole });
 }
 
@@ -204,7 +202,7 @@ void TestModel::setTest3(const QVector<MeasuredValue>& data)
     if (!instance)
         return;
     for (int i = 0; i < data.size(); ++i)
-        instance->m_data[i].test3 = static_cast<double>(data[i].Value1);
+        instance->m_data[i].test3 = static_cast<double>(data[i].valCh1);
     instance->dataChanged(instance->createIndex(2, 0), instance->createIndex(2, 7), { Qt::DisplayRole });
 }
 
@@ -213,7 +211,7 @@ void TestModel::setTest4(const QVector<MeasuredValue>& data)
     if (!instance)
         return;
     for (int i = 0; i < data.size(); ++i)
-        instance->m_data[i].test4 = static_cast<double>(data[i].Value1);
+        instance->m_data[i].test4 = static_cast<double>(data[i].valCh1);
     instance->dataChanged(instance->createIndex(3, 0), instance->createIndex(3, 7), { Qt::DisplayRole });
 }
 
@@ -222,7 +220,7 @@ void TestModel::setTest5(const QVector<MeasuredValue>& data)
     if (!instance)
         return;
     for (int i = 0; i < data.size(); ++i)
-        instance->m_data[i].test5 = static_cast<double>(data[i].Value1);
+        instance->m_data[i].test5 = static_cast<double>(data[i].valCh1);
     instance->dataChanged(instance->createIndex(4, 0), instance->createIndex(4, 7), { Qt::DisplayRole });
 }
 

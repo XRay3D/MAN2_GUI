@@ -5,6 +5,7 @@
 #include <QDateTimeAxis>
 #include <QEvent>
 #include <QLineSeries>
+#include <QSettings>
 #include <QValueAxis>
 #include <limits>
 
@@ -18,7 +19,8 @@ Measurements::Measurements(QWidget* parent)
 
     graphicsView = new QChartView(this);
     graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-    gridLayout->addWidget(graphicsView, 2, 0, 1, 10);
+    verticalLayout_11->addWidget(graphicsView, 1);
+    gridLayout->setSpacing(6);
 
     m_listPbCurrent = { pbCurrent_1, pbCurrent_2, pbCurrent_3, pbCurrent_4, pbCurrent_5, pbCurrent_6, pbCurrent_7, pbCurrent_8 };
     m_listPbShort = { pbShort_1, pbShort_2, pbShort_3, pbShort_4, pbShort_5, pbShort_6, pbShort_7, pbShort_8 };
@@ -29,19 +31,19 @@ Measurements::Measurements(QWidget* parent)
     m_listGroupBox = { gbChannel_1, gbChannel_2, gbChannel_3, gbChannel_4, gbChannel_5, gbChannel_6, gbChannel_7, gbChannel_8 };
 
     for (QPushButton* pbtn : m_listPbCurrent)
-        connect(pbtn, &QPushButton::clicked, [=] { PbCurrentClicked(m_listPbCurrent.indexOf(pbtn)); });
+        connect(pbtn, &QPushButton::clicked, [=] { bbCurrentClicked(m_listPbCurrent.indexOf(pbtn)); });
 
     for (QPushButton* pbtn : m_listPbShort)
-        connect(pbtn, &QPushButton::clicked, [=] { PbShortClicked(m_listPbShort.indexOf(pbtn)); });
+        connect(pbtn, &QPushButton::clicked, [=] { pbShortClicked(m_listPbShort.indexOf(pbtn)); });
 
     for (QPushButton* pbtn : m_listPbOsc)
-        connect(pbtn, &QPushButton::clicked, [=]() { PbOscClicked(m_listPbOsc.indexOf(pbtn)); });
+        connect(pbtn, &QPushButton::clicked, [=]() { obOscClicked(m_listPbOsc.indexOf(pbtn)); });
 
     for (QDoubleSpinBox* dsbx : m_listDsbSetCurrent)
-        connect(dsbx, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [=] { DsbSetCurrent(m_listDsbSetCurrent.indexOf(dsbx)); });
+        connect(dsbx, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [=] { dsbSetCurrent(m_listDsbSetCurrent.indexOf(dsbx)); });
 
     for (QGroupBox* grbx : m_listGroupBox)
-        connect(grbx, &QGroupBox::clicked, [=]() { GbChanneClicked(m_listGroupBox.indexOf(grbx)); });
+        connect(grbx, &QGroupBox::toggled, [=]() { gbChanneClicked(m_listGroupBox.indexOf(grbx)); });
 
     QChart* chart = new QChart();
     QValueAxis* axisY = new QValueAxis;
@@ -74,6 +76,33 @@ Measurements::Measurements(QWidget* parent)
     graphicsView->setChart(chart);
     graphicsView->setRenderHint(QPainter::Antialiasing);
     graphicsView->setPalette(QPalette(Qt::white));
+
+    QSettings settings("Settings.ini", QSettings::IniFormat);
+    settings.setIniCodec("UTF-8");
+    settings.beginGroup("Measurements");
+    gbChannel_1->setChecked(settings.value("gbChannel_1", true).toBool());
+    gbChannel_2->setChecked(settings.value("gbChannel_2", true).toBool());
+    gbChannel_3->setChecked(settings.value("gbChannel_3", true).toBool());
+    gbChannel_4->setChecked(settings.value("gbChannel_4", true).toBool());
+    gbChannel_5->setChecked(settings.value("gbChannel_5", true).toBool());
+    gbChannel_6->setChecked(settings.value("gbChannel_6", true).toBool());
+    gbChannel_7->setChecked(settings.value("gbChannel_7", true).toBool());
+    gbChannel_8->setChecked(settings.value("gbChannel_8", true).toBool());
+}
+
+Measurements::~Measurements()
+{
+    QSettings settings("Settings.ini", QSettings::IniFormat);
+    settings.setIniCodec("UTF-8");
+    settings.beginGroup("Measurements");
+    settings.setValue("gbChannel_1", gbChannel_1->isChecked());
+    settings.setValue("gbChannel_2", gbChannel_2->isChecked());
+    settings.setValue("gbChannel_3", gbChannel_3->isChecked());
+    settings.setValue("gbChannel_4", gbChannel_4->isChecked());
+    settings.setValue("gbChannel_5", gbChannel_5->isChecked());
+    settings.setValue("gbChannel_6", gbChannel_6->isChecked());
+    settings.setValue("gbChannel_7", gbChannel_7->isChecked());
+    settings.setValue("gbChannel_8", gbChannel_8->isChecked());
 }
 
 void Measurements::on_cbOsc_currentIndexChanged(int index)
@@ -97,7 +126,7 @@ void Measurements::timerEvent(QTimerEvent* event)
         QMutexLocker locker(&m_mutex);
         if (m_semaphore.tryAcquire()) {
             m_semaphore.acquire(m_semaphore.available());
-            StartMeasure();
+            startMeasure();
         }
     }
 }
@@ -154,7 +183,7 @@ void Measurements::on_pbShortAll_clicked(bool checked)
     mi::man->shortCircuitTest(checked);
 }
 
-void Measurements::PbCurrentClicked(int channel)
+void Measurements::bbCurrentClicked(int channel)
 {
     QPushButton* btn = m_listPbCurrent[channel];
     bool checked = btn->isChecked();
@@ -166,7 +195,7 @@ void Measurements::PbCurrentClicked(int channel)
     mi::man->switchCurrent(checked, channel + 1);
 }
 
-void Measurements::DsbSetCurrent(int channel)
+void Measurements::dsbSetCurrent(int channel)
 {
     if (m_disableSlots)
         return;
@@ -174,7 +203,7 @@ void Measurements::DsbSetCurrent(int channel)
     mi::man->setCurrent(value, channel + 1);
 }
 
-void Measurements::PbShortClicked(int channel)
+void Measurements::pbShortClicked(int channel)
 {
     QPushButton* btn = m_listPbShort[channel];
     bool checked = btn->isChecked();
@@ -186,7 +215,7 @@ void Measurements::PbShortClicked(int channel)
     mi::man->shortCircuitTest(checked, channel + 1);
 }
 
-void Measurements::PbOscClicked(int channel)
+void Measurements::obOscClicked(int channel)
 {
     QPushButton* btn = m_listPbOsc[channel];
     if (btn->isChecked())
@@ -195,9 +224,10 @@ void Measurements::PbOscClicked(int channel)
         cbOsc->setCurrentIndex(0); //        on_cbOsc_currentIndexChanged(0);
 }
 
-void Measurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue>& list)
+void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& list)
 {
     QMutexLocker locker(&m_mutex);
+    qDebug() << list;
     enum { MaxCount = 500 };
     if (m_minX == m_keyX)
         m_minX = m_keyX = QDateTime::currentDateTime();
@@ -210,16 +240,19 @@ void Measurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue>& list)
     double maxY = -std::numeric_limits<double>::max();
     bool flag = false;
 
-    double rms = 0.0;
-    rms = mi::man->getRmsValue();
-    dsbVoltage_9->setValue(rms);
+    //    double rms = mi::man->getRmsValue();
+    //    dsbVoltage_9->setValue(rms);
     while (iterator.hasNext()) {
         iterator.next();
         int i = iterator.key() - 1;
-        m_listDsbVoltage[i]->setValue(iterator.value().Value1);
-        m_listDsbCurrent[i]->setValue(iterator.value().Value2);
+        if (i > 7) {
+            continue;
+            ; ///////////////
+        }
+        m_listDsbVoltage[i]->setValue(iterator.value().valCh1);
+        m_listDsbCurrent[i]->setValue(iterator.value().valCh2);
 
-        m_series[i]->append(m_keyX.toMSecsSinceEpoch(), iterator.value().Value1);
+        m_series[i]->append(m_keyX.toMSecsSinceEpoch(), iterator.value().valCh1);
 
         if (m_series[i]->count() > MaxCount)
             m_series[i]->remove(0);
@@ -244,31 +277,83 @@ void Measurements::GetMeasuredValueSlot(const QMap<int, MeasuredValue>& list)
     m_semaphore.release();
 }
 
+void Measurements::measureCompletedSlot(const MeasuredValue&)
+{
+    //    QMutexLocker locker(&m_mutex);
+    //    enum { MaxCount = 500 };
+    //    if (m_minX == m_keyX)
+    //        m_minX = m_keyX = QDateTime::currentDateTime();
+
+    //    //    QElapsedTimer timer;
+    //    //    timer.start();
+
+    //    QMapIterator<int, MeasuredValue> iterator(list);
+    //    double minY = +std::numeric_limits<double>::max();
+    //    double maxY = -std::numeric_limits<double>::max();
+    //    bool flag = false;
+
+    //    double rms = 0.0;
+    //    rms = mi::man->getRmsValue();
+    //    dsbVoltage_9->setValue(rms);
+    //    while (iterator.hasNext()) {
+    //        iterator.next();
+    //        int i = iterator.key() - 1;
+    //        if (i > 7) {
+    //            continue;; ///////////////
+    //        }
+    //        m_listDsbVoltage[i]->setValue(iterator.value().valCh1);
+    //        m_listDsbCurrent[i]->setValue(iterator.value().valCh2);
+
+    //        m_series[i]->append(m_keyX.toMSecsSinceEpoch(), iterator.value().valCh1);
+
+    //        if (m_series[i]->count() > MaxCount)
+    //            m_series[i]->remove(0);
+
+    //        if (m_series[i]->isVisible()) {
+    //            for (QPointF& p : m_series[i]->points()) {
+    //                minY = qMin(minY, p.y());
+    //                maxY = qMax(maxY, p.y());
+    //            }
+    //            flag = true;
+    //        }
+    //    }
+    //    if (flag) {
+    //        if (m_series[0]->count() == MaxCount)
+    //            m_minX = QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(m_series[0]->at(0).x()));
+
+    //        graphicsView->chart()->axes(Qt::Horizontal).at(0) /*axisX()*/->setRange(m_minX, m_keyX);
+    //        graphicsView->chart()->axes(Qt::Vertical).at(0) /*axisY()*/->setRange(minY, maxY);
+    //    }
+    //    //    qDebug() << "GetMeasuredValueSlot" << timer.elapsed();
+    //    m_keyX = QDateTime::currentDateTime();
+    //    m_semaphore.release();
+}
+
 void Measurements::showEvent(QShowEvent* /*event*/)
 {
-    if (mi::man->IsConnected()) {
+    if (mi::man->isConnected()) {
         QVector<MeasuredValue> list;
         if (mi::man->getMeasuredValue(list)) {
             m_disableSlots = true;
-            for (int i = 0; i < list.size(); ++i) {
+            for (int i = 0; i < 8; ++i) {
                 const auto& mv = list[i];
-                m_listDsbVoltage[i]->setValue(static_cast<double>(mv.Value1));
-                m_listDsbCurrent[i]->setValue(static_cast<double>(mv.Value2));
-                m_listDsbSetCurrent[i]->setValue(static_cast<double>(mv.Value3));
+                m_listDsbVoltage[i]->setValue(static_cast<double>(mv.valCh1));
+                m_listDsbCurrent[i]->setValue(static_cast<double>(mv.valCh2));
+                m_listDsbSetCurrent[i]->setValue(static_cast<double>(mv.valCh3));
 
-                m_listPbCurrent[i]->setChecked(mv.ManState.Load);
-                m_listPbCurrent[i]->setText(mv.ManState.Load ? "Выкл." : "Вкл.");
+                m_listPbCurrent[i]->setChecked(mv.manState.load);
+                m_listPbCurrent[i]->setText(mv.manState.load ? "Выкл." : "Вкл.");
 
-                m_listPbShort[i]->setChecked(mv.ManState.ShortCircuit);
-                m_listPbShort[i]->setText(mv.ManState.ShortCircuit ? "Выкл." : "Вкл.");
+                m_listPbShort[i]->setChecked(mv.manState.shortCircuit);
+                m_listPbShort[i]->setText(mv.manState.shortCircuit ? "Выкл." : "Вкл.");
 
-                m_listPbOsc[i]->setChecked(mv.ManState.Oscilloscope);
-                m_listPbOsc[i]->setText(mv.ManState.Oscilloscope ? "Выкл." : "Вкл.");
+                m_listPbOsc[i]->setChecked(mv.manState.oscilloscope);
+                m_listPbOsc[i]->setText(mv.manState.oscilloscope ? "Выкл." : "Вкл.");
             }
             m_disableSlots = false;
         }
-        connect(this, &Measurements::StartMeasure, mi::man, &MAN2::GetMeasuredValueSlot);
-        connect(mi::man, &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
+        connect(this, &Measurements::startMeasure, mi::man, &MAN2::startMeasure);
+        connect(mi::man, &MAN2::measuresCompleted, this, &Measurements::measuredValueSlot);
         return;
     }
     setEnabled(false);
@@ -277,11 +362,11 @@ void Measurements::showEvent(QShowEvent* /*event*/)
 void Measurements::hideEvent(QHideEvent* /*event*/)
 {
     on_pbStart_clicked(false);
-    disconnect(this, &Measurements::StartMeasure, mi::man, &MAN2::GetMeasuredValueSlot);
-    disconnect(mi::man, &MAN2::GetMeasuredValueSignal, this, &Measurements::GetMeasuredValueSlot);
+    disconnect(this, &Measurements::startMeasure, mi::man, &MAN2::startMeasure);
+    disconnect(mi::man, &MAN2::measuresCompleted, this, &Measurements::measuredValueSlot);
 }
 
-void Measurements::GbChanneClicked(int channel)
+void Measurements::gbChanneClicked(int channel)
 {
     graphicsView->chart()->series()[channel]->setVisible(m_listGroupBox[channel]->isChecked());
     m_listPbCurrent[channel]->setEnabled(true);

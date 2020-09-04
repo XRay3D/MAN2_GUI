@@ -22,8 +22,8 @@ public:
     void setMeasuredValueSignal(const QMap<int, MeasuredValue>&);
 
 private:
-    double m_u[8];
-    double m_i[8];
+    double m_u[9];
+    double m_i[9];
     double m_acU;
 };
 

@@ -434,7 +434,7 @@ void MAN2::RxPing(const Parcel& data)
 void MAN2::RxGetMeasuredValue(const Parcel& data)
 {
     m_value = data.value<MeasuredValue>();
-    qDebug() << "GET_MEASURED_VALUE" /* << data.toHex().toUpper()*/ << m_value.value1 << m_value.value2 << m_value.value3;
+    qDebug() << "GET_MEASURED_VALUE" << data.addres;
     if (m_value.type == ValueTripCurrent) {
         qDebug() << "Value1" << m_value.value1;
         qDebug() << "Value2" << m_value.value2;

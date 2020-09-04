@@ -4,6 +4,8 @@
 #include "testmodel.h"
 
 #include <QSettings>
+
+enum { SkipRms = 1 };
 Worker::Worker(bool* doNotSkip, QObject* parent)
     : QThread(parent)
     , m_doNotSkip(doNotSkip)
@@ -135,7 +137,7 @@ void Worker::Test1()
             WaitAnswerManConnErr();
         TestModel::setTest1(m_list);
         CheckFinished();
-    } while (m_list.size() != 8);
+    } while (m_list.size() < 9);
     CheckFinished();
     emit updateProgresBar();
 }
@@ -172,7 +174,7 @@ void Worker::Test3()
             WaitAnswerManConnErr();
         TestModel::setTest3(m_list);
         CheckFinished();
-    } while (m_list.size() != 8);
+    } while (m_list.size() < 9);
     CheckFinished();
     emit updateProgresBar();
 }
@@ -192,7 +194,7 @@ void Worker::Test4()
             WaitAnswerManConnErr();
         TestModel::setTest4(m_list);
         CheckFinished();
-    } while (m_list.size() != 8);
+    } while (m_list.size() < 9);
     CheckFinished();
     emit updateProgresBar();
 }
@@ -213,7 +215,7 @@ void Worker::Test5()
             WaitAnswerManConnErr();
         TestModel::setTest5(m_list);
         CheckFinished();
-    } while (m_list.size() != 8);
+    } while (m_list.size() < 9);
     CheckFinished();
     emit updateProgresBar();
 }
@@ -251,15 +253,15 @@ void Worker::Test6()
                 while (!mi::man->getMeasuredValue(value, i, RawData))
                     WaitAnswerManConnErr();
 
-                qDebug() << i << value.Value1 << value.Value1 << value.Value3;
-                if (std::min(value.Value1, std::min(value.Value2, value.Value3)) < 1.0)
+                qDebug() << i << value.valCh1 << value.valCh1 << value.valCh3;
+                if (std::min(value.valCh1, std::min(value.valCh2, value.valCh3)) < 1.0)
                     break;
 
                 Msleep(100);
 
-                peak.append(value.Value3);
+                peak.append(value.valCh3);
                 CheckFinished();
-                TestModel::setTest6(i - 1, value.Value3);
+                TestModel::setTest6(i - 1, value.valCh3);
             }
             while (!mi::man->setCurrent(0, i))
                 WaitAnswerManConnErr();
@@ -343,12 +345,18 @@ void Worker::Msleep(unsigned long time)
         CheckFinished();
         while (!mi::man->getMeasuredValue(m_list))
             WaitAnswerManConnErr();
+        if (SkipRms)
+            continue;
         while ((m_inVoltage = mi::man->getRmsValue()) == 0.0)
             WaitAnswerManConnErr();
     }
+
     while (!mi::man->getMeasuredValue(m_list))
         WaitAnswerManConnErr();
+
     while (m_minInVoltage > m_inVoltage || m_inVoltage > m_maxInVoltage) {
+        if (SkipRms)
+            break;
         if (m_inVoltage == 0.0)
             WaitAnswerManConnErr();
         WaitAnswer(CheckInputVoltage);

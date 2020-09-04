@@ -1,16 +1,16 @@
 #include "devicemodel.h"
 
+#include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 #include <QMessageBox>
 #include <QTextCodec>
 #include <QTextStream>
 
-DeviceModel* DeviceModel::instance = nullptr;
-
 DeviceModel::DeviceModel(QObject* parent)
     : QAbstractTableModel(parent)
 {
-    instance = this;
+    qDebug() << QFileInfo::exists("modify.txt");
     QFile file("modify.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::critical(nullptr, "", "Не найден файл \"modify.txt\" с параметрами блоков питания!");
@@ -22,6 +22,7 @@ DeviceModel::DeviceModel(QObject* parent)
         m_data.append(ScanSettings(in.readLine().split(';')));
         m_cbxData.append(m_data.last().Type + " (" + m_data.last().Cipher + ")");
     }
+    instance = this;
 }
 
 DeviceModel::~DeviceModel()
@@ -31,7 +32,7 @@ DeviceModel::~DeviceModel()
 
 int DeviceModel::rowCount(const QModelIndex& /*parent*/) const
 {
-    return 15;
+    return 14 /*15*/;
 }
 
 int DeviceModel::columnCount(const QModelIndex& /*parent*/) const
@@ -45,7 +46,7 @@ QVariant DeviceModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
         if (m_data.size()) {
             ScanSettings s(m_data.value(m_index));
-            if (!index.column())
+            if (!index.column()) {
                 switch (index.row()) {
                 case 0:
                     return s.Type;
@@ -68,27 +69,28 @@ QVariant DeviceModel::data(const QModelIndex& index, int role) const
                 case 9:
                     return s.RestrictionsTest7Min;
                 case 10:
-                    return s.RestrictionsTest7Max;
-                case 11:
                     return s.Voltageerrortest5U1;
-                case 12:
+                case 11:
                     return s.Voltageerrortest3_4U1;
-                case 13:
+                case 12:
                     return s.VoltageErrorTest7;
-                case 14:
+                case 13:
                     return s.ParameterDLTest7;
                 default:
                     return QVariant();
                 }
-            else
+            } else {
                 switch (index.row()) {
-                case 11:
+                case 9:
+                    return s.RestrictionsTest7Max;
+                case 10:
                     return s.Voltageerrortest5U2;
-                case 12:
+                case 11:
                     return s.Voltageerrortest3_4U2;
                 default:
                     return QVariant();
                 }
+            }
         }
         return QVariant();
     case Qt::TextAlignmentRole:
@@ -112,7 +114,7 @@ QVariant DeviceModel::headerData(int section, Qt::Orientation orientation, int r
         "Условие визуального контроля№3",
         "Ограничения для теста №4 и №5",
         "Ограничение для теста №6",
-        "Ограничения для теста №7 (мин.)",
+        "Ограничения для теста №7 (мин./макс.)",
         "Ограничения для теста №7 (макс.)",
         "Напряжение и ошибка для тестов №3 и №4",
         "Напряжение и ошибка для теста №5",

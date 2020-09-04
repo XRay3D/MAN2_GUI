@@ -5,12 +5,13 @@
 
 class SerNumModel : public QAbstractTableModel {
     Q_OBJECT
+    inline static SerNumModel* self_;
+
 public:
     explicit SerNumModel(QObject* parent = nullptr);
     ~SerNumModel();
-    static SerNumModel* self;
+
     // QAbstractItemModel interface
-public:
     int rowCount(const QModelIndex& parent) const override;
     int columnCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -19,14 +20,12 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     void clear();
-    bool isEmpty();
-    QString serNum(int index) const { return m_data[index]; }
-    //    int count() const;
-    //    void setCount(int count);
+    static bool isEmpty();
+    static QString serNum(int index);
 
     int count() const;
-    int serNumCount();
-    void setCount(int count);
+    static int serNumCount();
+    static void setCount(int count);
 
 private:
     QVector<QString> m_data;

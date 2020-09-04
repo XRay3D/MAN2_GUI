@@ -53,7 +53,6 @@ SOURCES += \
     mainwindow.cpp \
     measurements.cpp \
     mydialog.cpp \
-    shdocvw.cpp \
     triptest.cpp
 
 HEADERS  += \
@@ -69,7 +68,6 @@ HEADERS  += \
     mainwindow.h \
     measurements.h \
     mydialog.h \
-    shdocvw.h \
     triptest.h
 
 FORMS    += \
