@@ -7,6 +7,8 @@
 #include <QTextCodec>
 #include <QTextStream>
 
+DeviceModel* DeviceModel::instance() { return m_instance; }
+
 DeviceModel::DeviceModel(QObject* parent)
     : QAbstractTableModel(parent)
 {
@@ -22,23 +24,14 @@ DeviceModel::DeviceModel(QObject* parent)
         m_data.append(ScanSettings(in.readLine().split(';')));
         m_cbxData.append(m_data.last().Type + " (" + m_data.last().Cipher + ")");
     }
-    instance = this;
+    m_instance = this;
 }
 
-DeviceModel::~DeviceModel()
-{
-    instance = nullptr;
-}
+DeviceModel::~DeviceModel() { m_instance = nullptr; }
 
-int DeviceModel::rowCount(const QModelIndex& /*parent*/) const
-{
-    return 14 /*15*/;
-}
+int DeviceModel::rowCount(const QModelIndex& /*parent*/) const { return 14 /*15*/; }
 
-int DeviceModel::columnCount(const QModelIndex& /*parent*/) const
-{
-    return 2;
-}
+int DeviceModel::columnCount(const QModelIndex& /*parent*/) const { return 2; }
 
 QVariant DeviceModel::data(const QModelIndex& index, int role) const
 {
@@ -131,35 +124,32 @@ QVariant DeviceModel::headerData(int section, Qt::Orientation orientation, int r
     return QVariant();
 }
 
-Qt::ItemFlags DeviceModel::flags(const QModelIndex& /*index*/) const
-{
-    return Qt::ItemIsEnabled;
-}
+Qt::ItemFlags DeviceModel::flags(const QModelIndex& /*index*/) const { return Qt::ItemIsEnabled; }
 
 QList<QString> DeviceModel::cbxData()
 {
-    if (!instance)
+    if (!m_instance)
         return {};
-    return instance->m_cbxData;
+    return m_instance->m_cbxData;
 }
 
 int DeviceModel::index()
 {
-    if (!instance)
+    if (!m_instance)
         return -1;
-    return instance->m_index;
+    return m_instance->m_index;
 }
 
 void DeviceModel::setIndex(int index)
 {
-    if (!instance)
+    if (!m_instance)
         return;
-    instance->m_index = index;
-    instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(14, 1), { Qt::DisplayRole });
+    m_instance->m_index = index;
+    m_instance->dataChanged(m_instance->createIndex(0, 0), m_instance->createIndex(14, 1), { Qt::DisplayRole });
 }
 
 ScanSettings DeviceModel::scanSettings()
 { //    if (!instance)
     //        return {};
-    return instance->m_data.value(instance->m_index);
+    return m_instance->m_data.value(m_instance->m_index);
 }

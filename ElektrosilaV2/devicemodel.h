@@ -6,7 +6,7 @@
 
 class DeviceModel : public QAbstractTableModel {
     Q_OBJECT
-    inline static DeviceModel* instance;
+    inline static DeviceModel* m_instance;
 
 public:
     explicit DeviceModel(QObject* parent = nullptr);
@@ -25,6 +25,8 @@ public:
     static int index();
     static void setIndex(int index);
     static ScanSettings scanSettings();
+
+    static DeviceModel* instance();
 
 private:
     QList<ScanSettings> m_data;

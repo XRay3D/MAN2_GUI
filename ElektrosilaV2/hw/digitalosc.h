@@ -12,6 +12,7 @@ class DigitalOsc : public QObject {
 
     ViSession rm = 0;
     ViSession vi = 0;
+    QString m_conected;
 
 public:
     explicit DigitalOsc(QObject* parent = nullptr);
@@ -20,13 +21,18 @@ public:
     void ping();
     void close();
 
-    QString conected;
-
     ViStatus SetChannel(int chNum, const QString& s);
     ViStatus SetComand(const QString& s);
     QByteArray wrRdData(QByteArray data, bool exception = true, int len = 20);
 
     void getWav();
+
+    bool isConnected() const { return !m_conected.isEmpty(); }
+
+    double PKPK(int ch);
+
+    double MIN(int ch);
+    double AVERage(int ch);
 
 signals:
     //    void wavData(const QVector<QPointF>& ch1, const QVector<QPointF>& ch2, const QVector<double>& scale);

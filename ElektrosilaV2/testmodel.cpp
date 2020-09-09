@@ -5,20 +5,23 @@
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
+#include <devicemodel.h>
 #include <mydialog.h>
 
-#include <preparation/devicemodel.h>
-
 const int id4 = qRegisterMetaType<QVector<int>>("QVector<int>");
+
+TestModel* TestModel::instance()
+{
+    if (!m_instance)
+        exit(-10);
+    return m_instance;
+}
 
 TestModel::TestModel(QObject* parent, const QVector<bool>* hChecked, const QVector<bool>* vChecked)
     : QAbstractTableModel(parent)
     , m_hChecked(hChecked)
     , m_vChecked(vChecked)
-    , m_paths(8)
-    , m_serNum(8)
 {
-    instance = this;
     reset();
     QFile file("TestModel.dat");
     if (file.open(QIODevice::ReadOnly)) {
@@ -26,11 +29,12 @@ TestModel::TestModel(QObject* parent, const QVector<bool>* hChecked, const QVect
         for (auto& var : m_data)
             in >> var;
     }
+    m_instance = this;
 }
 
 TestModel::~TestModel()
 {
-    instance = nullptr;
+    m_instance = nullptr;
     QFile file("TestModel.dat");
     if (file.open(QIODevice::WriteOnly)) {
         QDataStream out(&file); // we will serialize the data into the file
@@ -39,15 +43,9 @@ TestModel::~TestModel()
     }
 }
 
-int TestModel::rowCount(const QModelIndex& /*parent*/) const
-{
-    return TestCount;
-}
+int TestModel::rowCount(const QModelIndex&) const { return TestCount; }
 
-int TestModel::columnCount(const QModelIndex& /*parent*/) const
-{
-    return Channels;
-}
+int TestModel::columnCount(const QModelIndex&) const { return Channels; }
 
 QVariant TestModel::data(const QModelIndex& index, int role) const
 {
@@ -58,11 +56,11 @@ QVariant TestModel::data(const QModelIndex& index, int role) const
             return m_data[index.column()].test1;
         case 1:
             switch (m_data[index.column()].test2) {
-            case Result_t::Undefined:
+            case TestData::Undefined:
                 return "";
-            case Result_t::True:
+            case TestData::True:
                 return "в норме";
-            case Result_t::False:
+            case TestData::False:
                 return "отказ";
             }
         case 2:
@@ -76,23 +74,23 @@ QVariant TestModel::data(const QModelIndex& index, int role) const
         case 6:
             return m_data[index.column()].test7;
         }
-    case Qt::ToolTipRole:
-        switch (index.row()) {
-        case 0:
-            return "Измерение выходного напряжения при номинальной нагрузке и входном напряжении 220В.";
-        case 1:
-            return "Проверка пульсаций выходного напряжения  при номинальной нагрузке и входном напряжении 130В.";
-        case 2:
-            return "Измерение отклонения выходного напряжения от номинального при номинальной нагрузке и входном напряжении 130В.";
-        case 3:
-            return "Измерение отклонения выходного напряжения от номинального при номинальной нагрузке и входном напряжении 250В.";
-        case 4:
-            return "Измерение отклонения выходного напряжения холостого хода от номинального при входном напряжении 220В.";
-        case 5:
-            return "Ток срабатывания электронной защиты";
-        case 6:
-            return "Срабатывание электронной защиты при коротком замыкании";
-        }
+        //    case Qt::ToolTipRole:
+        //        switch (index.row()) {
+        //        case 0:
+        //            return "Измерение выходного напряжения при номинальной нагрузке и входном напряжении 220В.";
+        //        case 1:
+        //            return "Проверка пульсаций выходного напряжения  при номинальной нагрузке и входном напряжении 130В.";
+        //        case 2:
+        //            return "Измерение отклонения выходного напряжения от номинального при номинальной нагрузке и входном напряжении 130В.";
+        //        case 3:
+        //            return "Измерение отклонения выходного напряжения от номинального при номинальной нагрузке и входном напряжении 250В.";
+        //        case 4:
+        //            return "Измерение отклонения выходного напряжения холостого хода от номинального при входном напряжении 220В.";
+        //        case 5:
+        //            return "Ток срабатывания электронной защиты";
+        //        case 6:
+        //            return "Срабатывание электронной защиты при коротком замыкании";
+        //        }
     case Qt::BackgroundColorRole:
         if (m_currentTest == index.row())
             return QColor(255, 127, 127);
@@ -111,35 +109,40 @@ QVariant TestModel::headerData(int section, Qt::Orientation orientation, int rol
     switch (role) {
     case Qt::DisplayRole:
         if (orientation == Qt::Horizontal)
-            return QString("Канал №%1").arg(section + 1);
+            return QString("№%1").arg(section + 1);
         else
             switch (section) {
             case 0:
-                return "       Измерение выходного\n"
-                       "       напряжения при номинальной\n"
-                       "       нагрузке и входном напряжении 220В.";
+                return QString("       Измерение выходного\n"
+                               "       напряжения при номинальной\n"
+                               "       нагрузке и входном напряжении %1В.")
+                    .arg(220);
             case 1:
-                return "       Проверка пульсаций\n"
-                       "       выходного напряжения  при\n"
-                       "       номинальной нагрузке и входном напряжении 130В.";
+                return QString("       Проверка пульсаций выходного\n"
+                               "       напряжения при номинальной нагрузке и\n"
+                               "       входном напряжении %1В.")
+                    .arg(130);
             case 2:
-                return "       Измерение отклонения\n"
-                       "       выходного напряжения от номинального\n"
-                       "       при номинальной нагрузке и входном напряжении 130В.";
+                return QString("       Измерение отклонения выходного напряжения\n"
+                               "       от номинального при номинальной\n"
+                               "       нагрузке и входном напряжении %1В.")
+                    .arg(130);
             case 3:
-                return "       Измерение отклонения\n"
-                       "       выходного напряжения от номинального\n"
-                       "       при номинальной нагрузке и входном напряжении 250В.";
+                return QString("       Измерение отклонения выходного напряжения\n"
+                               "       от номинального при номинальной\n"
+                               "       нагрузке и входном напряжении %1В.")
+                    .arg(250);
             case 4:
-                return "       Измерение отклонения\n"
-                       "       выходного напряжения холостого хода\n"
-                       "       от номинального при входном напряжении 220В.";
+                return QString("       Измерение отклонения выходного\n"
+                               "       напряжения холостого хода от номинального\n"
+                               "       при входном напряжении %1В.")
+                    .arg(220);
             case 5:
-                return "       Ток срабатывания\n"
-                       "       электронной защиты";
+                return QString("       Ток срабатывания\n"
+                               "       электронной защиты");
             case 6:
-                return "       Срабатывание\n"
-                       "       электронной защиты при коротком замыкании";
+                return QString("       Срабатывание электронной защиты\n"
+                               "       при коротком замыкании");
             }
     }
     return QVariant();
@@ -165,92 +168,111 @@ Qt::ItemFlags TestModel::flags(const QModelIndex& index) const
 void TestModel::reset()
 {
     for (int i = 0; i < 8; ++i) {
-        m_data[i].reset();
-        m_paths[i].clear();
-        m_serNum[i].clear();
+        if (dontSkip(i)) {
+            m_data[i].reset();
+            m_paths[i].clear();
+            m_serNum[i].clear();
+        }
     }
-    //    dataChanged(createIndex(0, 0), createIndex(6, 7), { Qt::DisplayRole });
+    dataChanged(createIndex(Test1, 0), createIndex(Test7, 7), { Qt::DisplayRole });
 }
 
 void TestModel::setCurrentTest(int val)
 {
-    if (!instance)
-        return;
-    instance->m_currentTest = val;
-    instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(6, 7));
+    m_currentTest = val;
+    dataChanged(createIndex(Test1, 0), createIndex(Test7, 7));
 }
 
-void TestModel::setTest1(const QVector<MeasuredValue>& data)
+void TestModel::setTest1(const QMap<int, MeasuredValue>& data)
 {
-    if (!instance)
-        return;
-    for (int i = 0; i < data.size(); ++i)
-        instance->m_data[i].test1 = static_cast<double>(data[i].valCh1);
-    instance->dataChanged(instance->createIndex(0, 0), instance->createIndex(0, 7), { Qt::DisplayRole });
+    QMapIterator i(data);
+    while (i.hasNext()) {
+        i.next();
+        if (i.key() > 8)
+            continue;
+        m_data[i.key() - 1].test1 = static_cast<double>(i.value().valCh1);
+    }
+    dataChanged(createIndex(Test1, 0), createIndex(Test1, 7), { Qt::DisplayRole });
 }
 
 void TestModel::setTest2(int ch, bool result)
 {
-    if (!instance)
+    if (!m_instance || ch > 7)
         return;
-    instance->m_data[ch].test2 = result ? Result_t::True : Result_t::False;
-    instance->dataChanged(instance->createIndex(1, ch), instance->createIndex(1, ch), { Qt::DisplayRole });
+    m_data[ch].test2 = result ? TestData::True : TestData::False;
+    dataChanged(createIndex(Test2, ch), createIndex(Test2, ch), { Qt::DisplayRole });
 }
 
-void TestModel::setTest3(const QVector<MeasuredValue>& data)
+void TestModel::setTest3(const QMap<int, MeasuredValue>& data)
 {
-    if (!instance)
-        return;
-    for (int i = 0; i < data.size(); ++i)
-        instance->m_data[i].test3 = static_cast<double>(data[i].valCh1);
-    instance->dataChanged(instance->createIndex(2, 0), instance->createIndex(2, 7), { Qt::DisplayRole });
+    QMapIterator i(data);
+    while (i.hasNext()) {
+        i.next();
+        if (i.key() > 8)
+            continue;
+        m_data[i.key() - 1].test3 = static_cast<double>(i.value().valCh1);
+    }
+    dataChanged(createIndex(Test3, 0), createIndex(Test3, 7), { Qt::DisplayRole });
 }
 
-void TestModel::setTest4(const QVector<MeasuredValue>& data)
+void TestModel::setTest4(const QMap<int, MeasuredValue>& data)
 {
-    if (!instance)
-        return;
-    for (int i = 0; i < data.size(); ++i)
-        instance->m_data[i].test4 = static_cast<double>(data[i].valCh1);
-    instance->dataChanged(instance->createIndex(3, 0), instance->createIndex(3, 7), { Qt::DisplayRole });
+    QMapIterator i(data);
+    while (i.hasNext()) {
+        i.next();
+        if (i.key() > 8)
+            continue;
+        m_data[i.key() - 1].test4 = static_cast<double>(i.value().valCh1);
+    }
+    dataChanged(createIndex(Test4, 0), createIndex(Test4, 7), { Qt::DisplayRole });
 }
 
-void TestModel::setTest5(const QVector<MeasuredValue>& data)
+void TestModel::setTest5(const QMap<int, MeasuredValue>& data)
 {
-    if (!instance)
-        return;
-    for (int i = 0; i < data.size(); ++i)
-        instance->m_data[i].test5 = static_cast<double>(data[i].valCh1);
-    instance->dataChanged(instance->createIndex(4, 0), instance->createIndex(4, 7), { Qt::DisplayRole });
+    QMapIterator i(data);
+    while (i.hasNext()) {
+        i.next();
+        if (i.key() > 8)
+            continue;
+        m_data[i.key() - 1].test5 = static_cast<double>(i.value().valCh1);
+    }
+    dataChanged(createIndex(Test5, 0), createIndex(Test5, 7), { Qt::DisplayRole });
 }
 
 void TestModel::setTest6(int ch, double value)
 {
-    if (!instance)
+    if (!m_instance || ch > 7)
         return;
-    instance->m_data[ch].test6 = value;
-    instance->dataChanged(instance->createIndex(5, ch), instance->createIndex(5, ch), { Qt::DisplayRole });
+    m_data[ch].test6 = value;
+    dataChanged(createIndex(Test6, ch), createIndex(Test6, ch), { Qt::DisplayRole });
 }
 
-void TestModel::setTest7(const QVector<MeasuredValue>& data)
+void TestModel::setTest7(const QMap<int, MeasuredValue>& data)
 {
-    if (!instance)
-        return;
-    for (int i = 0; i < data.size(); ++i)
-        instance->m_data[i].test7 = 0.0; ///////////////////static_cast<double>(std::min(data[i].Value1, data[i].Value2));
-    instance->dataChanged(instance->createIndex(6, 0), instance->createIndex(6, 7), { Qt::DisplayRole });
+    QMapIterator i(data);
+    while (i.hasNext()) {
+        i.next();
+        if (i.key() > 8)
+            continue;
+        m_data[i.key() - 1].test7 = static_cast<double>(i.value().valCh1);
+    }
+    dataChanged(createIndex(Test7, 0), createIndex(Test7, 7), { Qt::DisplayRole });
 }
 
 void TestModel::saveProtokol(const QString& serialNumber, int number)
 {
-    instance->m_serNum[number] = serialNumber;
+    if (serialNumber.isEmpty())
+        return;
+
+    m_serNum[number] = serialNumber;
+
     QFile fileTop("Шапка.htm");
     QFile fileRow("Строка.htm");
     QFile fileBot("Подвал.htm");
 
-    qDebug() << fileTop.open(QFile::ReadOnly);
-    qDebug() << fileRow.open(QFile::ReadOnly);
-    qDebug() << fileBot.open(QFile::ReadOnly);
+    fileTop.open(QFile::ReadOnly);
+    fileRow.open(QFile::ReadOnly);
+    fileBot.open(QFile::ReadOnly);
 
     QString protocol;
     QString strTop(QString().fromLocal8Bit(fileTop.readAll()));
@@ -263,8 +285,12 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
 
     protocol.append(strTop.arg(DeviceModel::scanSettings().Cipher)
                         .arg(serialNumber)
-                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage - DeviceModel::scanSettings().RestrictionTest2).replace('.', ','))
-                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage + DeviceModel::scanSettings().RestrictionTest2).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage
+                            - DeviceModel::scanSettings().RestrictionTest2)
+                                 .replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage
+                            + DeviceModel::scanSettings().RestrictionTest2)
+                                 .replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().VisualControl).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().LimitationsTest4_5).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().LimitationsTest4_5).replace('.', ','))
@@ -288,15 +314,15 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
                 str = QString::number(row + 1);
                 break;
             case 1:
-                val = instance->m_data[row + number * rowCount].test1;
+                val = m_data[row + number * rowCount].test1;
                 str = QString::number(val, 'f', 4).replace('.', ',');
                 if (qAbs(DeviceModel::scanSettings().RatedVoltage - val) > DeviceModel::scanSettings().RestrictionTest2) {
                     flags[col - 1] = true;
                 }
                 break;
             case 2: {
-                int val = instance->m_data[row + number * rowCount].test2;
-                if (val == Result_t::True) {
+                int val = m_data[row + number * rowCount].test2;
+                if (val == TestData::True) {
                     str = "в норме";
                 } else {
                     flags[col - 1] = true;
@@ -304,28 +330,28 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
                 }
             } break;
             case 3:
-                val = instance->m_data[row + number * rowCount].test1 - instance->m_data[row + number * rowCount].test3;
+                val = m_data[row + number * rowCount].test1 - m_data[row + number * rowCount].test3;
                 str = QString::number(val, 'f', 4).replace('.', ',');
                 if (qAbs(val) > DeviceModel::scanSettings().LimitationsTest4_5) {
                     flags[col - 1] = true;
                 }
                 break;
             case 4:
-                val = instance->m_data[row + number * rowCount].test1 - instance->m_data[row + number * rowCount].test4;
+                val = m_data[row + number * rowCount].test1 - m_data[row + number * rowCount].test4;
                 str = QString::number(val, 'f', 4).replace('.', ',');
                 if (qAbs(val) > DeviceModel::scanSettings().LimitationsTest4_5) {
                     flags[col - 1] = true;
                 }
                 break;
             case 5:
-                val = instance->m_data[row + number * rowCount].test1 - instance->m_data[row + number * rowCount].test5;
+                val = m_data[row + number * rowCount].test1 - m_data[row + number * rowCount].test5;
                 str = QString::number(val, 'f', 4).replace('.', ',');
                 if (qAbs(val) > DeviceModel::scanSettings().LimitationsTest4_5) {
                     flags[col - 1] = true;
                 }
                 break;
             case 6:
-                val = instance->m_data[row + number * rowCount].test6;
+                val = m_data[row + number * rowCount].test6;
                 str = QString::number(val, 'f', 1).replace('.', ',');
                 if (DeviceModel::scanSettings().RestrictionsTest7Min > val || val > DeviceModel::scanSettings().RestrictionsTest7Max) {
                     flags[col - 1] = true;
@@ -336,7 +362,7 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
                 }
                 break;
             case 7:
-                val = instance->m_data[row + number * rowCount].test7;
+                val = m_data[row + number * rowCount].test7;
                 if (val > DeviceModel::scanSettings().VoltageErrorTest7) {
                     flags[col - 1] = true;
                     str = "отказ";
@@ -379,7 +405,7 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
                        .append(QDate::currentDate().toString("/yyyy"));
 
     if (!QDir().mkpath(path)) {
-        QMessageBox::critical(reinterpret_cast<QWidget*>(instance->parent()), "", "Не удaётся записать на диск файл протокола!");
+        QMessageBox::critical(reinterpret_cast<QWidget*>(parent()), "", "Не удaётся записать на диск файл протокола!");
         return;
     }
     path = path.append("/")
@@ -387,7 +413,7 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
                .append(QDateTime::currentDateTime().toString(" dd.MM.yyyy" /* H.mm.ss"*/))
                .append(".htm");
 
-    instance->m_paths[number] = path;
+    m_paths[number] = path;
 
     QFile file4(path);
     qDebug() << file4.open(QFile::WriteOnly);
@@ -397,27 +423,20 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
 
 void TestModel::showProtocol(int num)
 {
-    if (!instance)
-        return;
-    if (instance->m_serNum[num].isEmpty()) {
-        QMessageBox::warning(reinterpret_cast<QWidget*>(instance->parent()), "", "Протокол не создан!");
+    if (m_serNum[num].isEmpty()) {
+        QMessageBox::warning(reinterpret_cast<QWidget*>(parent()), "", "Протокол не создан!");
         return;
     }
-    MyDialog* Dialog = new MyDialog(reinterpret_cast<QWidget*>(instance->parent()), instance->m_serNum[num]);
-    Dialog->LoadFile(instance->m_paths[num]);
+    MyDialog* Dialog = new MyDialog(reinterpret_cast<QWidget*>(parent()), m_serNum[num]);
+    Dialog->LoadFile(m_paths[num]);
 }
 
-bool TestModel::dontSkip(int num)
-{
-    if (!instance)
-        return false;
-    return instance->m_vChecked->at(num);
-}
+bool TestModel::dontSkip(int num) { return m_vChecked->at(num); }
 
 void TestModel::onChecked(int index, int orientation)
 {
     if (orientation == Qt::Horizontal)
-        emit dataChanged(createIndex(0, index), createIndex(m_row - 1, index), { Qt::DisplayRole });
+        emit dataChanged(createIndex(0, index), createIndex(rowCount() - 1, index), { Qt::DisplayRole });
     else
-        emit dataChanged(createIndex(index, 0), createIndex(index, m_column - 1), { Qt::DisplayRole });
+        emit dataChanged(createIndex(index, 0), createIndex(index, columnCount() - 1), { Qt::DisplayRole });
 }

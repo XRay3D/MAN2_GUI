@@ -84,21 +84,23 @@ bool MAN2::ping(const QString& PortName)
 
 bool MAN2::getMeasuredValue(MeasuredValue& value, uint8_t channel, ValueType type)
 {
-
     QMutexLocker Locker(&m_mutex);
     if (isConnected()) {
         reset();
+        if (channel == 0)
+            return m_result;
         m_valueMap.clear();
         emit Write(createParcel(GetMeasuredValue, static_cast<uint8_t>(type), channel));
         if (m_semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delayMs[type])) {
             value = m_value;
             m_result = true;
+            emit measureCompleted(m_valueMap[channel]);
         }
     }
     return m_result;
 }
 
-bool MAN2::getMeasuredValue(QVector<MeasuredValue>& value, ValueType type)
+bool MAN2::getMeasuredValue(QMap<int, MeasuredValue>& value, ValueType type)
 {
     QMutexLocker Locker(&m_mutex);
     if (isConnected()) {
@@ -107,12 +109,8 @@ bool MAN2::getMeasuredValue(QVector<MeasuredValue>& value, ValueType type)
         value.clear();
         emit Write(createParcel(GetMeasuredValue, static_cast<uint8_t>(type), 0));
         if (m_semaphore.tryAcquire(ChannelCount, delayMs[type])) {
-            emit measureCompleted(m_valueMap.first());
-            QMapIterator<int, MeasuredValue> iterator(m_valueMap);
-            while (iterator.hasNext()) {
-                iterator.next();
-                value.insert(iterator.key() - 1, iterator.value());
-            }
+            emit measuresCompleted(m_valueMap);
+            value = m_valueMap;
             m_result = true;
         }
     }
@@ -285,7 +283,6 @@ bool MAN2::saveToEepromCalibrationCoefficients(uint8_t channel)
 
 bool MAN2::disableAll()
 {
-
     while (isConnected()) {
         reset();
         if (!shortCircuitTest(Off))
@@ -305,8 +302,8 @@ bool MAN2::disableAll()
 void MAN2::startMeasure(ValueType type, uint8_t channel)
 {
     QMutexLocker Locker(&m_mutex);
-    QElapsedTimer t;
-    t.start();
+    // QElapsedTimer t;
+    // t.start();
     if (isConnected()) {
         m_valueMap.clear();
         emit Write(createParcel(GetMeasuredValue, static_cast<uint8_t>(type), channel));
@@ -316,14 +313,13 @@ void MAN2::startMeasure(ValueType type, uint8_t channel)
             emit measureCompleted(m_valueMap.first());
         emit measuresCompleted(m_valueMap);
     }
-    qDebug() << "startMeasure" << t.elapsed() << m_result;
+    // qDebug() << "startMeasure" << t.elapsed() << m_result;
 }
 
 int MAN2::address() const { return m_address; }
 
 bool MAN2::startTest(float start, float stop, float step, uint8_t channel)
 {
-
     QMutexLocker Locker(&m_mutex);
     if (isConnected()) {
         reset();
@@ -332,7 +328,7 @@ bool MAN2::startTest(float start, float stop, float step, uint8_t channel)
         params.valCh2 = step;
         params.valCh3 = stop;
         emit Write(createParcel(TripCurrentTest, params, channel));
-        if (m_semaphore.tryAcquire(1, 10000))
+        if (m_semaphore.tryAcquire(1, 30000))
             m_result = true;
     }
     return m_result;
@@ -417,25 +413,36 @@ void MAN2::RxGetMeasuredValue(const Parcel& data)
 {
     m_value = data.value<MeasuredValue>();
     if constexpr (Dbg)
-        qDebug() << "GET_MEASURED_VALUE" << data.addres;
+        qDebug() << "GET_MEASURED_VALUE" << data.addres << m_value.manState.tripCurrentTest;
     switch (m_value.type) {
     case CurrentMeasuredValue: // Напряжение, ток и уставка.
         m_value.valCh2 *= 1000.0f;
         m_value.valCh3 *= 1000.0f;
+        m_valueMap[data.addres] = m_value;
+        emit measureCompleted(m_value);
+        m_semaphore.release();
         break;
     case ValueTripCurrent:
+        m_value.valCh2 *= 1000.0f;
+        m_value.valCh3 *= 1000.0f;
+        emit measureCompleted(m_value);
+        m_valueMap[data.addres] = m_value;
+        emit measuresCompleted(m_valueMap);
+        if (!m_value.manState.tripCurrentTest) // if end
+            m_semaphore.release();
     case CalibVoltage:
     case CalibCurrent:
         break;
     case RawData:
         m_value.valCh3 *= 1000.0f;
+        m_valueMap[data.addres] = m_value;
+
+        emit measureCompleted(m_value);
+        m_semaphore.release();
         break;
     default:
         return;
     }
-    m_valueMap[data.addres] = m_value;
-    emit measureCompleted(m_value);
-    m_semaphore.release();
 }
 
 void MAN2::RxSetCurrent(const Parcel& data)
@@ -617,9 +624,9 @@ SerialPort::SerialPort(MAN2* manInterface)
     //    connect(this, &QSerialPort::breakEnabledChanged, [](bool set) { qDebug() << "breakEnabled" << set; });
     //    connect(this, &QSerialPort::dataTerminalReadyChanged, [](bool set) { qDebug() << "dataTerminalReady" << set; });
     //    connect(this, &QSerialPort::requestToSendChanged, [](bool set) { qDebug() << "requestToSend" << set; });
-
     //    connect(this, &QSerialPort::baudRateChanged, [](qint32 baudRate, QSerialPort::Directions directions) { qDebug() << baudRate << directions; });
     //    connect(this, &QSerialPort::dataBitsChanged, [](QSerialPort::DataBits dataBits) { qDebug() << dataBits; });
+
     connect(this, &QSerialPort::errorOccurred, [this](QSerialPort::SerialPortError error) {
         qDebug() << error;
         switch (error) {
@@ -720,7 +727,7 @@ void SerialPort::Close()
 
 void SerialPort::Write(const QByteArray& data)
 {
-    qDebug() << "Write" << data.toHex().toUpper();
+    //    qDebug() << "Write" << data.toHex().toUpper();
     write(data);
 }
 

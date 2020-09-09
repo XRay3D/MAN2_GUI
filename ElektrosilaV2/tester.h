@@ -1,14 +1,14 @@
 #ifndef WORKER_H
 #define WORKER_H
 
-#include "automeasure.h"
+#include "hw/man2.h"
 #include <QThread>
 
-class Worker : public QThread {
+class Tester : public QThread {
     Q_OBJECT
 public:
-    Worker(bool* doNotSkip, QObject* parent = nullptr);
-    ~Worker() override;
+    Tester(bool* doNotSkip, QObject* parent = nullptr);
+    ~Tester() override;
     void Continue();
     void FinishMeasurements();
     void run() override;
@@ -32,7 +32,7 @@ private:
 
     void Msleep(unsigned long time);
 
-    QVector<MeasuredValue> m_list;
+    QMap<int, MeasuredValue> m_list;
     double m_inVoltage;
     double m_minInVoltage;
     double m_maxInVoltage;

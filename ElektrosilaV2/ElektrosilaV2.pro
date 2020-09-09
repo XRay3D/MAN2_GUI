@@ -46,13 +46,11 @@ CONFIG += c++17 \
 INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/include"
 
 SOURCES += \
-    auto/automeasure.cpp \
-    auto/header.cpp \
-    auto/manmodel.cpp \
-    auto/tableview.cpp \
-    auto/testmodel.cpp \
-    auto/worker.cpp \
+    autoform.cpp \
     communications.cpp \
+    devicemodel.cpp \
+    dialogeditbp.cpp \
+    header.cpp \
     hw/digitalosc.cpp \
     hw/interface.cpp \
     hw/man2.cpp \
@@ -60,22 +58,25 @@ SOURCES += \
     hw/scpi.cpp \
     main.cpp \
     mainwindow.cpp \
+    manmodel.cpp \
+    mantableview.cpp \
     measurements.cpp \
     mydialog.cpp \
-    preparation/devicemodel.cpp \
-    preparation/prepareform.cpp \
-    preparation/sernummodel.cpp \
+    sernummodel.cpp \
     shdocvw.cpp \
+    sntableview.cpp \
+    tableview.cpp \
+    tester.cpp \
+    testmodel.cpp \
+    teststableview.cpp \
 
 
 HEADERS += \
-    auto/automeasure.h \
-    auto/header.h \
-    auto/manmodel.h \
-    auto/tableview.h \
-    auto/testmodel.h \
-    auto/worker.h \
+    autoform.h \
     communications.h \
+    devicemodel.h \
+    dialogeditbp.h \
+    header.h \
     hw/common_interfaces.h \
     hw/common_interfaces.h \
     hw/digitalosc.h \
@@ -84,19 +85,24 @@ HEADERS += \
     hw/myprotokol.h \
     hw/scpi.h \
     mainwindow.h \
+    manmodel.h \
+    mantableview.h \
     measurements.h \
     mydialog.h \
-    preparation/devicemodel.h \
-    preparation/prepareform.h \
-    preparation/sernummodel.h \
+    sernummodel.h \
     shdocvw.h \
+    sntableview.h \
+    tableview.h \
+    tester.h \
+    testmodel.h \
+    teststableview.h \
 
 FORMS += \
-    auto/automeasure.ui \
+    autoform.ui \
     communications.ui \
+    dialogeditbp.ui \
     mainwindow.ui \
     measurements.ui \
-    preparation/prepareform.ui \
 
 DISTFILES += \
     modify.txt \

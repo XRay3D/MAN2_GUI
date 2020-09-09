@@ -145,7 +145,7 @@ public:
     bool ping(const QString& PortName = QString()) override;
 
     bool getMeasuredValue(MeasuredValue& value, uint8_t channel, ValueType type = CurrentMeasuredValue);
-    bool getMeasuredValue(QVector<MeasuredValue>& value, ValueType type = CurrentMeasuredValue);
+    bool getMeasuredValue(QMap<int, MeasuredValue>& value, ValueType type = CurrentMeasuredValue);
     double getRmsValue();
     bool setCurrent(float Current, uint8_t Channel = 0);
     bool switchCurrent(uint8_t Enable, uint8_t Channel = 0);
@@ -162,6 +162,7 @@ public:
     bool startTest(float start, float stop, float step, uint8_t channel);
 
     void startMeasure(ValueType type = CurrentMeasuredValue, uint8_t channel = 0);
+    const QMap<int, MeasuredValue>& valueMap() const { return m_valueMap; }
 
 signals:
     void detectedAddress(int mode);

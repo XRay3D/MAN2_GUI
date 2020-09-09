@@ -15,21 +15,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
-    <property name="spacing">
-     <number>0</number>
-    </property>
-    <property name="leftMargin">
-     <number>2</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -43,12 +28,7 @@
       </property>
       <widget class="PrepareForm" name="tabInputParameters">
        <attribute name="title">
-        <string>Ввод параметров</string>
-       </attribute>
-      </widget>
-      <widget class="AutoMeasure" name="tabAutomaticMeasurements">
-       <attribute name="title">
-        <string>Автоматические измерения</string>
+        <string>Автоматическая проверка</string>
        </attribute>
       </widget>
       <widget class="Measurements" name="tabMeasurements">
@@ -81,7 +61,7 @@
   <customwidget>
    <class>PrepareForm</class>
    <extends>QWidget</extends>
-   <header>preparation/prepareform.h</header>
+   <header>autoform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -94,12 +74,6 @@
    <class>Communications</class>
    <extends>QWidget</extends>
    <header>communications.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>AutoMeasure</class>
-   <extends>QWidget</extends>
-   <header>auto/automeasure.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -1,60 +1,52 @@
-#include "automeasure.h"
+#include "autoform.h"
+
 #include "devicemodel.h"
-#include "hw/interface.h"
+#include "dialogeditbp.h"
 #include "manmodel.h"
-#include "mydialog.h"
-#include "scansettings.h"
 #include "sernummodel.h"
 #include "testmodel.h"
-#include "worker.h"
-#include <QCheckBox>
+#include "tester.h"
 #include <QMessageBox>
-#include <QSettings>
 
-AutoMeasure::AutoMeasure(QWidget* parent)
+int id = qRegisterMetaType<ScanSettings>("ScanSettings_t");
+
+PrepareForm::PrepareForm(QWidget* parent)
     : QWidget(parent)
-    , m_model(new ManModel(this))
 {
     setupUi(this);
 
-    tvMeasure->setModel(m_model);
-    tvMeasure->setSpan(2, 0, 1, 8);
+    cbxDevice->addItems(DeviceModel::cbxData());
 
-    tvMeasure->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    tvMeasure->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    tvMeasure->verticalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
-
-    tvSerNum->setModel(SerNumModel::instance());
-    tvSerNum->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    tvSerNum->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    tvSerNum->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    connect(tvSerNum, &QTableView::doubleClicked, [](const QModelIndex& index) {
-        if (index.row() < SerNumModel::serNumCount())
-            TestModel::instance()->instance()->showProtocol(index.row());
+    connect(pbClearSerNum, &QPushButton::clicked, SerNumModel::instance(), &SerNumModel::clear);
+    connect(cbxDevice, qOverload<int>(&QComboBox::currentIndexChanged), [](int index) {
+        DeviceModel::setIndex(index);
+        if (DeviceModel::scanSettings().NumberOfChannels > 0)
+            SerNumModel::setCount(8 / DeviceModel::scanSettings().NumberOfChannels);
     });
-    tableView->initCheckBox();
-    //    tableView->setModel(new TestModel);
-    tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-    //    QSettings settings;
-    //    settings.beginGroup("AutoMeasure");
-    //    splitter_2->restoreGeometry(settings.value("Geometry2").toByteArray());
-    //    splitter->restoreGeometry(settings.value("Geometry1").toByteArray());
-
-    connect(&m_timerRms, &QTimer::timeout, [&]() { m_model->setRms(mi::man->getRmsValue()); });
+    connect(pbStartStop, &QPushButton::clicked, [this](bool checked) {
+        if (checked && SerNumModel::isEmpty()) {
+            QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
+            pbStartStop->setChecked(false); //pbStartStopClicked(false);
+        } else
+            pbStartStopClicked(checked);
+    });
+    connect(pushButton, &QPushButton::clicked, [this] { DialogEditBp(this).exec(); });
+    connect(
+        pbClear, &QPushButton::clicked, [this] {
+            if (QMessageBox::question(this, "", "Отчистить?") == QMessageBox::Yes)
+                TestModel::instance()->reset();
+        });
 }
 
-AutoMeasure::~AutoMeasure()
+PrepareForm::~PrepareForm()
 {
-    //    QSettings settings;
-    //    settings.beginGroup("AutoMeasure");
-    //    settings.setValue("Geometry2", splitter_2->saveGeometry());
-    //    settings.setValue("Geometry1", splitter->saveGeometry());
+    if (measureTimerId) {
+        killTimer(measureTimerId);
+        measureTimerId = 0;
+    }
 }
 
-void AutoMeasure::showMessage(int num)
+void PrepareForm::showMessage(int num)
 {
     static int stage = 0;
     QString messageText;
@@ -66,7 +58,7 @@ void AutoMeasure::showMessage(int num)
                           .arg(DeviceModel::scanSettings().Voltageerrortest5U2)
                           .replace('.', ',');
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-            on_pbStartStop_clicked(false);
+            pbStartStopClicked(false);
         else
             m_worker->Continue();
         return;
@@ -77,7 +69,7 @@ void AutoMeasure::showMessage(int num)
                           .arg(DeviceModel::scanSettings().Voltageerrortest3_4U2)
                           .replace('.', ',');
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-            on_pbStartStop_clicked(false);
+            pbStartStopClicked(false);
         else
             m_worker->Continue();
         return;
@@ -85,7 +77,7 @@ void AutoMeasure::showMessage(int num)
         stage = num;
         messageText = "Установите входное напряжение 220±4,4В";
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-            on_pbStartStop_clicked(false);
+            pbStartStopClicked(false);
 
         else
             m_worker->Continue();
@@ -93,14 +85,14 @@ void AutoMeasure::showMessage(int num)
     case NoConnectionWithMan:
         messageText = "Нет связи с МАНом 2!";
         if (QMessageBox::critical(this, "", messageText, "Повторить", "Остановить измерения"))
-            on_pbStartStop_clicked(false);
+            pbStartStopClicked(false);
         else
             m_worker->Continue();
         return;
     case RestoreTheOperationOfChannels:
         messageText = "Восстановите работу каналов блока питания";
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-            on_pbStartStop_clicked(false);
+            pbStartStopClicked(false);
         else
             m_worker->Continue();
         return;
@@ -128,7 +120,7 @@ void AutoMeasure::showMessage(int num)
             m_worker->Continue();
             return;
         case 2:
-            on_pbStartStop_clicked(false);
+            pbStartStopClicked(false);
             return;
         }
         return;
@@ -140,7 +132,7 @@ void AutoMeasure::showMessage(int num)
                               .arg(DeviceModel::scanSettings().Voltageerrortest5U2)
                               .replace('.', ',');
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-                on_pbStartStop_clicked(false);
+                pbStartStopClicked(false);
             else
                 m_worker->Continue();
             return;
@@ -150,14 +142,14 @@ void AutoMeasure::showMessage(int num)
                               .arg(DeviceModel::scanSettings().Voltageerrortest3_4U2)
                               .replace('.', ',');
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-                on_pbStartStop_clicked(false);
+                pbStartStopClicked(false);
             else
                 m_worker->Continue();
             return;
         case SetInputVoltageNormal:
             messageText = "Установите входное напряжение 220±4,4В";
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
-                on_pbStartStop_clicked(false);
+                pbStartStopClicked(false);
             else
                 m_worker->Continue();
             return;
@@ -166,22 +158,36 @@ void AutoMeasure::showMessage(int num)
     return;
 }
 
-void AutoMeasure::updateProgresBar()
+void PrepareForm::updateProgresBar()
 {
     if (progressBar->value() == progressBar->maximum())
         progressBar->setValue(0);
     progressBar->setValue(progressBar->value() + 1);
 }
 
-void AutoMeasure::endSlot() { on_pbStartStop_clicked(false); }
+void PrepareForm::endSlot()
+{
+    pbStartStopClicked(false);
+    qDebug("Включить протоколы перед релизом.");
+    for (int i = 0; i < SerNumModel::serNumCount(); ++i) {
+        TestModel::instance()->saveProtokol(SerNumModel::serNum(i), i);
+        TestModel::instance()->showProtocol(i);
+    }
+    //    QMessageBox::information(nullptr, "", "Проверка закончена.");
+}
 
-void AutoMeasure::on_pbStartStop_clicked(bool checked)
+void PrepareForm::pbStartStopClicked(bool checked)
 {
     pbStartStop->setChecked(checked);
-    tableView->verticalHeader()->setEnabled(!checked);
-    tableView->checkBox()->setEnabled(!checked);
+    tvTest->setCheckable(!checked);
 
     if (checked) {
+        pbStartStop->setText("Остановить измерения");
+
+        if (measureTimerId) {
+            killTimer(measureTimerId);
+            measureTimerId = 0;
+        }
         if (SerNumModel::isEmpty()) {
             QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
             pbStartStop->setChecked(false);
@@ -192,41 +198,57 @@ void AutoMeasure::on_pbStartStop_clicked(bool checked)
         for (bool& val : m_doNotSkip)
             val = i-- > 0;
 
-        pbStartStop->setText("Остановить измерения");
-        m_worker = new Worker(m_doNotSkip);
-        connect(m_worker, &QThread::finished, this, &AutoMeasure::endSlot);
+        m_worker = new Tester(m_doNotSkip);
+        connect(m_worker, &QThread::finished, this, &PrepareForm::endSlot);
         connect(m_worker, &QThread::finished, m_worker, &QObject::deleteLater);
-        connect(m_worker, &Worker::showMessage, this, &AutoMeasure::showMessage);
-        connect(m_worker, &Worker::updateProgresBar, this, &AutoMeasure::updateProgresBar);
+        connect(m_worker, &Tester::showMessage, this, &PrepareForm::showMessage);
+        connect(m_worker, &Tester::updateProgresBar, this, &PrepareForm::updateProgresBar);
+
         progressBar->setValue(0);
         progressBar->setMaximum(7 + SerNumModel::serNumCount() * DeviceModel::scanSettings().NumberOfChannels * 2);
+
         m_worker->start();
     } else {
         pbStartStop->setText("Начать измерения");
-        m_worker->FinishMeasurements();
+
+        if (m_worker)
+            m_worker->FinishMeasurements();
+
         progressBar->setValue(0);
-        for (int i = 0; i < SerNumModel::serNumCount(); ++i) {
-            TestModel::instance()->saveProtokol(SerNumModel::serNum(i), i);
-            TestModel::instance()->showProtocol(i);
-        }
-        QMessageBox::information(nullptr, "", "Проверка закончена.");
+
+        if (measureTimerId == 0)
+            measureTimerId = startTimer(200);
     }
 }
 
-void AutoMeasure::showEvent(QShowEvent* event)
+void PrepareForm::showEvent(QShowEvent* event)
 {
-    if (mi::man->isConnected()) {
-        connect(mi::man, &MAN2::measuresCompleted, m_model, &ManModel::setMeasuredValues);
-        m_timerRms.start(100);
-        setEnabled(true);
-    } else
-        setEnabled(false);
     QWidget::showEvent(event);
+    connect(mi::man, &MAN2::measuresCompleted, static_cast<ManModel*>(tvMeasure->model()), &ManModel::setMeasuredValues);
+    connect(this, &PrepareForm::startMeasure, mi::man, &MAN2::startMeasure);
+    if (mi::man->isConnected()) {
+        measureTimerId = startTimer(500);
+        setEnabled(true);
+    } else {
+        setEnabled(false);
+        emit CurrentTabIndex(2);
+    }
 }
 
-void AutoMeasure::hideEvent(QHideEvent* event)
+void PrepareForm::hideEvent(QHideEvent* event)
 {
-    disconnect(mi::man, &MAN2::measuresCompleted, m_model, &ManModel::setMeasuredValues);
-    m_timerRms.stop();
     QWidget::hideEvent(event);
+    disconnect(mi::man, &MAN2::measuresCompleted, static_cast<ManModel*>(tvMeasure->model()), &ManModel::setMeasuredValues);
+    disconnect(this, &PrepareForm::startMeasure, mi::man, &MAN2::startMeasure);
+    if (measureTimerId) {
+        killTimer(measureTimerId);
+        measureTimerId = 0;
+    }
+}
+
+void PrepareForm::timerEvent(QTimerEvent* event)
+{
+    if (event->timerId() == measureTimerId) {
+        emit startMeasure();
+    }
 }

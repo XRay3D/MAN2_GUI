@@ -5,13 +5,15 @@
 #include <QSerialPortInfo>
 #include <QSettings>
 
-#include "preparation/sernummodel.h"
+#include "devicemodel.h"
+#include "sernummodel.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , m_statusBarTimer(0)
     , statusBarTime(new QLineEdit(this))
 {
+    new DeviceModel(this);
     new SerNumModel(this);
 
     setupUi(this);
@@ -24,13 +26,11 @@ MainWindow::MainWindow(QWidget* parent)
 
     connect(tabCommunications, &Communications::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
     connect(tabCommunications, &Communications::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
-
     connect(tabInputParameters, &PrepareForm::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
-    //    connect(tabInputParameters, &Preparation::ScanSettingsSignal, tabAutomaticMeasurements, &AutomaticMeasurements::ScanSettingsSlot);
-    //    connect(tabInputParameters, &Preparation::SerialNumberChanged, tabAutomaticMeasurements, &AutomaticMeasurements::SerialNumberChanged);
-    connect(tabAutomaticMeasurements, &AutoMeasure::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
+    //    connect(tabAutomaticMeasurements, &AutoMeasure::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
 
     readSettings();
+
     m_statusBarTimer = startTimer(1000);
 }
 
@@ -51,7 +51,7 @@ void MainWindow::timerEvent(QTimerEvent* event)
 
 void MainWindow::readSettings()
 {
-    QSettings settings("Settings.ini", QSettings::IniFormat);
+    QSettings settings;
     settings.setIniCodec("UTF-8");
 
     settings.beginGroup("MainWindow");
@@ -59,19 +59,20 @@ void MainWindow::readSettings()
     restoreGeometry(settings.value("geometry").toByteArray());
     settings.endGroup();
 
-    settings.beginGroup("Communications");
-    tabCommunications->cbManPort->setCurrentIndex(settings.value("cbManPort").toInt());
-    settings.endGroup();
-
     settings.beginGroup("InputParameters");
     tabInputParameters->cbxDevice->setCurrentIndex(settings.value("cbDevice", 0).toInt());
     tabInputParameters->leFio->setText(settings.value("leFioOtk", "Ф.И.О.").toString());
+    settings.endGroup();
+
+    settings.beginGroup("Communications");
+    tabCommunications->cbManPort->setCurrentIndex(settings.value("cbManPort").toInt());
+    tabCommunications->CheckConnection();
     settings.endGroup();
 }
 
 void MainWindow::writeSettings()
 {
-    QSettings settings("Settings.ini", QSettings::IniFormat);
+    QSettings settings;
     settings.setIniCodec("UTF-8");
 
     settings.beginGroup("MainWindow");
@@ -79,12 +80,12 @@ void MainWindow::writeSettings()
     settings.setValue("geometry", saveGeometry());
     settings.endGroup();
 
-    settings.beginGroup("Communications");
-    settings.setValue("cbManPort", tabCommunications->cbManPort->currentIndex());
-    settings.endGroup();
-
     settings.beginGroup("InputParameters");
     settings.setValue("cbDevice", tabInputParameters->cbxDevice->currentIndex());
     settings.setValue("leFioOtk", tabInputParameters->leFio->text());
+    settings.endGroup();
+
+    settings.beginGroup("Communications");
+    settings.setValue("cbManPort", tabCommunications->cbManPort->currentIndex());
     settings.endGroup();
 }

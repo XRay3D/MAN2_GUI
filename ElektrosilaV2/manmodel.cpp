@@ -8,15 +8,9 @@ ManModel::ManModel(QObject* parent)
 {
 }
 
-int ManModel::rowCount(const QModelIndex& /*parent*/) const
-{
-    return 3;
-}
+int ManModel::rowCount(const QModelIndex& /*parent*/) const { return 3; }
 
-int ManModel::columnCount(const QModelIndex& /*parent*/) const
-{
-    return 8;
-}
+int ManModel::columnCount(const QModelIndex& /*parent*/) const { return 8; }
 
 QVariant ManModel::data(const QModelIndex& index, int role) const
 {
@@ -35,7 +29,7 @@ QVariant ManModel::data(const QModelIndex& index, int role) const
     case Qt::FontRole:
         if (index.row() == 2) {
             QFont f;
-            f.setPointSize(40);
+            f.setPointSize(32);
             return f;
         }
         return {};
@@ -45,10 +39,7 @@ QVariant ManModel::data(const QModelIndex& index, int role) const
     return {};
 }
 
-Qt::ItemFlags ManModel::flags(const QModelIndex& /*index*/) const
-{
-    return Qt::ItemIsEnabled;
-}
+Qt::ItemFlags ManModel::flags(const QModelIndex& /*index*/) const { return Qt::ItemIsEnabled; }
 
 void ManModel::setRms(double val)
 {
@@ -56,7 +47,7 @@ void ManModel::setRms(double val)
     dataChanged(createIndex(2, 0), createIndex(2, 7), { Qt::DisplayRole });
 }
 
-void ManModel::setMeasuredValueSignal(const QMap<int, MeasuredValue>& data)
+void ManModel::setMeasuredValues(const QMap<int, MeasuredValue>& data)
 {
     QMapIterator<int, MeasuredValue> iterator(data);
     while (iterator.hasNext()) {
@@ -72,7 +63,7 @@ QVariant ManModel::headerData(int section, Qt::Orientation orientation, int role
     switch (role) {
     case Qt::DisplayRole:
         if (orientation == Qt::Horizontal)
-            return QString("Канал №%1").arg(section + 1);
+            return QString("№%1").arg(section + 1);
         else
             switch (section) {
             case 0:

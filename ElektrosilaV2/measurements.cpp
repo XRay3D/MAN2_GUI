@@ -77,7 +77,7 @@ Measurements::Measurements(QWidget* parent)
     graphicsView->setRenderHint(QPainter::Antialiasing);
     graphicsView->setPalette(QPalette(Qt::white));
 
-    QSettings settings("Settings.ini", QSettings::IniFormat);
+    QSettings settings;
     settings.setIniCodec("UTF-8");
     settings.beginGroup("Measurements");
     gbChannel_1->setChecked(settings.value("gbChannel_1", true).toBool());
@@ -92,7 +92,7 @@ Measurements::Measurements(QWidget* parent)
 
 Measurements::~Measurements()
 {
-    QSettings settings("Settings.ini", QSettings::IniFormat);
+    QSettings settings;
     settings.setIniCodec("UTF-8");
     settings.beginGroup("Measurements");
     settings.setValue("gbChannel_1", gbChannel_1->isChecked());
@@ -332,7 +332,8 @@ void Measurements::measureCompletedSlot(const MeasuredValue&)
 void Measurements::showEvent(QShowEvent* /*event*/)
 {
     if (mi::man->isConnected()) {
-        QVector<MeasuredValue> list;
+        QMap<int, MeasuredValue> list;
+        qWarning("Fix i");
         if (mi::man->getMeasuredValue(list)) {
             m_disableSlots = true;
             for (int i = 0; i < 8; ++i) {

@@ -6,11 +6,10 @@
 class MainWindow;
 class Communications : public QWidget, private Ui::Communications {
     Q_OBJECT
-
     friend class MainWindow;
 
 public:
-    explicit Communications(QWidget* parent = 0);
+    explicit Communications(QWidget* parent = nullptr);
     void CheckConnection();
     ~Communications();
 

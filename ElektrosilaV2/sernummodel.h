@@ -5,7 +5,7 @@
 
 class SerNumModel : public QAbstractTableModel {
     Q_OBJECT
-    inline static SerNumModel* self_;
+    inline static SerNumModel* m_instance;
 
 public:
     explicit SerNumModel(QObject* parent = nullptr);
@@ -26,6 +26,8 @@ public:
     int count() const;
     static int serNumCount();
     static void setCount(int count);
+
+    static SerNumModel* instance();
 
 private:
     QVector<QString> m_data;

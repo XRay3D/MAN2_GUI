@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QFontDatabase>
+#include <QSettings>
 //#include <qt_windows.h>
 
 //void handler_sigsegv(int signum)
@@ -20,6 +21,7 @@ int main(int argc, char* argv[])
     //QCoreApplication::setOrganizationDomain("mysoft.com");
     QCoreApplication::setApplicationName("Электросила");
 
+    QSettings settings;
     //    w.setFont(QFont(QFontDatabase::applicationFontFamilies(f_id).first()));
     //    int f_id = QFontDatabase::addApplicationFont(":/ubuntu-font-family-0.83/Ubuntu-R.ttf");
     //    QFont f(QFontDatabase::applicationFontFamilies(f_id).first());
@@ -27,6 +29,9 @@ int main(int argc, char* argv[])
     //    QFont f;
     //    f.setPointSize(12);
     //    a.setFont(f);
+
+    QSettings::setDefaultFormat(QSettings::IniFormat);
+    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, a.applicationDirPath());
 
     mi mi_;
     Q_UNUSED(mi_)

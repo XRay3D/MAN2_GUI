@@ -15,13 +15,9 @@ Communications::Communications(QWidget* parent)
     }
     std::sort(list.begin(), list.end());
     cbManPort->addItems(list.toList());
-    QTimer::singleShot(100, Qt::CoarseTimer, this, &Communications::CheckConnection);
 }
 
-Communications::~Communications()
-{
-    qDebug() << "~Communications()";
-}
+Communications::~Communications() { qDebug() << "~Communications()"; }
 
 void Communications::on_pbManCheckConnection_clicked()
 {
@@ -41,6 +37,13 @@ void Communications::CheckConnection()
     mi::man->ping(cbManPort->currentText());
     if (mi::man->isConnected()) {
         emit SetTabBarEnabled(true);
+        mi::osc->ping();
+        if (mi::osc->isConnected()) {
+            emit SetTabBarEnabled(true);
+            return;
+        } else {
+            QMessageBox::critical(0, "", "Не удалось установить связь с Digital Osc!");
+        }
         return;
     } else {
         QMessageBox::critical(0, "", "Не удалось установить связь с МАН-2!");

@@ -3,18 +3,20 @@
 #include <QMessageBox>
 #include <QSettings>
 
+SerNumModel* SerNumModel::instance() { return m_instance; }
+
 SerNumModel::SerNumModel(QObject* parent)
     : QAbstractTableModel(parent)
     , m_data(8)
 {
-    self_ = this;
+    m_instance = this;
     readSerNum();
 }
 
 SerNumModel::~SerNumModel()
 {
     writeSerNum();
-    self_ = nullptr;
+    m_instance = nullptr;
 }
 
 int SerNumModel::rowCount(const QModelIndex& /*parent*/) const
@@ -98,52 +100,52 @@ void SerNumModel::clear()
 
 bool SerNumModel::isEmpty()
 {
-    for (QString& var : self_->m_data) {
+    for (QString& var : m_instance->m_data) {
         if (!var.isEmpty())
             return false;
     }
     return true;
 }
 
-QString SerNumModel::serNum(int index) { return self_->m_data[index]; }
+QString SerNumModel::serNum(int index) { return m_instance->m_data[index]; }
 
 int SerNumModel::count() const { return m_count; }
 
 int SerNumModel::serNumCount() /*const*/
 {
-    int i = !self_->m_data[0].isEmpty()
-        + !self_->m_data[1].isEmpty()
-        + !self_->m_data[2].isEmpty()
-        + !self_->m_data[3].isEmpty()
-        + !self_->m_data[4].isEmpty()
-        + !self_->m_data[5].isEmpty()
-        + !self_->m_data[6].isEmpty()
-        + !self_->m_data[7].isEmpty();
+    int i = !m_instance->m_data[0].isEmpty()
+        + !m_instance->m_data[1].isEmpty()
+        + !m_instance->m_data[2].isEmpty()
+        + !m_instance->m_data[3].isEmpty()
+        + !m_instance->m_data[4].isEmpty()
+        + !m_instance->m_data[5].isEmpty()
+        + !m_instance->m_data[6].isEmpty()
+        + !m_instance->m_data[7].isEmpty();
 
     //    std::sort(m_data.begin(), m_data.end());
     //    std::rotate(m_data.begin(), m_data.end() - i, m_data.end());
-    self_->dataChanged(self_->createIndex(0, 0), self_->createIndex(7, 0), { Qt::DisplayRole });
+    m_instance->dataChanged(m_instance->createIndex(0, 0), m_instance->createIndex(7, 0), { Qt::DisplayRole });
     return i;
 }
 
 void SerNumModel::setCount(int count)
 {
-    if (self_->m_count < count) {
-        self_->beginInsertRows(QModelIndex(), self_->m_count, count - 1);
-        self_->m_count = count;
-        self_->endInsertRows();
-    } else if (self_->m_count > count) {
-        self_->beginRemoveRows(QModelIndex(), count, self_->m_count - 1);
-        self_->m_count = count;
-        for (int i = self_->m_count; i < 8; ++i)
-            self_->m_data[i].clear();
-        self_->endRemoveRows();
+    if (m_instance->m_count < count) {
+        m_instance->beginInsertRows(QModelIndex(), m_instance->m_count, count - 1);
+        m_instance->m_count = count;
+        m_instance->endInsertRows();
+    } else if (m_instance->m_count > count) {
+        m_instance->beginRemoveRows(QModelIndex(), count, m_instance->m_count - 1);
+        m_instance->m_count = count;
+        for (int i = m_instance->m_count; i < 8; ++i)
+            m_instance->m_data[i].clear();
+        m_instance->endRemoveRows();
     }
 }
 
 void SerNumModel::readSerNum()
 {
-    QSettings settings("Settings.ini", QSettings::IniFormat);
+    QSettings settings;
     settings.setIniCodec("UTF-8");
     settings.beginGroup("InputParameters");
     for (int i = 0; i < 8; ++i) {
@@ -154,7 +156,7 @@ void SerNumModel::readSerNum()
 
 void SerNumModel::writeSerNum()
 {
-    QSettings settings("Settings.ini", QSettings::IniFormat);
+    QSettings settings;
     settings.setIniCodec("UTF-8");
     settings.beginGroup("InputParameters");
     for (int i = 0; i < 8; ++i) {

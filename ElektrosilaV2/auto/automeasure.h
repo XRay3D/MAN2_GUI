@@ -2,7 +2,7 @@
 #define AUTOMATICMEASUREMENTS_H
 
 #include "hw/man2.h"
-#include "preparation/scansettings.h"
+#include "scansettings.h"
 #include "ui_automeasure.h"
 #include <QAxWidget>
 #include <QDialog>
