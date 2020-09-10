@@ -60,12 +60,12 @@ public:
         Test6,
         Test7,
         TestCount,
-        Channels = 8
+        Channels = 8,
+        None = -1
     };
 
     // QAbstractItemModel interface
-public:
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+public : int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;

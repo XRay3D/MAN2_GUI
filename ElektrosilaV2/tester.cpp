@@ -7,6 +7,7 @@
 #include <QSettings>
 
 enum { SkipRms = 1 };
+
 Tester::Tester(bool* doNotSkip, QObject* parent)
     : QThread(parent)
     , m_doNotSkip(doNotSkip)
@@ -70,6 +71,11 @@ void Tester::run()
             SetVoltage(SetInputVoltageLower);
             Test2(); // Измерение Пульсации выходного напряжения под номинальной нагрузкой Минимальное (130) Да
         }
+
+        TestModel::instance()->setCurrentTest(TestModel::None);
+
+        while (!mi::man->disableAll())
+            WaitAnswerManConnErr();
     } catch (int i) {
         Q_UNUSED(i)
         m_semaphore.acquire(m_semaphore.available());
@@ -165,9 +171,6 @@ void Tester::Test2()
     while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         WaitAnswerManConnErr();
 
-    while (!mi::man->switchCurrent(1))
-        WaitAnswerManConnErr();
-
     if (mi::osc->isConnected()) {
         m_list.clear();
         mi::osc->wrRdData(":CH2:COUPling AC");
@@ -180,7 +183,6 @@ void Tester::Test2()
             Msleep(500);
             qDebug() << DeviceModel::scanSettings().VisualControl << mi::osc->PKPK(2);
             TestModel::instance()->setTest2(i - 1, DeviceModel::scanSettings().VisualControl > mi::osc->PKPK(2) * 1000.0);
-            WaitAnswerManConnErr(); ///////
             CheckFinished();
             emit updateProgresBar();
         }
@@ -205,7 +207,11 @@ void Tester::Test3()
 {
     qDebug() << "Test3";
     TestModel::instance()->setCurrentTest(TestModel::Test3);
-    Msleep(5000);
+
+    while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
+        WaitAnswerManConnErr();
+
+    Msleep(100); ////5000
     if (mi::osc->isConnected()) {
         m_list.clear();
         mi::osc->wrRdData(":CH2:COUPling DC");
