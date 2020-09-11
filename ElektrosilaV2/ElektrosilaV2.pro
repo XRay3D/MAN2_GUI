@@ -50,6 +50,7 @@ SOURCES += \
     communications.cpp \
     devicemodel.cpp \
     dialogeditbp.cpp \
+    excel.cpp \
     header.cpp \
     hw/digitalosc.cpp \
     hw/interface.cpp \
@@ -76,6 +77,7 @@ HEADERS += \
     communications.h \
     devicemodel.h \
     dialogeditbp.h \
+    excel.h \
     header.h \
     hw/common_interfaces.h \
     hw/common_interfaces.h \
