@@ -13,30 +13,30 @@ Graduation::Graduation(QWidget* parent)
 
     m_chbxs = QVector<QCheckBox*>({ checkBox_1, checkBox_2, checkBox_3, checkBox_4, checkBox_5, checkBox_6 });
 
-    connect(pbSave, &QPushButton::clicked, [&]() { mi::man->saveToEepromCalibrationCoefficients(m_channel); });
+    connect(pbSave, &QPushButton::clicked, []() { mi::man->saveToEepromCalibrationCoefficients(mi::man->address()); });
 
     connect(dsbxAdcCh1Offset, qOverload<double>(&QDoubleSpinBox::valueChanged),
-        [this](double val) { gradCoeff.AdcCh1Offset = val; });
+        [this](double val) { gradCoeff.adcCh1.offset = val; });
     connect(dsbxAdcCh1Scale, qOverload<double>(&QDoubleSpinBox::valueChanged),
-        [this](double val) { gradCoeff.AdcCh1Scale = val; });
+        [this](double val) { gradCoeff.adcCh1.scale = val; });
     connect(dsbxAdcCh2Offset, qOverload<double>(&QDoubleSpinBox::valueChanged),
-        [this](double val) { gradCoeff.AdcCh2Offset = val; });
+        [this](double val) { gradCoeff.adcCh2.offset = val; });
     connect(dsbxAdcCh2Scale, qOverload<double>(&QDoubleSpinBox::valueChanged),
-        [this](double val) { gradCoeff.AdcCh2Scale = val; });
+        [this](double val) { gradCoeff.adcCh2.scale = val; });
     connect(dsbxAdcCh3Offset, qOverload<double>(&QDoubleSpinBox::valueChanged),
-        [this](double val) { gradCoeff.AdcCh3Offset = val; });
+        [this](double val) { gradCoeff.adcCh3.offset = val; });
     connect(dsbxAdcCh3Scale, qOverload<double>(&QDoubleSpinBox::valueChanged),
-        [this](double val) { gradCoeff.AdcCh3Scale = val; });
+        [this](double val) { gradCoeff.adcCh3.scale = val; });
     connect(dsbxDacOffset, qOverload<double>(&QDoubleSpinBox::valueChanged),
-        [this](double val) { gradCoeff.DacOffset = val; });
+        [this](double val) { gradCoeff.dac.offset = val; });
     connect(dsbxDacScale, qOverload<double>(&QDoubleSpinBox::valueChanged),
-        [this](double val) { gradCoeff.DacScale = val; });
+        [this](double val) { gradCoeff.dac.scale = val; });
 
-    connect(cbManCh, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [&](int index) {
-        if (index == 8)
-            rbVoltage->setChecked(true);
-        rbCurrent->setEnabled(index != 8);
-    });
+    //    connect(cbManCh, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [&](int index) {
+    //        if (index == 8)
+    //            rbVoltage->setChecked(true);
+    //        rbCurrent->setEnabled(index != 8);
+    //    });
 }
 
 Graduation::~Graduation()
@@ -56,29 +56,27 @@ void Graduation::gradI()
 
     QMessageBox::information(this, "", "Подключите источник тока 3 ампера.");
 
-    mi::man->getCalibrationCoefficients(gradCoeff, m_channel);
+    mi::man->getCalibrationCoefficients(gradCoeff, mi::man->address());
     setGradDsbxs();
-    mi::man->setDefaultCalibrationCoefficients(m_channel);
+    mi::man->setDefaultCalibrationCoefficients(mi::man->address());
+    GradCoeff defGc;
+    mi::man->getCalibrationCoefficients(defGc, mi::man->address());
 
     m_chbxs[0]->setChecked(true);
     m_chbxs[1]->setChecked(true);
 
-    constexpr double i1 = 0.01; // A
+    constexpr double i1 = 0.1; // A
     constexpr double i2 = 3.0; // A
 
-    GradCoeff GradCoeff2;
-    mi::man->getCalibrationCoefficients(GradCoeff2, m_channel);
-    const double defDacScale = GradCoeff2.DacScale; // A
-
     { //0.1 A
-        mi::man->setCurrent(i1 * 1000, m_channel);
-        mi::man->switchCurrent(true, m_channel);
+        mi::man->setCurrent(i1 * 1000, mi::man->address());
+        mi::man->switchCurrent(true, mi::man->address());
         thread()->sleep(10);
         qApp->processEvents();
-        mi::man->getMeasuredValue(value, m_channel, CalibCurrent);
+        mi::man->getMeasuredValue(value, mi::man->address(), CalibCurrent);
         for (int i = 0; i < count;) {
-            mi::man->getMeasuredValue(value, m_channel, CalibCurrent);
-            measured[Meas1] += static_cast<double>(value.value1);
+            mi::man->getMeasuredValue(value, mi::man->address(), CalibCurrent);
+            measured[Meas1] += static_cast<double>(value.ch1);
             reference[Meas1] += mi::scpi->GetDcCurrent();
             dsbxMeasure_1->setValue(measured[Meas1] / ++i);
             dsbxSet_1->setValue(reference[Meas1] / i);
@@ -93,13 +91,13 @@ void Graduation::gradI()
     m_chbxs[3]->setChecked(true);
 
     { //3 A
-        mi::man->setCurrent(i2 * 1000, m_channel);
+        mi::man->setCurrent(i2 * 1000, mi::man->address());
         thread()->sleep(10);
         qApp->processEvents();
-        mi::man->getMeasuredValue(value, m_channel, CalibCurrent);
+        mi::man->getMeasuredValue(value, mi::man->address(), CalibCurrent);
         for (int i = 0; i < count;) {
-            mi::man->getMeasuredValue(value, m_channel, CalibCurrent);
-            measured[Meas2] += static_cast<double>(value.value1);
+            mi::man->getMeasuredValue(value, mi::man->address(), CalibCurrent);
+            measured[Meas2] += static_cast<double>(value.ch1);
             reference[Meas2] += mi::scpi->GetDcCurrent();
             dsbxMeasure_1->setValue(measured[Meas2] / ++i);
             dsbxSet_1->setValue(reference[Meas2] / i);
@@ -109,23 +107,24 @@ void Graduation::gradI()
         reference[Meas2] /= count;
     }
 
-    mi::man->setCurrent(0, m_channel);
-    mi::man->switchCurrent(false, m_channel);
+    mi::man->setCurrent(0, mi::man->address());
+    mi::man->switchCurrent(false, mi::man->address());
 
     const double scale = (i2 - i1) / (reference[Meas2] - reference[Meas1]);
-    gradCoeff.AdcCh3Scale = static_cast<float>(((reference[Meas2] - reference[Meas1]) / (measured[Meas2] - measured[Meas1])) * 0.01);
-    gradCoeff.DacOffset = static_cast<float>((i1 / scale) - reference[Meas1]);
-    gradCoeff.DacScale = static_cast<float>(scale * defDacScale);
+    gradCoeff.adcCh3.scale = static_cast<float>(((reference[Meas2] - reference[Meas1]) / (measured[Meas2] - measured[Meas1])) * defGc.adcCh3.scale);
+    gradCoeff.dac.offset = 0; //static_cast<float>((i1 / scale) - reference[Meas1]);
+    gradCoeff.dac.scale = static_cast<float>(scale * defGc.dac.scale);
     m_chbxs[4]->setChecked(true);
 
-    //    qDebug() << "AdcCh3Scale" << gradCoeff.AdcCh3Scale;
-    //    qDebug() << "DacOffset" << gradCoeff.DacOffset;
-    //    qDebug() << "DacScale" << gradCoeff.DacScale;
+    //    qDebug() << "adcCh3.scale" << gradCoeff.adcCh3.scale;
+    //    qDebug() << "dac.offset" << gradCoeff.dac.offset;
+    //    qDebug() << "dac.scale" << gradCoeff.dac.scale;
 
-    //    if ((0.009f < gradCoeff.AdcCh3Scale) && (gradCoeff.AdcCh3Scale < 0.011f)
-    //        /*&& (0.0f < gradCoeff.DacOffset) && (gradCoeff.DacOffset < 0.3f)*/
-    //        /*&& (defDacScale * 0.9 < gradCoeff.DacScale) && (gradCoeff.DacScale < defDacScale * 1.1)*/)
-    mi::man->setCalibrationCoefficients(gradCoeff, m_channel);
+    //    if ((0.009f < gradCoeff.adcCh3.scale) && (gradCoeff.adcCh3.scale < 0.011f)
+    //        /*&& (0.0f < gradCoeff.dac.offset) && (gradCoeff.dac.offset < 0.3f)*/
+    //        /*&& (defDacScale * 0.9 < gradCoeff.dac.scale) && (gradCoeff.dac.scale < defDacScale * 1.1)*/)
+    mi::man->setCalibrationCoefficients(gradCoeff, mi::man->address());
+    setGradDsbxs();
     //    else
     //        QMessageBox::critical(this, "", "Коэффициенты выходят за пределы!");
 
@@ -142,7 +141,7 @@ void Graduation::gradU()
     double measure[2] = { 0.0, 0.0 };
     double reference = 0.0;
 
-    mi::man->getCalibrationCoefficients(gradCoeff, m_channel);
+    mi::man->getCalibrationCoefficients(gradCoeff, mi::man->address());
     setGradDsbxs();
 
     m_chbxs[0]->setChecked(true);
@@ -152,9 +151,9 @@ void Graduation::gradU()
 
     qApp->processEvents();
     for (int i = 0; i < count; ++i) {
-        mi::man->getMeasuredValue(value, m_channel, CalibVoltage);
-        measure[Ch1] += value.value1;
-        measure[Ch2] += value.value2;
+        mi::man->getMeasuredValue(value, mi::man->address(), CalibVoltage);
+        measure[Ch1] += value.ch1;
+        measure[Ch2] += value.ch2;
         qApp->processEvents();
         reference += mi::scpi->GetDcVoltage();
         dsbxMeasure_1->setValue(measure[Ch1] / (i + 1));
@@ -167,16 +166,16 @@ void Graduation::gradU()
     reference /= count;
     m_chbxs[4]->setChecked(true);
 
-    gradCoeff.AdcCh1Scale = 0.05f * (reference / measure[Ch1]);
-    gradCoeff.AdcCh2Scale = 0.05f * (reference / measure[Ch2]);
-    gradCoeff.AdcCh1Offset = 0.0f;
-    gradCoeff.AdcCh2Offset = 0.0f;
+    gradCoeff.adcCh1.scale = 0.05f * (reference / measure[Ch1]);
+    gradCoeff.adcCh2.scale = 0.05f * (reference / measure[Ch2]);
+    gradCoeff.adcCh1.offset = 0.0f;
+    gradCoeff.adcCh2.offset = 0.0f;
 
-    qDebug() << gradCoeff.AdcCh1Scale;
-    qDebug() << gradCoeff.AdcCh2Scale;
+    qDebug() << gradCoeff.adcCh1.scale;
+    qDebug() << gradCoeff.adcCh2.scale;
 
-    if ((0.04f < gradCoeff.AdcCh1Scale) && (gradCoeff.AdcCh1Scale < 0.06f) && (0.04f < gradCoeff.AdcCh2Scale) && (gradCoeff.AdcCh2Scale < 0.06f))
-        mi::man->setCalibrationCoefficients(gradCoeff, m_channel);
+    if ((0.04f < gradCoeff.adcCh1.scale) && (gradCoeff.adcCh1.scale < 0.06f) && (0.04f < gradCoeff.adcCh2.scale) && (gradCoeff.adcCh2.scale < 0.06f))
+        mi::man->setCalibrationCoefficients(gradCoeff, mi::man->address());
     else
         QMessageBox::critical(this, "", "Коэффициенты выходят за пределы!");
 
@@ -195,7 +194,8 @@ void Graduation::gradUAdc()
     double reference[2] = { 0.0, 0.0 };
     const int count2 = 50;
 
-    mi::man->setDefaultCalibrationCoefficients(m_channel);
+    mi::man->setDefaultCalibrationCoefficients(mi::man->address());
+    mi::man->getCalibrationCoefficients(gradCoeff, mi::man->address());
 
     m_chbxs[0]->setChecked(true);
     m_chbxs[1]->setChecked(true);
@@ -205,7 +205,8 @@ void Graduation::gradUAdc()
 
     for (int i = 0, counter = 1; i < count; ++i, ++counter) {
         for (int j = 0; j < count2; ++j, ++counter) {
-            measure[Meas1] += mi::man->getRmsValue();
+            mi::man->getMeasuredValue(value, mi::man->address(), CurrentMeasuredValue);
+            measure[Meas1] += value.ch1;
             thread()->msleep(10);
             dsbxMeasure_1->setValue(measure[Meas1] / counter);
             qApp->processEvents();
@@ -224,7 +225,8 @@ void Graduation::gradUAdc()
     qApp->processEvents();
     for (int i = 0, counter = 1; i < count; ++i, ++counter) {
         for (int j = 0; j < count2; ++j, ++counter) {
-            measure[Meas2] += mi::man->getRmsValue();
+            mi::man->getMeasuredValue(value, mi::man->address(), CurrentMeasuredValue);
+            measure[Meas2] += value.ch1;
             thread()->msleep(10);
             dsbxMeasure_1->setValue(measure[Meas2] / counter);
             qApp->processEvents();
@@ -238,15 +240,17 @@ void Graduation::gradUAdc()
 
     m_chbxs[4]->setChecked(true);
 
-    gradCoeff.AdcCh1Scale = ((reference[Meas2] - reference[Meas1]) / (measure[Meas2] - measure[Meas1]));
-    gradCoeff.AdcCh1Offset = reference[Meas1] - (measure[Meas1] * gradCoeff.AdcCh1Scale);
+    //    gradCoeff.adcCh1.scale = ((reference[Meas2] - reference[Meas1]) / (measure[Meas2] - measure[Meas1]));
+    //    gradCoeff.adcCh1.offset = reference[Meas1] - (measure[Meas1] * gradCoeff.adcCh1.scale);
+    gradCoeff.adcCh1.scale = ((reference[Meas2] - reference[Meas1]) / (measure[Meas2] - measure[Meas1]));
+    gradCoeff.dac.scale *= gradCoeff.adcCh1.scale;
 
-    qDebug() << gradCoeff.AdcCh1Offset;
-    qDebug() << gradCoeff.AdcCh1Scale;
+    qDebug() << gradCoeff.adcCh1.offset;
+    qDebug() << gradCoeff.adcCh1.scale;
 
-    //            if ((1.5f < GradCoeff.AdcCh1Scale) && (GradCoeff.AdcCh1Scale < 2.5f))
-    mi::man->setCalibrationCoefficients(gradCoeff, m_channel);
-    mi::man->saveToEepromCalibrationCoefficients(m_channel);
+    //            if ((1.5f < GradCoeff.adcCh1.scale) && (GradCoeff.adcCh1.scale < 2.5f))
+    mi::man->setCalibrationCoefficients(gradCoeff, mi::man->address());
+    //mi::man->saveToEepromCalibrationCoefficients(mi::man->address());
     //            else
     //                QMessageBox::critical(this, "", "Что-то пошло не так, коэффициенты выходят за пределы!");
 
@@ -255,21 +259,20 @@ void Graduation::gradUAdc()
 
 void Graduation::setGradDsbxs()
 {
-    dsbxAdcCh1Offset->setValue(gradCoeff.AdcCh1Offset);
-    dsbxAdcCh1Scale->setValue(gradCoeff.AdcCh1Scale);
-    dsbxAdcCh2Offset->setValue(gradCoeff.AdcCh2Offset);
-    dsbxAdcCh2Scale->setValue(gradCoeff.AdcCh2Scale);
-    dsbxAdcCh3Offset->setValue(gradCoeff.AdcCh3Offset);
-    dsbxAdcCh3Scale->setValue(gradCoeff.AdcCh3Scale);
-    dsbxDacOffset->setValue(gradCoeff.DacOffset);
-    dsbxDacScale->setValue(gradCoeff.DacScale);
+    dsbxAdcCh1Offset->setValue(gradCoeff.adcCh1.offset);
+    dsbxAdcCh1Scale->setValue(gradCoeff.adcCh1.scale);
+    dsbxAdcCh2Offset->setValue(gradCoeff.adcCh2.offset);
+    dsbxAdcCh2Scale->setValue(gradCoeff.adcCh2.scale);
+    dsbxAdcCh3Offset->setValue(gradCoeff.adcCh3.offset);
+    dsbxAdcCh3Scale->setValue(gradCoeff.adcCh3.scale);
+    dsbxDacOffset->setValue(gradCoeff.dac.offset);
+    dsbxDacScale->setValue(gradCoeff.dac.scale);
 }
 
 void Graduation::showEvent(QShowEvent* event)
 {
     Q_UNUSED(event)
-    groupBoxGrad->setEnabled(mi::man->IsConnected() && mi::scpi->IsConnected());
-    m_channel = mi::man->address(); // cbManCh->currentIndex() + 1;
+    groupBoxGrad->setEnabled(mi::man->isConnected() && mi::scpi->isConnected());
 }
 
 void Graduation::on_pbStartGrad_clicked()
@@ -277,16 +280,14 @@ void Graduation::on_pbStartGrad_clicked()
     for (QCheckBox* chbx : m_chbxs)
         chbx->setChecked(false);
 
-    mi::man->shortCircuitTest(false, m_channel);
-    mi::man->switchCurrent(false, m_channel);
+    mi::man->shortCircuitTest(ScOff, mi::man->address());
+    mi::man->switchCurrent(false, mi::man->address());
     mi::man->oscilloscope(0);
 
     if (rbVoltage->isChecked()) {
-        if (m_channel == 9) {
-            gradUAdc();
-        } else {
-            gradU();
-        }
+        gradU();
+    } else if (rbVoltageAc->isChecked()) {
+        gradUAdc();
     } else if (rbCurrent->isChecked()) {
         gradI();
     }
@@ -294,27 +295,27 @@ void Graduation::on_pbStartGrad_clicked()
 
 void Graduation::on_pbGet_clicked()
 {
-    mi::man->getCalibrationCoefficients(gradCoeff, m_channel);
+    mi::man->getCalibrationCoefficients(gradCoeff, mi::man->address());
     setGradDsbxs();
 }
 
 void Graduation::on_pbSet_clicked()
 {
-    mi::man->getCalibrationCoefficients(gradCoeff, m_channel);
-    gradCoeff.AdcCh1Offset = dsbxAdcCh1Offset->value();
-    gradCoeff.AdcCh1Scale = dsbxAdcCh1Scale->value();
-    gradCoeff.AdcCh2Offset = dsbxAdcCh2Offset->value();
-    gradCoeff.AdcCh2Scale = dsbxAdcCh2Scale->value();
-    gradCoeff.AdcCh3Offset = dsbxAdcCh3Offset->value();
-    gradCoeff.AdcCh3Scale = dsbxAdcCh3Scale->value();
-    gradCoeff.DacOffset = dsbxDacOffset->value();
-    gradCoeff.DacScale = dsbxDacScale->value();
-    mi::man->setCalibrationCoefficients(gradCoeff, m_channel);
+    mi::man->getCalibrationCoefficients(gradCoeff, mi::man->address());
+    gradCoeff.adcCh1.offset = dsbxAdcCh1Offset->value();
+    gradCoeff.adcCh1.scale = dsbxAdcCh1Scale->value();
+    gradCoeff.adcCh2.offset = dsbxAdcCh2Offset->value();
+    gradCoeff.adcCh2.scale = dsbxAdcCh2Scale->value();
+    gradCoeff.adcCh3.offset = dsbxAdcCh3Offset->value();
+    gradCoeff.adcCh3.scale = dsbxAdcCh3Scale->value();
+    gradCoeff.dac.offset = dsbxDacOffset->value();
+    gradCoeff.dac.scale = dsbxDacScale->value();
+    mi::man->setCalibrationCoefficients(gradCoeff, mi::man->address());
 }
 
 void Graduation::on_pbSetDefault_clicked()
 {
-    mi::man->setDefaultCalibrationCoefficients(m_channel);
-    mi::man->getCalibrationCoefficients(gradCoeff, m_channel);
+    mi::man->setDefaultCalibrationCoefficients(mi::man->address());
+    mi::man->getCalibrationCoefficients(gradCoeff, mi::man->address());
     setGradDsbxs();
 }

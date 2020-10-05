@@ -23,16 +23,17 @@ public:
 
     ViStatus SetChannel(int chNum, const QString& s);
     ViStatus SetComand(const QString& s);
-    QByteArray wrRdData(QByteArray data, bool exception = true, int len = 20);
+    QByteArray wrRdData(QByteArray data, int len = 128, bool exception = true);
 
     void getWav();
 
     bool isConnected() const { return !m_conected.isEmpty(); }
 
     double PKPK(int ch);
-
     double MIN(int ch);
     double AVERage(int ch);
+    double VAMP(int ch);
+    double CYCRms(int ch);
 
 signals:
     //    void wavData(const QVector<QPointF>& ch1, const QVector<QPointF>& ch2, const QVector<double>& scale);

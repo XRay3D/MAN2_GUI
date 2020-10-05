@@ -18,12 +18,11 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
-    void setRms(double val);
     void setMeasuredValues(const QMap<int, MeasuredValue>&);
 
 private:
-    double m_u[9];
-    double m_i[9];
+    double m_u[8];
+    double m_i[8];
     double m_acU;
 };
 

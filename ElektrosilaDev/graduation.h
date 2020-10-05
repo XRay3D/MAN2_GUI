@@ -16,7 +16,6 @@ public:
     ~Graduation();
 
 private:
-    uint8_t m_channel = 0;
     QVector<QCheckBox*> m_chbxs;
 
     MeasuredValue value;

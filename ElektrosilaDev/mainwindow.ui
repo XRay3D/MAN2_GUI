@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>696</width>
-    <height>569</height>
+    <width>680</width>
+    <height>439</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,25 +15,43 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
-    <property name="spacing">
-     <number>0</number>
-    </property>
     <property name="leftMargin">
-     <number>2</number>
+     <number>6</number>
     </property>
     <property name="topMargin">
-     <number>0</number>
+     <number>6</number>
     </property>
     <property name="rightMargin">
-     <number>0</number>
+     <number>6</number>
     </property>
     <property name="bottomMargin">
-     <number>0</number>
+     <number>6</number>
     </property>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Select Address:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cbxAddress">
+        <property name="editable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="tabsClosable">
        <bool>false</bool>
@@ -51,7 +69,7 @@
         <string>Ручное управление</string>
        </attribute>
       </widget>
-      <widget class="TripTest" name="tab_2">
+      <widget class="TripTestForm" name="tab_2">
        <attribute name="title">
         <string>TripTest</string>
        </attribute>
@@ -75,7 +93,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>696</width>
+     <width>680</width>
      <height>21</height>
     </rect>
    </property>
@@ -108,7 +126,7 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>TripTest</class>
+   <class>TripTestForm</class>
    <extends>QWidget</extends>
    <header>triptest.h</header>
    <container>1</container>

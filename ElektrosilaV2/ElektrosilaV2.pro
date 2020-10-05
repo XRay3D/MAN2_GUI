@@ -40,8 +40,7 @@ TEMPLATE = app
 
 win32:RC_FILE = main_icon/myapp.rc
 
-CONFIG += c++17 \
-#    console \
+CONFIG += c++17
 
 INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/include"
 
@@ -56,7 +55,6 @@ SOURCES += \
     hw/interface.cpp \
     hw/man2.cpp \
     hw/myprotokol.cpp \
-    hw/scpi.cpp \
     main.cpp \
     mainwindow.cpp \
     manmodel.cpp \
@@ -66,7 +64,6 @@ SOURCES += \
     sernummodel.cpp \
     shdocvw.cpp \
     sntableview.cpp \
-    tableview.cpp \
     tester.cpp \
     testmodel.cpp \
     teststableview.cpp \
@@ -85,7 +82,6 @@ HEADERS += \
     hw/interface.h \
     hw/man2.h \
     hw/myprotokol.h \
-    hw/scpi.h \
     mainwindow.h \
     manmodel.h \
     mantableview.h \
@@ -94,7 +90,6 @@ HEADERS += \
     sernummodel.h \
     shdocvw.h \
     sntableview.h \
-    tableview.h \
     tester.h \
     testmodel.h \
     teststableview.h \
@@ -108,7 +103,9 @@ FORMS += \
 
 DISTFILES += \
     modify.txt \
-    scratch.txt
+    scratch.txt \
+    tableview.h \
+    tableview.cpp \
 
 RESOURCES += \
     res.qrc

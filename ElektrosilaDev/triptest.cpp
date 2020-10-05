@@ -2,7 +2,7 @@
 #include "hw/interface.h"
 #include "ui_triptest.h"
 
-TripTest::TripTest(QWidget* parent)
+TripTestForm::TripTestForm(QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::TripTest)
 {
@@ -11,21 +11,21 @@ TripTest::TripTest(QWidget* parent)
     ui->verticalLayout->addWidget(chvw);
     setup(chvw, series, { "Setted", "Man", "Scpi" });
 
-    connect(this, &TripTest::startTest, mi::man, &MAN2::startTest);
-    connect(mi::man, &MAN2::measCompleted, this, &TripTest::measCompleted);
+    //    connect(this, &TripTestForm::startTest, mi::man, &MAN2::startTest);
+    //    connect(mi::man, &MAN2::measCompleted, this, &TripTestForm::measCompleted);
 
     QSettings s;
-    s.beginGroup("TripTest");
+    s.beginGroup("TripTestForm");
     ui->dsbxStart->setValue(s.value("dsbxStart", 0).toDouble());
     ui->dsbxStop->setValue(s.value("dsbxStop", 1000).toDouble());
     ui->dsbxStep->setValue(s.value("dsbxStep", 10).toDouble());
     s.endGroup();
 }
 
-TripTest::~TripTest()
+TripTestForm::~TripTestForm()
 {
     QSettings s;
-    s.beginGroup("TripTest");
+    s.beginGroup("TripTestForm");
     s.setValue("dsbxStart", ui->dsbxStart->value());
     s.setValue("dsbxStop", ui->dsbxStop->value());
     s.setValue("dsbxStep", ui->dsbxStep->value());
@@ -33,7 +33,7 @@ TripTest::~TripTest()
     delete ui;
 }
 
-void TripTest::setup(QChartView* cv, QList<QLineSeries*>& series, const QList<QString>& names)
+void TripTestForm::setup(QChartView* cv, QList<QLineSeries*>& series, const QList<QString>& names)
 {
     QChart* chart = new QChart();
     QValueAxis* axisY = new QValueAxis;
@@ -73,9 +73,9 @@ void TripTest::setup(QChartView* cv, QList<QLineSeries*>& series, const QList<QS
     cv->setPalette(QPalette(Qt::white));
 }
 
-void TripTest::measCompleted(const MeasuredValue& list)
+void TripTestForm::measCompleted(const MeasuredValue& list)
 {
-    if (!list.manState.TripCurrentTest) {
+    if (!list.manState.tripCurrentTest) {
         return;
     }
     QMutexLocker locker(&m_mutex);
@@ -88,9 +88,9 @@ void TripTest::measCompleted(const MeasuredValue& list)
 
     bool flag = false;
 
-    series[0]->append(m_keyX.toMSecsSinceEpoch(), list.value1);
-    series[1]->append(m_keyX.toMSecsSinceEpoch(), list.value2);
-    series[2]->append(m_keyX.toMSecsSinceEpoch(), list.value3);
+    series[0]->append(m_keyX.toMSecsSinceEpoch(), list.ch1);
+    series[1]->append(m_keyX.toMSecsSinceEpoch(), list.ch2);
+    series[2]->append(m_keyX.toMSecsSinceEpoch(), list.ch3);
 
     for (auto var : series) {
         if (var->count() > MaxCount)
@@ -115,10 +115,10 @@ void TripTest::measCompleted(const MeasuredValue& list)
 
     //    qDebug() << "GetMeasuredValueSlot" << timer.elapsed();
     m_keyX = QDateTime::currentDateTime();
-    ui->pushButton->setEnabled(list.value3 > ui->dsbxStop->value());
+    ui->pushButton->setEnabled(list.ch3 > ui->dsbxStop->value());
 }
 
-void TripTest::on_pushButton_clicked()
+void TripTestForm::on_pushButton_clicked()
 {
     m_minX = m_keyX = QDateTime::currentDateTime();
     series[0]->clear();

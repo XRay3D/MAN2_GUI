@@ -27,6 +27,7 @@ void Tester::Continue()
 
 void Tester::FinishMeasurements()
 {
+    mi::man->ping();
     mi::man->disableAll();
     m_semaphore.release(2);
 }
@@ -102,8 +103,10 @@ void Tester::WaitAnswerManConnErr()
 
 void Tester::CheckFinished()
 {
-    if (m_semaphore.available())
+    if (m_semaphore.available()) {
+        mi::man->disableAll();
         throw int(1);
+    }
 }
 
 void Tester::SetVoltage(int voltage)
@@ -140,9 +143,7 @@ void Tester::Test1()
     Msleep(100); ////5000
     if (mi::osc->isConnected()) {
         m_list.clear();
-        mi::osc->wrRdData(":CH2:COUPling DC");
-        mi::osc->wrRdData(":CH2:SCALe 5v");
-        mi::osc->wrRdData(":CH2:OFFSet -2");
+        configCh2();
         for (int i = 1; i < 9; ++i) {
             if (!m_doNotSkip[i - 1])
                 continue;
@@ -170,19 +171,22 @@ void Tester::Test2()
 
     while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         WaitAnswerManConnErr();
-
+    Msleep(1000);
     if (mi::osc->isConnected()) {
         m_list.clear();
         mi::osc->wrRdData(":CH2:COUPling AC");
-        mi::osc->wrRdData(":CH2:SCALe 500mv");
+        mi::osc->wrRdData(":CH2:SCALe 100mv");
         mi::osc->wrRdData(":CH2:OFFSet 0");
+
+        mi::osc->wrRdData(":HORIzontal:SCALe 1.0ms");
+
         for (int i = 1; i < 9; ++i) {
             if (!m_doNotSkip[i - 1])
                 continue;
             mi::man->oscilloscope(i);
-            Msleep(500);
-            qDebug() << DeviceModel::scanSettings().VisualControl << mi::osc->PKPK(2);
-            TestModel::instance()->setTest2(i - 1, DeviceModel::scanSettings().VisualControl > mi::osc->PKPK(2) * 1000.0);
+            Msleep(1000);
+            TestModel::instance()->setTest2(i - 1,
+                DeviceModel::scanSettings().VisualControl > mi::osc->AVERage(2) * 1000.0);
             CheckFinished();
             emit updateProgresBar();
         }
@@ -214,9 +218,7 @@ void Tester::Test3()
     Msleep(100); ////5000
     if (mi::osc->isConnected()) {
         m_list.clear();
-        mi::osc->wrRdData(":CH2:COUPling DC");
-        mi::osc->wrRdData(":CH2:SCALe 5v");
-        mi::osc->wrRdData(":CH2:OFFSet -2");
+        configCh2();
         for (int i = 1; i < 9; ++i) {
             if (!m_doNotSkip[i - 1])
                 continue;
@@ -248,9 +250,7 @@ void Tester::Test4()
     Msleep(5000);
     if (mi::osc->isConnected()) {
         m_list.clear();
-        mi::osc->wrRdData(":CH2:COUPling DC");
-        mi::osc->wrRdData(":CH2:SCALe 5v");
-        mi::osc->wrRdData(":CH2:OFFSet -2");
+        configCh2();
         for (int i = 1; i < 9; ++i) {
             if (!m_doNotSkip[i - 1])
                 continue;
@@ -282,9 +282,7 @@ void Tester::Test5()
     Msleep(5000);
     if (mi::osc->isConnected()) {
         m_list.clear();
-        mi::osc->wrRdData(":CH2:COUPling DC");
-        mi::osc->wrRdData(":CH2:SCALe 5v");
-        mi::osc->wrRdData(":CH2:OFFSet -2");
+        configCh2();
         for (int i = 1; i < 9; ++i) {
             if (!m_doNotSkip[i - 1])
                 continue;
@@ -314,64 +312,33 @@ void Tester::Test6()
     while (!mi::man->setCurrent(0))
         WaitAnswerManConnErr();
 
-    /*    if (mi::osc->isConnected()) {
-        m_list.clear();
-        mi::osc->wrRdData(":CH2:COUPling DC");
-        mi::osc->wrRdData(":CH2:SCALe 5v");
-        mi::osc->wrRdData(":CH2:OFFSet -2");
-        for (int i = 1; i < 9; ++i) {
-            if (!m_doNotSkip[i - 1])
-                continue;
-            mi::man->oscilloscope(i);
-            Msleep(500);
-            m_list[i].valCh1 = mi::osc->AVERage(2);
-            TestModel::instance()->setTest5(m_list);
-            CheckFinished();
-        }
-    } else */
     {
-        //        QList<double> peak;
-        for (uint8_t i = 1; i <= 8; ++i) {
-            if (!m_doNotSkip[i - 1]) {
+        for (uint8_t ch = 1; ch <= 8; ++ch) {
+            if (!m_doNotSkip[ch - 1]) {
                 emit updateProgresBar();
                 continue;
             }
+            if (mi::osc->isConnected()) {
+                mi::osc->wrRdData(":CH1:COUPling DC");
+                mi::osc->wrRdData(":CH1:SCALe 100mv");
+                mi::osc->wrRdData(":CH1:OFFSet -3");
 
-            while (!mi::man->setCurrent(DeviceModel::scanSettings().RestrictionsTest7Min, i))
+                configCh2();
+            }
+            while (!mi::man->setCurrent(DeviceModel::scanSettings().RestrictionsTest7Min, ch))
                 WaitAnswerManConnErr();
-            Msleep(5000);
-            double step = DeviceModel::scanSettings().RestrictionsTest7Max - DeviceModel::scanSettings().RestrictionsTest7Min;
-            if (step > 100)
-                step = 0.002;
-            else
-                step = 0.001;
-            while (!mi::man->startTest(
-                DeviceModel::scanSettings().RestrictionsTest7Min / 1000.0f,
-                DeviceModel::scanSettings().RestrictionsTest7Max / 1000.0f,
-                step, i))
-                WaitAnswerManConnErr();
+            mi::man->oscilloscope(ch);
+            Msleep(1000);
+            //            double step = DeviceModel::scanSettings().RestrictionsTest7Max - DeviceModel::scanSettings().RestrictionsTest7Min;
+            // Всё в амперах
 
-            //            for (double current = DeviceModel::scanSettings().RestrictionsTest7Min;
-            //                 current <= DeviceModel::scanSettings().RestrictionsTest7Max;
-            //                 current += step) {
-            //                while (!mi::man->setCurrent(current, i))
-            //                    WaitAnswerManConnErr();
-            //                msleep(50);
-            //                while (!mi::man->getMeasuredValue(value, i, RawData))
-            //                    WaitAnswerManConnErr();
-            //                qDebug() << i << value.valCh1 << value.valCh1 << value.valCh3;
-            //                if (std::min(value.valCh1, std::min(value.valCh2, value.valCh3)) < 1.0)
-            //                    break;
-            //                Msleep(100);
-            //                peak.append(value.valCh3);
-            //                CheckFinished();
-            //                TestModel::instance()->setTest6(i - 1, value.valCh3);
-            //            }
-            //            while (!mi::man->setCurrent(0, i))
-            //                WaitAnswerManConnErr();
-            //            std::sort(peak.begin(), peak.end());
-            TestModel::instance()->setTest6(i - 1, mi::man->valueMap()[i].valCh3);
-            //            peak.clear();
+            while (!mi::man->tripCurrentTest(
+                { static_cast<float>(DeviceModel::scanSettings().RestrictionsTest7Min * 0.8),
+                    static_cast<float>(DeviceModel::scanSettings().RestrictionsTest7Max * 2),
+                    static_cast<float>(1.0 /*step > 100 ? 4 : 2*/) }, // mA
+                ch))
+                WaitAnswerManConnErr();
+            TestModel::instance()->setTest6(ch - 1, mi::man->valueMap()[ch].valCh3);
         }
     }
     WaitAnswer(RestoreTheOperationOfChannels);
@@ -391,20 +358,15 @@ void Tester::Test7()
     m_list.clear();
 
     if (mi::osc->isConnected()) {
-        mi::osc->wrRdData(":CH2:COUPling DC");
-        mi::osc->wrRdData(":CH2:SCALe 5v");
-        mi::osc->wrRdData(":CH2:OFFSet -2");
+        configCh2();
         for (uint8_t ch = 1; ch < 9; ++ch) {
             if (!m_doNotSkip[ch - 1])
                 continue;
             mi::osc->wrRdData(":HORIzontal:SCALe 0.5s");
             mi::man->oscilloscope(ch);
             Msleep(500);
-            while (!mi::man->shortCircuitTest(1, ch)) //вкл
+            while (!mi::man->shortCircuitTest(ScShunt, ch)) //вкл
                 WaitAnswerManConnErr();
-            while (!mi::man->shortCircuitTest(0, ch)) //выкл
-                WaitAnswerManConnErr();
-            msleep(50);
             m_list[ch].valCh1 = mi::osc->MIN(2);
             TestModel::instance()->setTest7(m_list);
             mi::osc->wrRdData(":HORIzontal:SCALe 100us");
@@ -413,18 +375,27 @@ void Tester::Test7()
         for (uint8_t ch = 1; ch < 9; ++ch) {
             if (!m_doNotSkip[ch - 1])
                 continue;
-            while (!mi::man->shortCircuitTest(1, ch)) //вкл
-                WaitAnswerManConnErr();
-            while (!mi::man->shortCircuitTest(0, ch)) //выкл
+            while (!mi::man->shortCircuitTest(ScShunt, ch)) //вкл
                 WaitAnswerManConnErr();
             while (!mi::man->getMeasuredValue(m_list[ch], ch, RawData)) //измерение
                 WaitAnswerManConnErr();
-            TestModel::instance()->setTest7(m_list);
+            TestModel::instance()->setTest7(mi::man->valueMap());
         }
     }
     CheckFinished();
     WaitAnswer(RestoreTheOperationOfChannels);
     emit updateProgresBar();
+}
+
+void Tester::configCh2(bool slow)
+{
+    mi::osc->wrRdData(":CH2:COUPling DC");
+    mi::osc->wrRdData(":CH2:SCALe 5v");
+    mi::osc->wrRdData(":CH2:OFFSet -3");
+    if (slow)
+        mi::osc->wrRdData(":HORIzontal:SCALe 1.0s");
+    else
+        mi::osc->wrRdData(":HORIzontal:SCALe 1.0us");
 }
 
 void Tester::Msleep(unsigned long time)

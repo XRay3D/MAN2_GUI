@@ -46,6 +46,9 @@ private:
     QSemaphore m_semaphore;
     QMutex m_mutex;
 
+    double minY = +std::numeric_limits<double>::max();
+    double maxY = -std::numeric_limits<double>::max();
+
     // QObject interface
 protected:
     void timerEvent(QTimerEvent* event);

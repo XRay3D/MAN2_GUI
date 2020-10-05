@@ -55,6 +55,8 @@ signals:
 
 private slots:
 
+    void on_pbProto_clicked();
+
 protected:
     // QWidget interface
     void showEvent(QShowEvent* event) override;

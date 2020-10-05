@@ -180,7 +180,7 @@ void Measurements::on_pbShortAll_clicked(bool checked)
         button->setChecked(checked);
         button->setText(checked ? "Выкл." : "Вкл.");
     }
-    mi::man->shortCircuitTest(checked);
+    mi::man->switchShortCircuit(checked ? ScShunt : ScOff);
 }
 
 void Measurements::bbCurrentClicked(int channel)
@@ -212,7 +212,7 @@ void Measurements::pbShortClicked(int channel)
     else
         btn->setText("Вкл.");
 
-    mi::man->shortCircuitTest(checked, channel + 1);
+    mi::man->shortCircuitTest(checked ? ScShunt : ScOff, channel + 1);
 }
 
 void Measurements::obOscClicked(int channel)
@@ -246,8 +246,8 @@ void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& list)
         iterator.next();
         int i = iterator.key() - 1;
         if (i > 7) {
+            dsbVoltage_9->setValue(iterator.value().valCh1);
             continue;
-            ; ///////////////
         }
         m_listDsbVoltage[i]->setValue(iterator.value().valCh1);
         m_listDsbCurrent[i]->setValue(iterator.value().valCh2);
@@ -351,6 +351,7 @@ void Measurements::showEvent(QShowEvent* /*event*/)
                 m_listPbOsc[i]->setChecked(mv.manState.oscilloscope);
                 m_listPbOsc[i]->setText(mv.manState.oscilloscope ? "Выкл." : "Вкл.");
             }
+            dsbVoltage_9->setValue(list[9].valCh1);
             m_disableSlots = false;
         }
         connect(this, &Measurements::startMeasure, mi::man, &MAN2::startMeasure);

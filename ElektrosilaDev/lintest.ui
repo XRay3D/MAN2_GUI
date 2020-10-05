@@ -17,7 +17,7 @@
    <item row="1" column="2">
     <widget class="QDoubleSpinBox" name="dsbxMeasMan">
      <property name="decimals">
-      <number>3</number>
+      <number>6</number>
      </property>
      <property name="minimum">
       <double>-9999.000000000000000</double>
@@ -69,7 +69,7 @@
    <item row="1" column="3">
     <widget class="QDoubleSpinBox" name="dsbxMeasScpi">
      <property name="decimals">
-      <number>3</number>
+      <number>6</number>
      </property>
      <property name="minimum">
       <double>-9999.000000000000000</double>

@@ -17,12 +17,6 @@ Communications::Communications(QWidget* parent)
     std::sort(list.begin(), list.end());
     cbManPort->addItems(list.toList());
     cbManPortScpi->addItems(list.toList());
-    connect(mi::man, &MAN2::detectedAddress, [this](int address) {
-        comboBox->addItem(QString::number(address));
-    });
-    connect(comboBox, &QComboBox::currentTextChanged, [](const QString& address) {
-        mi::man->setAddress(0, address.toInt());
-    });
 
     //CheckConnection();
     //QTimer::singleShot(1, Qt::CoarseTimer, this, &Communications::CheckConnection);
@@ -33,13 +27,11 @@ Communications::~Communications()
     qDebug() << "~Communications()";
     QSettings settings("Settings.ini", QSettings::IniFormat);
     settings.beginGroup("Communications");
-    settings.setValue("comboBox", comboBox->currentIndex());
 }
 void Communications::on_pbManCheckConnection_clicked()
 {
-    comboBox->clear();
     mi::man->ping(cbManPort->currentText());
-    if (mi::man->IsConnected()) {
+    if (mi::man->isConnected()) {
         //        comboBox->setCurrentText(QString::number(mi::man->address()));
         //QMessageBox::information(this, "", " Связь установлена.");
         //emit SetTabBarEnabled(true);
@@ -50,8 +42,7 @@ void Communications::on_pbManCheckConnection_clicked()
     }
 
     mi::scpi->ping(cbManPortScpi->currentText());
-    if (mi::scpi->IsConnected()) {
-        comboBox->setCurrentText(QString::number(mi::man->address()));
+    if (mi::scpi->isConnected()) {
         //QMessageBox::information(this, "", " Связь установлена.");
         //emit SetTabBarEnabled(true);
     } else {
@@ -64,11 +55,7 @@ void Communications::on_pbManCheckConnection_clicked()
 void Communications::CheckConnection()
 {
     mi::man->ping(cbManPort->currentText());
-    if (mi::man->IsConnected()) {
-        comboBox->setCurrentText(QString::number(mi::man->address()));
-        QSettings settings("Settings.ini", QSettings::IniFormat);
-        settings.beginGroup("Communications");
-        comboBox->setCurrentIndex(settings.value("comboBox").toInt());
+    if (mi::man->isConnected()) {
         //emit SetTabBarEnabled(true);
         return;
     } else {
@@ -80,5 +67,14 @@ void Communications::CheckConnection()
 
 void Communications::on_pushButton_clicked()
 {
-    mi::man->setAddress(spinBox->value(), comboBox->currentText().toInt());
+    //    mi::man->setAddress(spinBox->value(), comboBox->currentText().toInt());
+}
+
+void Communications::showEvent(QShowEvent* event)
+{
+    //    QSettings settings("Settings.ini", QSettings::IniFormat);
+    //    settings.setIniCodec("UTF-8");
+    //    settings.beginGroup("Communications");
+    //    comboBox->setCurrentIndex(settings.value("comboBox").toInt());
+    QWidget::showEvent(event);
 }

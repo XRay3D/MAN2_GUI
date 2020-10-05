@@ -21,6 +21,16 @@ MainWindow::MainWindow(QWidget* parent)
     connect(tabCommunications, &Communications::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
     connect(tabCommunications, &Communications::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
 
+    connect(mi::man, &MAN2::detectedAddress, [this](int address) {
+        if (static QSet<int> set; !set.contains(address)) {
+            set.insert(address);
+            cbxAddress->addItem(QString::number(address));
+        }
+    });
+    connect(cbxAddress, &QComboBox::currentTextChanged, [](const QString& address) {
+        mi::man->address() = address.toInt();
+    });
+
     //    connect(tabInputParameters, &PrepareForm::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
     //    connect(tabInputParameters, &Preparation::ScanSettingsSignal, tabAutomaticMeasurements, &AutomaticMeasurements::ScanSettingsSlot);
     //    connect(tabInputParameters, &Preparation::SerialNumberChanged, tabAutomaticMeasurements, &AutomaticMeasurements::SerialNumberChanged);

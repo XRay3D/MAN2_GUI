@@ -19,7 +19,7 @@ public:
     void initRadioButton();
     void initCheckBoxRadioButton();
 
-    QCheckBox *checkBox() const;
+    QCheckBox* checkBox() const;
 
 private:
     TestModel* m_model;

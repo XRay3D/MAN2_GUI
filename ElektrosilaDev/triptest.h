@@ -1,6 +1,7 @@
 #ifndef TRIPTEST_H
 #define TRIPTEST_H
 
+#include <QDateTime>
 #include <QWidget>
 #include <QtCharts>
 #include <hw/man2.h>
@@ -11,12 +12,12 @@ namespace Ui {
 class TripTest;
 }
 
-class TripTest : public QWidget {
+class TripTestForm : public QWidget {
     Q_OBJECT
 
 public:
-    explicit TripTest(QWidget* parent = nullptr);
-    ~TripTest();
+    explicit TripTestForm(QWidget* parent = nullptr);
+    ~TripTestForm();
 
 signals:
     void startTest(float start, float stop, float step, uint8_t channel);

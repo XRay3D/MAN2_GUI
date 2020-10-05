@@ -21,178 +21,176 @@
 
 struct IDispatch;
 
-
 // Referenced namespace
 
 namespace SHDocVw {
 
-    enum CommandStateChangeConstants {
-        CSC_UPDATECOMMANDS      = -1,
-        CSC_NAVIGATEFORWARD     = 1,
-        CSC_NAVIGATEBACK        = 2
-    };
+enum CommandStateChangeConstants {
+    CSC_UPDATECOMMANDS = -1,
+    CSC_NAVIGATEFORWARD = 1,
+    CSC_NAVIGATEBACK = 2
+};
 
-    enum NewProcessCauseConstants {
-        ProtectedModeRedirect   = 1
-    };
+enum NewProcessCauseConstants {
+    ProtectedModeRedirect = 1
+};
 
-    enum OLECMDEXECOPT {
-        OLECMDEXECOPT_DODEFAULT = 0,
-        OLECMDEXECOPT_PROMPTUSER= 1,
-        OLECMDEXECOPT_DONTPROMPTUSER= 2,
-        OLECMDEXECOPT_SHOWHELP  = 3
-    };
+enum OLECMDEXECOPT {
+    OLECMDEXECOPT_DODEFAULT = 0,
+    OLECMDEXECOPT_PROMPTUSER = 1,
+    OLECMDEXECOPT_DONTPROMPTUSER = 2,
+    OLECMDEXECOPT_SHOWHELP = 3
+};
 
-    enum OLECMDF {
-        OLECMDF_SUPPORTED       = 1,
-        OLECMDF_ENABLED         = 2,
-        OLECMDF_LATCHED         = 4,
-        OLECMDF_NINCHED         = 8,
-        OLECMDF_INVISIBLE       = 16,
-        OLECMDF_DEFHIDEONCTXTMENU= 32
-    };
+enum OLECMDF {
+    OLECMDF_SUPPORTED = 1,
+    OLECMDF_ENABLED = 2,
+    OLECMDF_LATCHED = 4,
+    OLECMDF_NINCHED = 8,
+    OLECMDF_INVISIBLE = 16,
+    OLECMDF_DEFHIDEONCTXTMENU = 32
+};
 
-    enum OLECMDID {
-        OLECMDID_OPEN           = 1,
-        OLECMDID_NEW            = 2,
-        OLECMDID_SAVE           = 3,
-        OLECMDID_SAVEAS         = 4,
-        OLECMDID_SAVECOPYAS     = 5,
-        OLECMDID_PRINT          = 6,
-        OLECMDID_PRINTPREVIEW   = 7,
-        OLECMDID_PAGESETUP      = 8,
-        OLECMDID_SPELL          = 9,
-        OLECMDID_PROPERTIES     = 10,
-        OLECMDID_CUT            = 11,
-        OLECMDID_COPY           = 12,
-        OLECMDID_PASTE          = 13,
-        OLECMDID_PASTESPECIAL   = 14,
-        OLECMDID_UNDO           = 15,
-        OLECMDID_REDO           = 16,
-        OLECMDID_SELECTALL      = 17,
-        OLECMDID_CLEARSELECTION = 18,
-        OLECMDID_ZOOM           = 19,
-        OLECMDID_GETZOOMRANGE   = 20,
-        OLECMDID_UPDATECOMMANDS = 21,
-        OLECMDID_REFRESH        = 22,
-        OLECMDID_STOP           = 23,
-        OLECMDID_HIDETOOLBARS   = 24,
-        OLECMDID_SETPROGRESSMAX = 25,
-        OLECMDID_SETPROGRESSPOS = 26,
-        OLECMDID_SETPROGRESSTEXT= 27,
-        OLECMDID_SETTITLE       = 28,
-        OLECMDID_SETDOWNLOADSTATE= 29,
-        OLECMDID_STOPDOWNLOAD   = 30,
-        OLECMDID_ONTOOLBARACTIVATED= 31,
-        OLECMDID_FIND           = 32,
-        OLECMDID_DELETE         = 33,
-        OLECMDID_HTTPEQUIV      = 34,
-        OLECMDID_HTTPEQUIV_DONE = 35,
-        OLECMDID_ENABLE_INTERACTION= 36,
-        OLECMDID_ONUNLOAD       = 37,
-        OLECMDID_PROPERTYBAG2   = 38,
-        OLECMDID_PREREFRESH     = 39,
-        OLECMDID_SHOWSCRIPTERROR= 40,
-        OLECMDID_SHOWMESSAGE    = 41,
-        OLECMDID_SHOWFIND       = 42,
-        OLECMDID_SHOWPAGESETUP  = 43,
-        OLECMDID_SHOWPRINT      = 44,
-        OLECMDID_CLOSE          = 45,
-        OLECMDID_ALLOWUILESSSAVEAS= 46,
-        OLECMDID_DONTDOWNLOADCSS= 47,
-        OLECMDID_UPDATEPAGESTATUS= 48,
-        OLECMDID_PRINT2         = 49,
-        OLECMDID_PRINTPREVIEW2  = 50,
-        OLECMDID_SETPRINTTEMPLATE= 51,
-        OLECMDID_GETPRINTTEMPLATE= 52,
-        OLECMDID_PAGEACTIONBLOCKED= 55,
-        OLECMDID_PAGEACTIONUIQUERY= 56,
-        OLECMDID_FOCUSVIEWCONTROLS= 57,
-        OLECMDID_FOCUSVIEWCONTROLSQUERY= 58,
-        OLECMDID_SHOWPAGEACTIONMENU= 59,
-        OLECMDID_ADDTRAVELENTRY = 60,
-        OLECMDID_UPDATETRAVELENTRY= 61,
-        OLECMDID_UPDATEBACKFORWARDSTATE= 62,
-        OLECMDID_OPTICAL_ZOOM   = 63,
-        OLECMDID_OPTICAL_GETZOOMRANGE= 64,
-        OLECMDID_WINDOWSTATECHANGED= 65,
-        OLECMDID_ACTIVEXINSTALLSCOPE= 66,
-        OLECMDID_UPDATETRAVELENTRY_DATARECOVERY= 67,
-        OLECMDID_SHOWTASKDLG    = 68,
-        OLECMDID_POPSTATEEVENT  = 69,
-        OLECMDID_VIEWPORT_MODE  = 70,
-        OLECMDID_LAYOUT_VIEWPORT_WIDTH= 71,
-        OLECMDID_VISUAL_VIEWPORT_EXCLUDE_BOTTOM= 72,
-        OLECMDID_USER_OPTICAL_ZOOM= 73,
-        OLECMDID_PAGEAVAILABLE  = 74,
-        OLECMDID_GETUSERSCALABLE= 75,
-        OLECMDID_UPDATE_CARET   = 76,
-        OLECMDID_ENABLE_VISIBILITY= 77,
-        OLECMDID_MEDIA_PLAYBACK = 78,
-        OLECMDID_SETFAVICON     = 79,
-        OLECMDID_SET_HOST_FULLSCREENMODE= 80,
-        OLECMDID_EXITFULLSCREEN = 81,
-        OLECMDID_SCROLLCOMPLETE = 82,
-        OLECMDID_ONBEFOREUNLOAD = 83
-    };
+enum OLECMDID {
+    OLECMDID_OPEN = 1,
+    OLECMDID_NEW = 2,
+    OLECMDID_SAVE = 3,
+    OLECMDID_SAVEAS = 4,
+    OLECMDID_SAVECOPYAS = 5,
+    OLECMDID_PRINT = 6,
+    OLECMDID_PRINTPREVIEW = 7,
+    OLECMDID_PAGESETUP = 8,
+    OLECMDID_SPELL = 9,
+    OLECMDID_PROPERTIES = 10,
+    OLECMDID_CUT = 11,
+    OLECMDID_COPY = 12,
+    OLECMDID_PASTE = 13,
+    OLECMDID_PASTESPECIAL = 14,
+    OLECMDID_UNDO = 15,
+    OLECMDID_REDO = 16,
+    OLECMDID_SELECTALL = 17,
+    OLECMDID_CLEARSELECTION = 18,
+    OLECMDID_ZOOM = 19,
+    OLECMDID_GETZOOMRANGE = 20,
+    OLECMDID_UPDATECOMMANDS = 21,
+    OLECMDID_REFRESH = 22,
+    OLECMDID_STOP = 23,
+    OLECMDID_HIDETOOLBARS = 24,
+    OLECMDID_SETPROGRESSMAX = 25,
+    OLECMDID_SETPROGRESSPOS = 26,
+    OLECMDID_SETPROGRESSTEXT = 27,
+    OLECMDID_SETTITLE = 28,
+    OLECMDID_SETDOWNLOADSTATE = 29,
+    OLECMDID_STOPDOWNLOAD = 30,
+    OLECMDID_ONTOOLBARACTIVATED = 31,
+    OLECMDID_FIND = 32,
+    OLECMDID_DELETE = 33,
+    OLECMDID_HTTPEQUIV = 34,
+    OLECMDID_HTTPEQUIV_DONE = 35,
+    OLECMDID_ENABLE_INTERACTION = 36,
+    OLECMDID_ONUNLOAD = 37,
+    OLECMDID_PROPERTYBAG2 = 38,
+    OLECMDID_PREREFRESH = 39,
+    OLECMDID_SHOWSCRIPTERROR = 40,
+    OLECMDID_SHOWMESSAGE = 41,
+    OLECMDID_SHOWFIND = 42,
+    OLECMDID_SHOWPAGESETUP = 43,
+    OLECMDID_SHOWPRINT = 44,
+    OLECMDID_CLOSE = 45,
+    OLECMDID_ALLOWUILESSSAVEAS = 46,
+    OLECMDID_DONTDOWNLOADCSS = 47,
+    OLECMDID_UPDATEPAGESTATUS = 48,
+    OLECMDID_PRINT2 = 49,
+    OLECMDID_PRINTPREVIEW2 = 50,
+    OLECMDID_SETPRINTTEMPLATE = 51,
+    OLECMDID_GETPRINTTEMPLATE = 52,
+    OLECMDID_PAGEACTIONBLOCKED = 55,
+    OLECMDID_PAGEACTIONUIQUERY = 56,
+    OLECMDID_FOCUSVIEWCONTROLS = 57,
+    OLECMDID_FOCUSVIEWCONTROLSQUERY = 58,
+    OLECMDID_SHOWPAGEACTIONMENU = 59,
+    OLECMDID_ADDTRAVELENTRY = 60,
+    OLECMDID_UPDATETRAVELENTRY = 61,
+    OLECMDID_UPDATEBACKFORWARDSTATE = 62,
+    OLECMDID_OPTICAL_ZOOM = 63,
+    OLECMDID_OPTICAL_GETZOOMRANGE = 64,
+    OLECMDID_WINDOWSTATECHANGED = 65,
+    OLECMDID_ACTIVEXINSTALLSCOPE = 66,
+    OLECMDID_UPDATETRAVELENTRY_DATARECOVERY = 67,
+    OLECMDID_SHOWTASKDLG = 68,
+    OLECMDID_POPSTATEEVENT = 69,
+    OLECMDID_VIEWPORT_MODE = 70,
+    OLECMDID_LAYOUT_VIEWPORT_WIDTH = 71,
+    OLECMDID_VISUAL_VIEWPORT_EXCLUDE_BOTTOM = 72,
+    OLECMDID_USER_OPTICAL_ZOOM = 73,
+    OLECMDID_PAGEAVAILABLE = 74,
+    OLECMDID_GETUSERSCALABLE = 75,
+    OLECMDID_UPDATE_CARET = 76,
+    OLECMDID_ENABLE_VISIBILITY = 77,
+    OLECMDID_MEDIA_PLAYBACK = 78,
+    OLECMDID_SETFAVICON = 79,
+    OLECMDID_SET_HOST_FULLSCREENMODE = 80,
+    OLECMDID_EXITFULLSCREEN = 81,
+    OLECMDID_SCROLLCOMPLETE = 82,
+    OLECMDID_ONBEFOREUNLOAD = 83
+};
 
-    enum SecureLockIconConstants {
-        secureLockIconUnsecure  = 0,
-        secureLockIconMixed     = 1,
-        secureLockIconSecureUnknownBits= 2,
-        secureLockIconSecure40Bit= 3,
-        secureLockIconSecure56Bit= 4,
-        secureLockIconSecureFortezza= 5,
-        secureLockIconSecure128Bit= 6
-    };
+enum SecureLockIconConstants {
+    secureLockIconUnsecure = 0,
+    secureLockIconMixed = 1,
+    secureLockIconSecureUnknownBits = 2,
+    secureLockIconSecure40Bit = 3,
+    secureLockIconSecure56Bit = 4,
+    secureLockIconSecureFortezza = 5,
+    secureLockIconSecure128Bit = 6
+};
 
-    enum ShellWindowFindWindowOptions {
-        SWFO_NEEDDISPATCH       = 1,
-        SWFO_INCLUDEPENDING     = 2,
-        SWFO_COOKIEPASSED       = 4
-    };
+enum ShellWindowFindWindowOptions {
+    SWFO_NEEDDISPATCH = 1,
+    SWFO_INCLUDEPENDING = 2,
+    SWFO_COOKIEPASSED = 4
+};
 
-    enum ShellWindowTypeConstants {
-        SWC_EXPLORER            = 0,
-        SWC_BROWSER             = 1,
-        SWC_3RDPARTY            = 2,
-        SWC_CALLBACK            = 4,
-        SWC_DESKTOP             = 8
-    };
+enum ShellWindowTypeConstants {
+    SWC_EXPLORER = 0,
+    SWC_BROWSER = 1,
+    SWC_3RDPARTY = 2,
+    SWC_CALLBACK = 4,
+    SWC_DESKTOP = 8
+};
 
-    enum tagREADYSTATE {
-        READYSTATE_UNINITIALIZED= 0,
-        READYSTATE_LOADING      = 1,
-        READYSTATE_LOADED       = 2,
-        READYSTATE_INTERACTIVE  = 3,
-        READYSTATE_COMPLETE     = 4
-    };
+enum tagREADYSTATE {
+    READYSTATE_UNINITIALIZED = 0,
+    READYSTATE_LOADING = 1,
+    READYSTATE_LOADED = 2,
+    READYSTATE_INTERACTIVE = 3,
+    READYSTATE_COMPLETE = 4
+};
 
 // forward declarations
-    enum CommandStateChangeConstants;
-    enum OLECMDID;
-    enum OLECMDF;
-    enum OLECMDEXECOPT;
-    enum tagREADYSTATE;
-    enum SecureLockIconConstants;
-    enum NewProcessCauseConstants;
-    enum ShellWindowTypeConstants;
-    enum ShellWindowFindWindowOptions;
-    enum CommandStateChangeConstants;
-    enum OLECMDID;
-    enum OLECMDF;
-    enum OLECMDEXECOPT;
-    enum tagREADYSTATE;
-    enum SecureLockIconConstants;
-    enum NewProcessCauseConstants;
-    enum ShellWindowTypeConstants;
-    enum ShellWindowFindWindowOptions;
+enum CommandStateChangeConstants;
+enum OLECMDID;
+enum OLECMDF;
+enum OLECMDEXECOPT;
+enum tagREADYSTATE;
+enum SecureLockIconConstants;
+enum NewProcessCauseConstants;
+enum ShellWindowTypeConstants;
+enum ShellWindowFindWindowOptions;
+enum CommandStateChangeConstants;
+enum OLECMDID;
+enum OLECMDF;
+enum OLECMDEXECOPT;
+enum tagREADYSTATE;
+enum SecureLockIconConstants;
+enum NewProcessCauseConstants;
+enum ShellWindowTypeConstants;
+enum ShellWindowFindWindowOptions;
 
-class SHDOCVW_EXPORT IWebBrowser : public QAxObject
-{
+class SHDOCVW_EXPORT IWebBrowser : public QAxObject {
 public:
-    IWebBrowser(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IWebBrowser(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -409,19 +407,18 @@ public:
     */
     inline void Stop();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
 // skipping event interface DWebBrowserEvents
 
-class SHDOCVW_EXPORT IWebBrowserApp : public QAxObject
-{
+class SHDOCVW_EXPORT IWebBrowserApp : public QAxObject {
 public:
-    IWebBrowserApp(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IWebBrowserApp(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -756,17 +753,16 @@ public:
     */
     inline void Stop();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT IWebBrowser2 : public QAxObject
-{
+class SHDOCVW_EXPORT IWebBrowser2 : public QAxObject {
 public:
-    IWebBrowser2(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IWebBrowser2(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -1265,21 +1261,20 @@ public:
     */
     inline void Stop();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
 // skipping event interface DWebBrowserEvents2
 
 // skipping event interface DShellWindowsEvents
 
-class SHDOCVW_EXPORT IShellWindows : public QAxObject
-{
+class SHDOCVW_EXPORT IShellWindows : public QAxObject {
 public:
-    IShellWindows(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IShellWindows(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -1380,17 +1375,16 @@ public:
     */
     inline IUnknown* _NewEnum();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT IShellUIHelper : public QAxObject
-{
+class SHDOCVW_EXPORT IShellUIHelper : public QAxObject {
 public:
-    IShellUIHelper(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IShellUIHelper(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -1500,17 +1494,16 @@ public:
     */
     inline QVariant ShowBrowserUI(const QString& bstrName, QVariant& pvarIn);
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT IShellUIHelper2 : public QAxObject
-{
+class SHDOCVW_EXPORT IShellUIHelper2 : public QAxObject {
 public:
-    IShellUIHelper2(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IShellUIHelper2(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -1700,17 +1693,16 @@ public:
     */
     inline bool SqmEnabled();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT IShellUIHelper3 : public QAxObject
-{
+class SHDOCVW_EXPORT IShellUIHelper3 : public QAxObject {
 public:
-    IShellUIHelper3(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IShellUIHelper3(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -1970,17 +1962,16 @@ public:
     */
     inline bool SqmEnabled();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT IShellUIHelper4 : public QAxObject
-{
+class SHDOCVW_EXPORT IShellUIHelper4 : public QAxObject {
 public:
-    IShellUIHelper4(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IShellUIHelper4(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -2340,17 +2331,16 @@ public:
     */
     inline bool msTrackingProtectionEnabled();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT IShellUIHelper5 : public QAxObject
-{
+class SHDOCVW_EXPORT IShellUIHelper5 : public QAxObject {
 public:
-    IShellUIHelper5(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IShellUIHelper5(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -2745,17 +2735,16 @@ public:
     */
     inline bool msTrackingProtectionEnabled();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT IShellUIHelper6 : public QAxObject
-{
+class SHDOCVW_EXPORT IShellUIHelper6 : public QAxObject {
 public:
-    IShellUIHelper6(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IShellUIHelper6(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -3260,19 +3249,18 @@ public:
     */
     inline bool msTrackingProtectionEnabled();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
 // skipping event interface DShellNameSpaceEvents
 
-class SHDOCVW_EXPORT IShellFavoritesNameSpace : public QAxObject
-{
+class SHDOCVW_EXPORT IShellFavoritesNameSpace : public QAxObject {
 public:
-    IShellFavoritesNameSpace(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IShellFavoritesNameSpace(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -3381,17 +3369,16 @@ public:
     */
     inline void Synchronize();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT IShellNameSpace : public QAxObject
-{
+class SHDOCVW_EXPORT IShellNameSpace : public QAxObject {
 public:
-    IShellNameSpace(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IShellNameSpace(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -3589,17 +3576,16 @@ public:
     */
     inline void UnselectAll();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT IScriptErrorList : public QAxObject
-{
+class SHDOCVW_EXPORT IScriptErrorList : public QAxObject {
 public:
-    IScriptErrorList(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    IScriptErrorList(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -3674,18 +3660,17 @@ public:
     */
     inline void setPerErrorDisplay(int fPerErrorDisplay);
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
 // Actual coclasses
-class SHDOCVW_EXPORT WebBrowser_V1 : public QAxWidget
-{
+class SHDOCVW_EXPORT WebBrowser_V1 : public QAxWidget {
 public:
-    WebBrowser_V1(QWidget *parent = 0, Qt::WindowFlags f = 0)
-    : QAxWidget(parent, f)
+    WebBrowser_V1(QWidget* parent = 0, Qt::WindowFlags f = 0)
+        : QAxWidget(parent, f)
     {
         setControl("{eab22ac3-30c1-11cf-a7eb-0000c05bae0b}");
     }
@@ -4085,17 +4070,16 @@ public:
     */
     inline void Stop();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT WebBrowser : public QAxWidget
-{
+class SHDOCVW_EXPORT WebBrowser : public QAxWidget {
 public:
-    WebBrowser(QWidget *parent = 0, Qt::WindowFlags f = 0)
-    : QAxWidget(parent, f)
+    WebBrowser(QWidget* parent = 0, Qt::WindowFlags f = 0)
+        : QAxWidget(parent, f)
     {
         setControl("{8856f961-340a-11d0-a96b-00c04fd705a2}");
     }
@@ -4594,17 +4578,16 @@ public:
     */
     inline void Stop();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT InternetExplorer : public QAxObject
-{
+class SHDOCVW_EXPORT InternetExplorer : public QAxObject {
 public:
-    InternetExplorer(QObject *parent = 0)
-    : QAxObject(parent)
+    InternetExplorer(QObject* parent = 0)
+        : QAxObject(parent)
     {
         setControl("{0002df01-0000-0000-c000-000000000046}");
     }
@@ -5103,17 +5086,16 @@ public:
     */
     inline void Stop();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT InternetExplorerMedium : public QAxObject
-{
+class SHDOCVW_EXPORT InternetExplorerMedium : public QAxObject {
 public:
-    InternetExplorerMedium(QObject *parent = 0)
-    : QAxObject(parent)
+    InternetExplorerMedium(QObject* parent = 0)
+        : QAxObject(parent)
     {
         setControl("{d5e8041d-920f-45e9-b8fb-b1deb82c6e5e}");
     }
@@ -5612,17 +5594,16 @@ public:
     */
     inline void Stop();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT ShellBrowserWindow : public QAxObject
-{
+class SHDOCVW_EXPORT ShellBrowserWindow : public QAxObject {
 public:
-    ShellBrowserWindow(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    ShellBrowserWindow(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -6121,23 +6102,22 @@ public:
     */
     inline void Stop();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT ShellWindows : public QAxObject
-{
+class SHDOCVW_EXPORT ShellWindows : public QAxObject {
 public:
-    ShellWindows(QObject *parent = 0)
-    : QAxObject(parent)
+    ShellWindows(QObject* parent = 0)
+        : QAxObject(parent)
     {
         setControl("{9ba05972-f6a8-11cf-a442-00a0c90a8f39}");
     }
 
-    ShellWindows(IShellWindows *iface)
-    : QAxObject()
+    ShellWindows(IShellWindows* iface)
+        : QAxObject()
     {
         initializeFrom(iface);
         delete iface;
@@ -6239,23 +6219,22 @@ public:
     */
     inline IUnknown* _NewEnum();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT ShellUIHelper : public QAxObject
-{
+class SHDOCVW_EXPORT ShellUIHelper : public QAxObject {
 public:
-    ShellUIHelper(QObject *parent = 0)
-    : QAxObject(parent)
+    ShellUIHelper(QObject* parent = 0)
+        : QAxObject(parent)
     {
         setControl("{64ab4bb7-111e-11d1-8f79-00c04fc2fbe1}");
     }
 
-    ShellUIHelper(IShellUIHelper6 *iface)
-    : QAxObject()
+    ShellUIHelper(IShellUIHelper6* iface)
+        : QAxObject()
     {
         initializeFrom(iface);
         delete iface;
@@ -6761,17 +6740,16 @@ public:
     */
     inline bool msTrackingProtectionEnabled();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT ShellNameSpace : public QAxObject
-{
+class SHDOCVW_EXPORT ShellNameSpace : public QAxObject {
 public:
-    ShellNameSpace(QObject *parent = 0)
-    : QAxObject(parent)
+    ShellNameSpace(QObject* parent = 0)
+        : QAxObject(parent)
     {
         setControl("{55136805-b2de-11d1-b9f2-00a0c98bc547}");
     }
@@ -6969,17 +6947,16 @@ public:
     */
     inline void UnselectAll();
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
-class SHDOCVW_EXPORT CScriptErrorList : public QAxObject
-{
+class SHDOCVW_EXPORT CScriptErrorList : public QAxObject {
 public:
-    CScriptErrorList(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+    CScriptErrorList(IDispatch* subobject = 0, QAxObject* parent = 0)
+        : QAxObject((IUnknown*)subobject, parent)
     {
         internalRelease();
     }
@@ -7054,10 +7031,10 @@ public:
     */
     inline void setPerErrorDisplay(int fPerErrorDisplay);
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
-    virtual void *qt_metacast(const char *);
+    virtual const QMetaObject* metaObject() const { return &staticMetaObject; }
+    virtual void* qt_metacast(const char*);
 };
 
 // member function implementation
@@ -7065,7 +7042,8 @@ public:
 inline IDispatch* IWebBrowser::Application() const
 {
     QVariant qax_result = property("Application");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7080,7 +7058,8 @@ inline bool IWebBrowser::Busy() const
 inline IDispatch* IWebBrowser::Container() const
 {
     QVariant qax_result = property("Container");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7088,7 +7067,8 @@ inline IDispatch* IWebBrowser::Container() const
 inline IDispatch* IWebBrowser::Document() const
 {
     QVariant qax_result = property("Document");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7099,7 +7079,7 @@ inline int IWebBrowser::Height() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowser::SetHeight(int value){ setProperty("Height", QVariant(value)); }
+inline void IWebBrowser::SetHeight(int value) { setProperty("Height", QVariant(value)); }
 
 inline int IWebBrowser::Left() const
 {
@@ -7107,7 +7087,7 @@ inline int IWebBrowser::Left() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowser::SetLeft(int value){ setProperty("Left", QVariant(value)); }
+inline void IWebBrowser::SetLeft(int value) { setProperty("Left", QVariant(value)); }
 
 inline QString IWebBrowser::LocationName() const
 {
@@ -7126,7 +7106,8 @@ inline QString IWebBrowser::LocationURL() const
 inline IDispatch* IWebBrowser::Parent() const
 {
     QVariant qax_result = property("Parent");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7137,7 +7118,7 @@ inline int IWebBrowser::Top() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowser::SetTop(int value){ setProperty("Top", QVariant(value)); }
+inline void IWebBrowser::SetTop(int value) { setProperty("Top", QVariant(value)); }
 
 inline bool IWebBrowser::TopLevelContainer() const
 {
@@ -7159,91 +7140,91 @@ inline int IWebBrowser::Width() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowser::SetWidth(int value){ setProperty("Width", QVariant(value)); }
+inline void IWebBrowser::SetWidth(int value) { setProperty("Width", QVariant(value)); }
 
 inline void IWebBrowser::GoBack()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline void IWebBrowser::GoForward()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
 }
 
 inline void IWebBrowser::GoHome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IWebBrowser::GoSearch()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IWebBrowser::Navigate(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IWebBrowser::Navigate(const QString& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IWebBrowser::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IWebBrowser::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IWebBrowser::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IWebBrowser::Refresh()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IWebBrowser::Refresh2()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IWebBrowser::Refresh2(QVariant& Level)
 {
-    void *_a[] = {0, (void*)&Level};
+    void* _a[] = { 0, (void*)&Level };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IWebBrowser::Stop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 24, _a);
 }
-
 
 inline IDispatch* IWebBrowserApp::Application() const
 {
     QVariant qax_result = property("Application");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7258,7 +7239,8 @@ inline bool IWebBrowserApp::Busy() const
 inline IDispatch* IWebBrowserApp::Container() const
 {
     QVariant qax_result = property("Container");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7266,7 +7248,8 @@ inline IDispatch* IWebBrowserApp::Container() const
 inline IDispatch* IWebBrowserApp::Document() const
 {
     QVariant qax_result = property("Document");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7284,7 +7267,7 @@ inline bool IWebBrowserApp::FullScreen() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetFullScreen(bool value){ setProperty("FullScreen", QVariant(value)); }
+inline void IWebBrowserApp::SetFullScreen(bool value) { setProperty("FullScreen", QVariant(value)); }
 
 inline int IWebBrowserApp::HWND() const
 {
@@ -7299,7 +7282,7 @@ inline int IWebBrowserApp::Height() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetHeight(int value){ setProperty("Height", QVariant(value)); }
+inline void IWebBrowserApp::SetHeight(int value) { setProperty("Height", QVariant(value)); }
 
 inline int IWebBrowserApp::Left() const
 {
@@ -7307,7 +7290,7 @@ inline int IWebBrowserApp::Left() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetLeft(int value){ setProperty("Left", QVariant(value)); }
+inline void IWebBrowserApp::SetLeft(int value) { setProperty("Left", QVariant(value)); }
 
 inline QString IWebBrowserApp::LocationName() const
 {
@@ -7329,7 +7312,7 @@ inline bool IWebBrowserApp::MenuBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetMenuBar(bool value){ setProperty("MenuBar", QVariant(value)); }
+inline void IWebBrowserApp::SetMenuBar(bool value) { setProperty("MenuBar", QVariant(value)); }
 
 inline QString IWebBrowserApp::Name() const
 {
@@ -7341,7 +7324,8 @@ inline QString IWebBrowserApp::Name() const
 inline IDispatch* IWebBrowserApp::Parent() const
 {
     QVariant qax_result = property("Parent");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7359,7 +7343,7 @@ inline bool IWebBrowserApp::StatusBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetStatusBar(bool value){ setProperty("StatusBar", QVariant(value)); }
+inline void IWebBrowserApp::SetStatusBar(bool value) { setProperty("StatusBar", QVariant(value)); }
 
 inline QString IWebBrowserApp::StatusText() const
 {
@@ -7367,7 +7351,7 @@ inline QString IWebBrowserApp::StatusText() const
     Q_ASSERT(qax_result.isValid());
     return *(QString*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetStatusText(const QString& value){ setProperty("StatusText", QVariant(value)); }
+inline void IWebBrowserApp::SetStatusText(const QString& value) { setProperty("StatusText", QVariant(value)); }
 
 inline int IWebBrowserApp::ToolBar() const
 {
@@ -7375,7 +7359,7 @@ inline int IWebBrowserApp::ToolBar() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetToolBar(int value){ setProperty("ToolBar", QVariant(value)); }
+inline void IWebBrowserApp::SetToolBar(int value) { setProperty("ToolBar", QVariant(value)); }
 
 inline int IWebBrowserApp::Top() const
 {
@@ -7383,7 +7367,7 @@ inline int IWebBrowserApp::Top() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetTop(int value){ setProperty("Top", QVariant(value)); }
+inline void IWebBrowserApp::SetTop(int value) { setProperty("Top", QVariant(value)); }
 
 inline bool IWebBrowserApp::TopLevelContainer() const
 {
@@ -7405,7 +7389,7 @@ inline bool IWebBrowserApp::Visible() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetVisible(bool value){ setProperty("Visible", QVariant(value)); }
+inline void IWebBrowserApp::SetVisible(bool value) { setProperty("Visible", QVariant(value)); }
 
 inline int IWebBrowserApp::Width() const
 {
@@ -7413,112 +7397,111 @@ inline int IWebBrowserApp::Width() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowserApp::SetWidth(int value){ setProperty("Width", QVariant(value)); }
+inline void IWebBrowserApp::SetWidth(int value) { setProperty("Width", QVariant(value)); }
 
 inline void IWebBrowserApp::ClientToWindow(int& pcx, int& pcy)
 {
-    void *_a[] = {0, (void*)&pcx, (void*)&pcy};
+    void* _a[] = { 0, (void*)&pcx, (void*)&pcy };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline QVariant IWebBrowserApp::GetProperty(const QString& Property)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&Property};
+    void* _a[] = { (void*)&qax_result, (void*)&Property };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
     return qax_result;
 }
 
 inline void IWebBrowserApp::GoBack()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IWebBrowserApp::GoForward()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IWebBrowserApp::GoHome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IWebBrowserApp::GoSearch()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IWebBrowserApp::Navigate(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IWebBrowserApp::Navigate(const QString& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IWebBrowserApp::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IWebBrowserApp::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IWebBrowserApp::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IWebBrowserApp::PutProperty(const QString& Property, const QVariant& vtValue)
 {
-    void *_a[] = {0, (void*)&Property, (void*)&vtValue};
+    void* _a[] = { 0, (void*)&Property, (void*)&vtValue };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IWebBrowserApp::Quit()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void IWebBrowserApp::Refresh()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void IWebBrowserApp::Refresh2()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline void IWebBrowserApp::Refresh2(QVariant& Level)
 {
-    void *_a[] = {0, (void*)&Level};
+    void* _a[] = { 0, (void*)&Level };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
 }
 
 inline void IWebBrowserApp::Stop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 34, _a);
 }
-
 
 inline bool IWebBrowser2::AddressBar() const
 {
@@ -7526,12 +7509,13 @@ inline bool IWebBrowser2::AddressBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetAddressBar(bool value){ setProperty("AddressBar", QVariant(value)); }
+inline void IWebBrowser2::SetAddressBar(bool value) { setProperty("AddressBar", QVariant(value)); }
 
 inline IDispatch* IWebBrowser2::Application() const
 {
     QVariant qax_result = property("Application");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7546,7 +7530,8 @@ inline bool IWebBrowser2::Busy() const
 inline IDispatch* IWebBrowser2::Container() const
 {
     QVariant qax_result = property("Container");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7554,7 +7539,8 @@ inline IDispatch* IWebBrowser2::Container() const
 inline IDispatch* IWebBrowser2::Document() const
 {
     QVariant qax_result = property("Document");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7572,7 +7558,7 @@ inline bool IWebBrowser2::FullScreen() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetFullScreen(bool value){ setProperty("FullScreen", QVariant(value)); }
+inline void IWebBrowser2::SetFullScreen(bool value) { setProperty("FullScreen", QVariant(value)); }
 
 inline int IWebBrowser2::HWND() const
 {
@@ -7587,7 +7573,7 @@ inline int IWebBrowser2::Height() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowser2::SetHeight(int value){ setProperty("Height", QVariant(value)); }
+inline void IWebBrowser2::SetHeight(int value) { setProperty("Height", QVariant(value)); }
 
 inline int IWebBrowser2::Left() const
 {
@@ -7595,7 +7581,7 @@ inline int IWebBrowser2::Left() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowser2::SetLeft(int value){ setProperty("Left", QVariant(value)); }
+inline void IWebBrowser2::SetLeft(int value) { setProperty("Left", QVariant(value)); }
 
 inline QString IWebBrowser2::LocationName() const
 {
@@ -7617,7 +7603,7 @@ inline bool IWebBrowser2::MenuBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetMenuBar(bool value){ setProperty("MenuBar", QVariant(value)); }
+inline void IWebBrowser2::SetMenuBar(bool value) { setProperty("MenuBar", QVariant(value)); }
 
 inline QString IWebBrowser2::Name() const
 {
@@ -7632,12 +7618,13 @@ inline bool IWebBrowser2::Offline() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetOffline(bool value){ setProperty("Offline", QVariant(value)); }
+inline void IWebBrowser2::SetOffline(bool value) { setProperty("Offline", QVariant(value)); }
 
 inline IDispatch* IWebBrowser2::Parent() const
 {
     QVariant qax_result = property("Parent");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7662,7 +7649,7 @@ inline bool IWebBrowser2::RegisterAsBrowser() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetRegisterAsBrowser(bool value){ setProperty("RegisterAsBrowser", QVariant(value)); }
+inline void IWebBrowser2::SetRegisterAsBrowser(bool value) { setProperty("RegisterAsBrowser", QVariant(value)); }
 
 inline bool IWebBrowser2::RegisterAsDropTarget() const
 {
@@ -7670,7 +7657,7 @@ inline bool IWebBrowser2::RegisterAsDropTarget() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetRegisterAsDropTarget(bool value){ setProperty("RegisterAsDropTarget", QVariant(value)); }
+inline void IWebBrowser2::SetRegisterAsDropTarget(bool value) { setProperty("RegisterAsDropTarget", QVariant(value)); }
 
 inline bool IWebBrowser2::Resizable() const
 {
@@ -7678,7 +7665,7 @@ inline bool IWebBrowser2::Resizable() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetResizable(bool value){ setProperty("Resizable", QVariant(value)); }
+inline void IWebBrowser2::SetResizable(bool value) { setProperty("Resizable", QVariant(value)); }
 
 inline bool IWebBrowser2::Silent() const
 {
@@ -7686,7 +7673,7 @@ inline bool IWebBrowser2::Silent() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetSilent(bool value){ setProperty("Silent", QVariant(value)); }
+inline void IWebBrowser2::SetSilent(bool value) { setProperty("Silent", QVariant(value)); }
 
 inline bool IWebBrowser2::StatusBar() const
 {
@@ -7694,7 +7681,7 @@ inline bool IWebBrowser2::StatusBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetStatusBar(bool value){ setProperty("StatusBar", QVariant(value)); }
+inline void IWebBrowser2::SetStatusBar(bool value) { setProperty("StatusBar", QVariant(value)); }
 
 inline QString IWebBrowser2::StatusText() const
 {
@@ -7702,7 +7689,7 @@ inline QString IWebBrowser2::StatusText() const
     Q_ASSERT(qax_result.isValid());
     return *(QString*)qax_result.constData();
 }
-inline void IWebBrowser2::SetStatusText(const QString& value){ setProperty("StatusText", QVariant(value)); }
+inline void IWebBrowser2::SetStatusText(const QString& value) { setProperty("StatusText", QVariant(value)); }
 
 inline bool IWebBrowser2::TheaterMode() const
 {
@@ -7710,7 +7697,7 @@ inline bool IWebBrowser2::TheaterMode() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetTheaterMode(bool value){ setProperty("TheaterMode", QVariant(value)); }
+inline void IWebBrowser2::SetTheaterMode(bool value) { setProperty("TheaterMode", QVariant(value)); }
 
 inline int IWebBrowser2::ToolBar() const
 {
@@ -7718,7 +7705,7 @@ inline int IWebBrowser2::ToolBar() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowser2::SetToolBar(int value){ setProperty("ToolBar", QVariant(value)); }
+inline void IWebBrowser2::SetToolBar(int value) { setProperty("ToolBar", QVariant(value)); }
 
 inline int IWebBrowser2::Top() const
 {
@@ -7726,7 +7713,7 @@ inline int IWebBrowser2::Top() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowser2::SetTop(int value){ setProperty("Top", QVariant(value)); }
+inline void IWebBrowser2::SetTop(int value) { setProperty("Top", QVariant(value)); }
 
 inline bool IWebBrowser2::TopLevelContainer() const
 {
@@ -7748,7 +7735,7 @@ inline bool IWebBrowser2::Visible() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void IWebBrowser2::SetVisible(bool value){ setProperty("Visible", QVariant(value)); }
+inline void IWebBrowser2::SetVisible(bool value) { setProperty("Visible", QVariant(value)); }
 
 inline int IWebBrowser2::Width() const
 {
@@ -7756,186 +7743,185 @@ inline int IWebBrowser2::Width() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IWebBrowser2::SetWidth(int value){ setProperty("Width", QVariant(value)); }
+inline void IWebBrowser2::SetWidth(int value) { setProperty("Width", QVariant(value)); }
 
 inline void IWebBrowser2::ClientToWindow(int& pcx, int& pcy)
 {
-    void *_a[] = {0, (void*)&pcx, (void*)&pcy};
+    void* _a[] = { 0, (void*)&pcx, (void*)&pcy };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
 }
 
 inline void IWebBrowser2::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IWebBrowser2::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IWebBrowser2::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn, QVariant& pvaOut)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline QVariant IWebBrowser2::GetProperty(const QString& Property)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&Property};
+    void* _a[] = { (void*)&qax_result, (void*)&Property };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
     return qax_result;
 }
 
 inline void IWebBrowser2::GoBack()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IWebBrowser2::GoForward()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IWebBrowser2::GoHome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IWebBrowser2::GoSearch()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IWebBrowser2::Navigate(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IWebBrowser2::Navigate(const QString& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IWebBrowser2::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void IWebBrowser2::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void IWebBrowser2::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline void IWebBrowser2::Navigate2(QVariant& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
 }
 
 inline void IWebBrowser2::Navigate2(QVariant& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 24, _a);
 }
 
 inline void IWebBrowser2::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 25, _a);
 }
 
 inline void IWebBrowser2::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 26, _a);
 }
 
 inline void IWebBrowser2::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 27, _a);
 }
 
 inline void IWebBrowser2::PutProperty(const QString& Property, const QVariant& vtValue)
 {
-    void *_a[] = {0, (void*)&Property, (void*)&vtValue};
+    void* _a[] = { 0, (void*)&Property, (void*)&vtValue };
     qt_metacall(QMetaObject::InvokeMetaMethod, 28, _a);
 }
 
 inline OLECMDF IWebBrowser2::QueryStatusWB(SHDocVw::OLECMDID cmdID)
 {
     OLECMDF qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&cmdID};
+    void* _a[] = { (void*)&qax_result, (void*)&cmdID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 29, _a);
     return qax_result;
 }
 
 inline void IWebBrowser2::Quit()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 30, _a);
 }
 
 inline void IWebBrowser2::Refresh()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 31, _a);
 }
 
 inline void IWebBrowser2::Refresh2()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 32, _a);
 }
 
 inline void IWebBrowser2::Refresh2(QVariant& Level)
 {
-    void *_a[] = {0, (void*)&Level};
+    void* _a[] = { 0, (void*)&Level };
     qt_metacall(QMetaObject::InvokeMetaMethod, 33, _a);
 }
 
 inline void IWebBrowser2::ShowBrowserBar(QVariant& pvaClsid)
 {
-    void *_a[] = {0, (void*)&pvaClsid};
+    void* _a[] = { 0, (void*)&pvaClsid };
     qt_metacall(QMetaObject::InvokeMetaMethod, 51, _a);
 }
 
 inline void IWebBrowser2::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow };
     qt_metacall(QMetaObject::InvokeMetaMethod, 52, _a);
 }
 
 inline void IWebBrowser2::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow, QVariant& pvarSize)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize };
     qt_metacall(QMetaObject::InvokeMetaMethod, 53, _a);
 }
 
 inline void IWebBrowser2::Stop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 54, _a);
 }
-
 
 inline bool WebBrowser_V1::AddressBar() const
 {
@@ -7943,12 +7929,13 @@ inline bool WebBrowser_V1::AddressBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetAddressBar(bool value){ setProperty("AddressBar", QVariant(value)); }
+inline void WebBrowser_V1::SetAddressBar(bool value) { setProperty("AddressBar", QVariant(value)); }
 
 inline IDispatch* WebBrowser_V1::Application() const
 {
     QVariant qax_result = property("Application");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7963,7 +7950,8 @@ inline bool WebBrowser_V1::Busy() const
 inline IDispatch* WebBrowser_V1::Container() const
 {
     QVariant qax_result = property("Container");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7971,7 +7959,8 @@ inline IDispatch* WebBrowser_V1::Container() const
 inline IDispatch* WebBrowser_V1::Document() const
 {
     QVariant qax_result = property("Document");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -7989,7 +7978,7 @@ inline bool WebBrowser_V1::FullScreen() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetFullScreen(bool value){ setProperty("FullScreen", QVariant(value)); }
+inline void WebBrowser_V1::SetFullScreen(bool value) { setProperty("FullScreen", QVariant(value)); }
 
 inline int WebBrowser_V1::HWND() const
 {
@@ -8004,7 +7993,7 @@ inline int WebBrowser_V1::Height() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetHeight(int value){ setProperty("Height", QVariant(value)); }
+inline void WebBrowser_V1::SetHeight(int value) { setProperty("Height", QVariant(value)); }
 
 inline int WebBrowser_V1::Left() const
 {
@@ -8012,7 +8001,7 @@ inline int WebBrowser_V1::Left() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetLeft(int value){ setProperty("Left", QVariant(value)); }
+inline void WebBrowser_V1::SetLeft(int value) { setProperty("Left", QVariant(value)); }
 
 inline QString WebBrowser_V1::LocationName() const
 {
@@ -8034,7 +8023,7 @@ inline bool WebBrowser_V1::MenuBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetMenuBar(bool value){ setProperty("MenuBar", QVariant(value)); }
+inline void WebBrowser_V1::SetMenuBar(bool value) { setProperty("MenuBar", QVariant(value)); }
 
 inline QString WebBrowser_V1::Name() const
 {
@@ -8049,12 +8038,13 @@ inline bool WebBrowser_V1::Offline() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetOffline(bool value){ setProperty("Offline", QVariant(value)); }
+inline void WebBrowser_V1::SetOffline(bool value) { setProperty("Offline", QVariant(value)); }
 
 inline IDispatch* WebBrowser_V1::Parent() const
 {
     QVariant qax_result = property("Parent");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -8079,7 +8069,7 @@ inline bool WebBrowser_V1::RegisterAsBrowser() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetRegisterAsBrowser(bool value){ setProperty("RegisterAsBrowser", QVariant(value)); }
+inline void WebBrowser_V1::SetRegisterAsBrowser(bool value) { setProperty("RegisterAsBrowser", QVariant(value)); }
 
 inline bool WebBrowser_V1::RegisterAsDropTarget() const
 {
@@ -8087,7 +8077,7 @@ inline bool WebBrowser_V1::RegisterAsDropTarget() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetRegisterAsDropTarget(bool value){ setProperty("RegisterAsDropTarget", QVariant(value)); }
+inline void WebBrowser_V1::SetRegisterAsDropTarget(bool value) { setProperty("RegisterAsDropTarget", QVariant(value)); }
 
 inline bool WebBrowser_V1::Resizable() const
 {
@@ -8095,7 +8085,7 @@ inline bool WebBrowser_V1::Resizable() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetResizable(bool value){ setProperty("Resizable", QVariant(value)); }
+inline void WebBrowser_V1::SetResizable(bool value) { setProperty("Resizable", QVariant(value)); }
 
 inline bool WebBrowser_V1::Silent() const
 {
@@ -8103,7 +8093,7 @@ inline bool WebBrowser_V1::Silent() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetSilent(bool value){ setProperty("Silent", QVariant(value)); }
+inline void WebBrowser_V1::SetSilent(bool value) { setProperty("Silent", QVariant(value)); }
 
 inline bool WebBrowser_V1::StatusBar() const
 {
@@ -8111,7 +8101,7 @@ inline bool WebBrowser_V1::StatusBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetStatusBar(bool value){ setProperty("StatusBar", QVariant(value)); }
+inline void WebBrowser_V1::SetStatusBar(bool value) { setProperty("StatusBar", QVariant(value)); }
 
 inline QString WebBrowser_V1::StatusText() const
 {
@@ -8119,7 +8109,7 @@ inline QString WebBrowser_V1::StatusText() const
     Q_ASSERT(qax_result.isValid());
     return *(QString*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetStatusText(const QString& value){ setProperty("StatusText", QVariant(value)); }
+inline void WebBrowser_V1::SetStatusText(const QString& value) { setProperty("StatusText", QVariant(value)); }
 
 inline bool WebBrowser_V1::TheaterMode() const
 {
@@ -8127,7 +8117,7 @@ inline bool WebBrowser_V1::TheaterMode() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetTheaterMode(bool value){ setProperty("TheaterMode", QVariant(value)); }
+inline void WebBrowser_V1::SetTheaterMode(bool value) { setProperty("TheaterMode", QVariant(value)); }
 
 inline int WebBrowser_V1::ToolBar() const
 {
@@ -8135,7 +8125,7 @@ inline int WebBrowser_V1::ToolBar() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetToolBar(int value){ setProperty("ToolBar", QVariant(value)); }
+inline void WebBrowser_V1::SetToolBar(int value) { setProperty("ToolBar", QVariant(value)); }
 
 inline int WebBrowser_V1::Top() const
 {
@@ -8143,7 +8133,7 @@ inline int WebBrowser_V1::Top() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetTop(int value){ setProperty("Top", QVariant(value)); }
+inline void WebBrowser_V1::SetTop(int value) { setProperty("Top", QVariant(value)); }
 
 inline bool WebBrowser_V1::TopLevelContainer() const
 {
@@ -8165,7 +8155,7 @@ inline bool WebBrowser_V1::Visible() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetVisible(bool value){ setProperty("Visible", QVariant(value)); }
+inline void WebBrowser_V1::SetVisible(bool value) { setProperty("Visible", QVariant(value)); }
 
 inline int WebBrowser_V1::Width() const
 {
@@ -8173,186 +8163,185 @@ inline int WebBrowser_V1::Width() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser_V1::SetWidth(int value){ setProperty("Width", QVariant(value)); }
+inline void WebBrowser_V1::SetWidth(int value) { setProperty("Width", QVariant(value)); }
 
 inline void WebBrowser_V1::ClientToWindow(int& pcx, int& pcy)
 {
-    void *_a[] = {0, (void*)&pcx, (void*)&pcy};
+    void* _a[] = { 0, (void*)&pcx, (void*)&pcy };
     qt_metacall(QMetaObject::InvokeMetaMethod, 87, _a);
 }
 
 inline void WebBrowser_V1::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt };
     qt_metacall(QMetaObject::InvokeMetaMethod, 88, _a);
 }
 
 inline void WebBrowser_V1::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 89, _a);
 }
 
 inline void WebBrowser_V1::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn, QVariant& pvaOut)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut };
     qt_metacall(QMetaObject::InvokeMetaMethod, 90, _a);
 }
 
 inline QVariant WebBrowser_V1::GetProperty(const QString& Property)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&Property};
+    void* _a[] = { (void*)&qax_result, (void*)&Property };
     qt_metacall(QMetaObject::InvokeMetaMethod, 91, _a);
     return qax_result;
 }
 
 inline void WebBrowser_V1::GoBack()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 92, _a);
 }
 
 inline void WebBrowser_V1::GoForward()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 93, _a);
 }
 
 inline void WebBrowser_V1::GoHome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 94, _a);
 }
 
 inline void WebBrowser_V1::GoSearch()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 95, _a);
 }
 
 inline void WebBrowser_V1::Navigate(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 96, _a);
 }
 
 inline void WebBrowser_V1::Navigate(const QString& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 97, _a);
 }
 
 inline void WebBrowser_V1::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 98, _a);
 }
 
 inline void WebBrowser_V1::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 99, _a);
 }
 
 inline void WebBrowser_V1::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 100, _a);
 }
 
 inline void WebBrowser_V1::Navigate2(QVariant& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 101, _a);
 }
 
 inline void WebBrowser_V1::Navigate2(QVariant& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 102, _a);
 }
 
 inline void WebBrowser_V1::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 103, _a);
 }
 
 inline void WebBrowser_V1::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 104, _a);
 }
 
 inline void WebBrowser_V1::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 105, _a);
 }
 
 inline void WebBrowser_V1::PutProperty(const QString& Property, const QVariant& vtValue)
 {
-    void *_a[] = {0, (void*)&Property, (void*)&vtValue};
+    void* _a[] = { 0, (void*)&Property, (void*)&vtValue };
     qt_metacall(QMetaObject::InvokeMetaMethod, 106, _a);
 }
 
 inline OLECMDF WebBrowser_V1::QueryStatusWB(SHDocVw::OLECMDID cmdID)
 {
     OLECMDF qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&cmdID};
+    void* _a[] = { (void*)&qax_result, (void*)&cmdID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 107, _a);
     return qax_result;
 }
 
 inline void WebBrowser_V1::Quit()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 108, _a);
 }
 
 inline void WebBrowser_V1::Refresh()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 109, _a);
 }
 
 inline void WebBrowser_V1::Refresh2()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 110, _a);
 }
 
 inline void WebBrowser_V1::Refresh2(QVariant& Level)
 {
-    void *_a[] = {0, (void*)&Level};
+    void* _a[] = { 0, (void*)&Level };
     qt_metacall(QMetaObject::InvokeMetaMethod, 111, _a);
 }
 
 inline void WebBrowser_V1::ShowBrowserBar(QVariant& pvaClsid)
 {
-    void *_a[] = {0, (void*)&pvaClsid};
+    void* _a[] = { 0, (void*)&pvaClsid };
     qt_metacall(QMetaObject::InvokeMetaMethod, 129, _a);
 }
 
 inline void WebBrowser_V1::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow };
     qt_metacall(QMetaObject::InvokeMetaMethod, 130, _a);
 }
 
 inline void WebBrowser_V1::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow, QVariant& pvarSize)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize };
     qt_metacall(QMetaObject::InvokeMetaMethod, 131, _a);
 }
 
 inline void WebBrowser_V1::Stop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 132, _a);
 }
-
 
 inline bool WebBrowser::AddressBar() const
 {
@@ -8360,12 +8349,13 @@ inline bool WebBrowser::AddressBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetAddressBar(bool value){ setProperty("AddressBar", QVariant(value)); }
+inline void WebBrowser::SetAddressBar(bool value) { setProperty("AddressBar", QVariant(value)); }
 
 inline IDispatch* WebBrowser::Application() const
 {
     QVariant qax_result = property("Application");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -8380,7 +8370,8 @@ inline bool WebBrowser::Busy() const
 inline IDispatch* WebBrowser::Container() const
 {
     QVariant qax_result = property("Container");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -8388,7 +8379,8 @@ inline IDispatch* WebBrowser::Container() const
 inline IDispatch* WebBrowser::Document() const
 {
     QVariant qax_result = property("Document");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -8406,7 +8398,7 @@ inline bool WebBrowser::FullScreen() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetFullScreen(bool value){ setProperty("FullScreen", QVariant(value)); }
+inline void WebBrowser::SetFullScreen(bool value) { setProperty("FullScreen", QVariant(value)); }
 
 inline int WebBrowser::HWND() const
 {
@@ -8421,7 +8413,7 @@ inline int WebBrowser::Height() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser::SetHeight(int value){ setProperty("Height", QVariant(value)); }
+inline void WebBrowser::SetHeight(int value) { setProperty("Height", QVariant(value)); }
 
 inline int WebBrowser::Left() const
 {
@@ -8429,7 +8421,7 @@ inline int WebBrowser::Left() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser::SetLeft(int value){ setProperty("Left", QVariant(value)); }
+inline void WebBrowser::SetLeft(int value) { setProperty("Left", QVariant(value)); }
 
 inline QString WebBrowser::LocationName() const
 {
@@ -8451,7 +8443,7 @@ inline bool WebBrowser::MenuBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetMenuBar(bool value){ setProperty("MenuBar", QVariant(value)); }
+inline void WebBrowser::SetMenuBar(bool value) { setProperty("MenuBar", QVariant(value)); }
 
 inline QString WebBrowser::Name() const
 {
@@ -8466,12 +8458,13 @@ inline bool WebBrowser::Offline() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetOffline(bool value){ setProperty("Offline", QVariant(value)); }
+inline void WebBrowser::SetOffline(bool value) { setProperty("Offline", QVariant(value)); }
 
 inline IDispatch* WebBrowser::Parent() const
 {
     QVariant qax_result = property("Parent");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -8496,7 +8489,7 @@ inline bool WebBrowser::RegisterAsBrowser() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetRegisterAsBrowser(bool value){ setProperty("RegisterAsBrowser", QVariant(value)); }
+inline void WebBrowser::SetRegisterAsBrowser(bool value) { setProperty("RegisterAsBrowser", QVariant(value)); }
 
 inline bool WebBrowser::RegisterAsDropTarget() const
 {
@@ -8504,7 +8497,7 @@ inline bool WebBrowser::RegisterAsDropTarget() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetRegisterAsDropTarget(bool value){ setProperty("RegisterAsDropTarget", QVariant(value)); }
+inline void WebBrowser::SetRegisterAsDropTarget(bool value) { setProperty("RegisterAsDropTarget", QVariant(value)); }
 
 inline bool WebBrowser::Resizable() const
 {
@@ -8512,7 +8505,7 @@ inline bool WebBrowser::Resizable() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetResizable(bool value){ setProperty("Resizable", QVariant(value)); }
+inline void WebBrowser::SetResizable(bool value) { setProperty("Resizable", QVariant(value)); }
 
 inline bool WebBrowser::Silent() const
 {
@@ -8520,7 +8513,7 @@ inline bool WebBrowser::Silent() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetSilent(bool value){ setProperty("Silent", QVariant(value)); }
+inline void WebBrowser::SetSilent(bool value) { setProperty("Silent", QVariant(value)); }
 
 inline bool WebBrowser::StatusBar() const
 {
@@ -8528,7 +8521,7 @@ inline bool WebBrowser::StatusBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetStatusBar(bool value){ setProperty("StatusBar", QVariant(value)); }
+inline void WebBrowser::SetStatusBar(bool value) { setProperty("StatusBar", QVariant(value)); }
 
 inline QString WebBrowser::StatusText() const
 {
@@ -8536,7 +8529,7 @@ inline QString WebBrowser::StatusText() const
     Q_ASSERT(qax_result.isValid());
     return *(QString*)qax_result.constData();
 }
-inline void WebBrowser::SetStatusText(const QString& value){ setProperty("StatusText", QVariant(value)); }
+inline void WebBrowser::SetStatusText(const QString& value) { setProperty("StatusText", QVariant(value)); }
 
 inline bool WebBrowser::TheaterMode() const
 {
@@ -8544,7 +8537,7 @@ inline bool WebBrowser::TheaterMode() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetTheaterMode(bool value){ setProperty("TheaterMode", QVariant(value)); }
+inline void WebBrowser::SetTheaterMode(bool value) { setProperty("TheaterMode", QVariant(value)); }
 
 inline int WebBrowser::ToolBar() const
 {
@@ -8552,7 +8545,7 @@ inline int WebBrowser::ToolBar() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser::SetToolBar(int value){ setProperty("ToolBar", QVariant(value)); }
+inline void WebBrowser::SetToolBar(int value) { setProperty("ToolBar", QVariant(value)); }
 
 inline int WebBrowser::Top() const
 {
@@ -8560,7 +8553,7 @@ inline int WebBrowser::Top() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser::SetTop(int value){ setProperty("Top", QVariant(value)); }
+inline void WebBrowser::SetTop(int value) { setProperty("Top", QVariant(value)); }
 
 inline bool WebBrowser::TopLevelContainer() const
 {
@@ -8582,7 +8575,7 @@ inline bool WebBrowser::Visible() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void WebBrowser::SetVisible(bool value){ setProperty("Visible", QVariant(value)); }
+inline void WebBrowser::SetVisible(bool value) { setProperty("Visible", QVariant(value)); }
 
 inline int WebBrowser::Width() const
 {
@@ -8590,186 +8583,185 @@ inline int WebBrowser::Width() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void WebBrowser::SetWidth(int value){ setProperty("Width", QVariant(value)); }
+inline void WebBrowser::SetWidth(int value) { setProperty("Width", QVariant(value)); }
 
 inline void WebBrowser::ClientToWindow(int& pcx, int& pcy)
 {
-    void *_a[] = {0, (void*)&pcx, (void*)&pcy};
+    void* _a[] = { 0, (void*)&pcx, (void*)&pcy };
     qt_metacall(QMetaObject::InvokeMetaMethod, 87, _a);
 }
 
 inline void WebBrowser::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt };
     qt_metacall(QMetaObject::InvokeMetaMethod, 88, _a);
 }
 
 inline void WebBrowser::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 89, _a);
 }
 
 inline void WebBrowser::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn, QVariant& pvaOut)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut };
     qt_metacall(QMetaObject::InvokeMetaMethod, 90, _a);
 }
 
 inline QVariant WebBrowser::GetProperty(const QString& Property)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&Property};
+    void* _a[] = { (void*)&qax_result, (void*)&Property };
     qt_metacall(QMetaObject::InvokeMetaMethod, 91, _a);
     return qax_result;
 }
 
 inline void WebBrowser::GoBack()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 92, _a);
 }
 
 inline void WebBrowser::GoForward()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 93, _a);
 }
 
 inline void WebBrowser::GoHome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 94, _a);
 }
 
 inline void WebBrowser::GoSearch()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 95, _a);
 }
 
 inline void WebBrowser::Navigate(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 96, _a);
 }
 
 inline void WebBrowser::Navigate(const QString& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 97, _a);
 }
 
 inline void WebBrowser::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 98, _a);
 }
 
 inline void WebBrowser::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 99, _a);
 }
 
 inline void WebBrowser::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 100, _a);
 }
 
 inline void WebBrowser::Navigate2(QVariant& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 101, _a);
 }
 
 inline void WebBrowser::Navigate2(QVariant& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 102, _a);
 }
 
 inline void WebBrowser::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 103, _a);
 }
 
 inline void WebBrowser::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 104, _a);
 }
 
 inline void WebBrowser::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 105, _a);
 }
 
 inline void WebBrowser::PutProperty(const QString& Property, const QVariant& vtValue)
 {
-    void *_a[] = {0, (void*)&Property, (void*)&vtValue};
+    void* _a[] = { 0, (void*)&Property, (void*)&vtValue };
     qt_metacall(QMetaObject::InvokeMetaMethod, 106, _a);
 }
 
 inline OLECMDF WebBrowser::QueryStatusWB(SHDocVw::OLECMDID cmdID)
 {
     OLECMDF qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&cmdID};
+    void* _a[] = { (void*)&qax_result, (void*)&cmdID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 107, _a);
     return qax_result;
 }
 
 inline void WebBrowser::Quit()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 108, _a);
 }
 
 inline void WebBrowser::Refresh()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 109, _a);
 }
 
 inline void WebBrowser::Refresh2()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 110, _a);
 }
 
 inline void WebBrowser::Refresh2(QVariant& Level)
 {
-    void *_a[] = {0, (void*)&Level};
+    void* _a[] = { 0, (void*)&Level };
     qt_metacall(QMetaObject::InvokeMetaMethod, 111, _a);
 }
 
 inline void WebBrowser::ShowBrowserBar(QVariant& pvaClsid)
 {
-    void *_a[] = {0, (void*)&pvaClsid};
+    void* _a[] = { 0, (void*)&pvaClsid };
     qt_metacall(QMetaObject::InvokeMetaMethod, 129, _a);
 }
 
 inline void WebBrowser::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow };
     qt_metacall(QMetaObject::InvokeMetaMethod, 130, _a);
 }
 
 inline void WebBrowser::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow, QVariant& pvarSize)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize };
     qt_metacall(QMetaObject::InvokeMetaMethod, 131, _a);
 }
 
 inline void WebBrowser::Stop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 132, _a);
 }
-
 
 inline bool InternetExplorer::AddressBar() const
 {
@@ -8777,12 +8769,13 @@ inline bool InternetExplorer::AddressBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetAddressBar(bool value){ setProperty("AddressBar", QVariant(value)); }
+inline void InternetExplorer::SetAddressBar(bool value) { setProperty("AddressBar", QVariant(value)); }
 
 inline IDispatch* InternetExplorer::Application() const
 {
     QVariant qax_result = property("Application");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -8797,7 +8790,8 @@ inline bool InternetExplorer::Busy() const
 inline IDispatch* InternetExplorer::Container() const
 {
     QVariant qax_result = property("Container");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -8805,7 +8799,8 @@ inline IDispatch* InternetExplorer::Container() const
 inline IDispatch* InternetExplorer::Document() const
 {
     QVariant qax_result = property("Document");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -8823,7 +8818,7 @@ inline bool InternetExplorer::FullScreen() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetFullScreen(bool value){ setProperty("FullScreen", QVariant(value)); }
+inline void InternetExplorer::SetFullScreen(bool value) { setProperty("FullScreen", QVariant(value)); }
 
 inline int InternetExplorer::HWND() const
 {
@@ -8838,7 +8833,7 @@ inline int InternetExplorer::Height() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorer::SetHeight(int value){ setProperty("Height", QVariant(value)); }
+inline void InternetExplorer::SetHeight(int value) { setProperty("Height", QVariant(value)); }
 
 inline int InternetExplorer::Left() const
 {
@@ -8846,7 +8841,7 @@ inline int InternetExplorer::Left() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorer::SetLeft(int value){ setProperty("Left", QVariant(value)); }
+inline void InternetExplorer::SetLeft(int value) { setProperty("Left", QVariant(value)); }
 
 inline QString InternetExplorer::LocationName() const
 {
@@ -8868,7 +8863,7 @@ inline bool InternetExplorer::MenuBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetMenuBar(bool value){ setProperty("MenuBar", QVariant(value)); }
+inline void InternetExplorer::SetMenuBar(bool value) { setProperty("MenuBar", QVariant(value)); }
 
 inline QString InternetExplorer::Name() const
 {
@@ -8883,12 +8878,13 @@ inline bool InternetExplorer::Offline() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetOffline(bool value){ setProperty("Offline", QVariant(value)); }
+inline void InternetExplorer::SetOffline(bool value) { setProperty("Offline", QVariant(value)); }
 
 inline IDispatch* InternetExplorer::Parent() const
 {
     QVariant qax_result = property("Parent");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -8913,7 +8909,7 @@ inline bool InternetExplorer::RegisterAsBrowser() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetRegisterAsBrowser(bool value){ setProperty("RegisterAsBrowser", QVariant(value)); }
+inline void InternetExplorer::SetRegisterAsBrowser(bool value) { setProperty("RegisterAsBrowser", QVariant(value)); }
 
 inline bool InternetExplorer::RegisterAsDropTarget() const
 {
@@ -8921,7 +8917,7 @@ inline bool InternetExplorer::RegisterAsDropTarget() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetRegisterAsDropTarget(bool value){ setProperty("RegisterAsDropTarget", QVariant(value)); }
+inline void InternetExplorer::SetRegisterAsDropTarget(bool value) { setProperty("RegisterAsDropTarget", QVariant(value)); }
 
 inline bool InternetExplorer::Resizable() const
 {
@@ -8929,7 +8925,7 @@ inline bool InternetExplorer::Resizable() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetResizable(bool value){ setProperty("Resizable", QVariant(value)); }
+inline void InternetExplorer::SetResizable(bool value) { setProperty("Resizable", QVariant(value)); }
 
 inline bool InternetExplorer::Silent() const
 {
@@ -8937,7 +8933,7 @@ inline bool InternetExplorer::Silent() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetSilent(bool value){ setProperty("Silent", QVariant(value)); }
+inline void InternetExplorer::SetSilent(bool value) { setProperty("Silent", QVariant(value)); }
 
 inline bool InternetExplorer::StatusBar() const
 {
@@ -8945,7 +8941,7 @@ inline bool InternetExplorer::StatusBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetStatusBar(bool value){ setProperty("StatusBar", QVariant(value)); }
+inline void InternetExplorer::SetStatusBar(bool value) { setProperty("StatusBar", QVariant(value)); }
 
 inline QString InternetExplorer::StatusText() const
 {
@@ -8953,7 +8949,7 @@ inline QString InternetExplorer::StatusText() const
     Q_ASSERT(qax_result.isValid());
     return *(QString*)qax_result.constData();
 }
-inline void InternetExplorer::SetStatusText(const QString& value){ setProperty("StatusText", QVariant(value)); }
+inline void InternetExplorer::SetStatusText(const QString& value) { setProperty("StatusText", QVariant(value)); }
 
 inline bool InternetExplorer::TheaterMode() const
 {
@@ -8961,7 +8957,7 @@ inline bool InternetExplorer::TheaterMode() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetTheaterMode(bool value){ setProperty("TheaterMode", QVariant(value)); }
+inline void InternetExplorer::SetTheaterMode(bool value) { setProperty("TheaterMode", QVariant(value)); }
 
 inline int InternetExplorer::ToolBar() const
 {
@@ -8969,7 +8965,7 @@ inline int InternetExplorer::ToolBar() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorer::SetToolBar(int value){ setProperty("ToolBar", QVariant(value)); }
+inline void InternetExplorer::SetToolBar(int value) { setProperty("ToolBar", QVariant(value)); }
 
 inline int InternetExplorer::Top() const
 {
@@ -8977,7 +8973,7 @@ inline int InternetExplorer::Top() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorer::SetTop(int value){ setProperty("Top", QVariant(value)); }
+inline void InternetExplorer::SetTop(int value) { setProperty("Top", QVariant(value)); }
 
 inline bool InternetExplorer::TopLevelContainer() const
 {
@@ -8999,7 +8995,7 @@ inline bool InternetExplorer::Visible() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorer::SetVisible(bool value){ setProperty("Visible", QVariant(value)); }
+inline void InternetExplorer::SetVisible(bool value) { setProperty("Visible", QVariant(value)); }
 
 inline int InternetExplorer::Width() const
 {
@@ -9007,186 +9003,185 @@ inline int InternetExplorer::Width() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorer::SetWidth(int value){ setProperty("Width", QVariant(value)); }
+inline void InternetExplorer::SetWidth(int value) { setProperty("Width", QVariant(value)); }
 
 inline void InternetExplorer::ClientToWindow(int& pcx, int& pcy)
 {
-    void *_a[] = {0, (void*)&pcx, (void*)&pcy};
+    void* _a[] = { 0, (void*)&pcx, (void*)&pcy };
     qt_metacall(QMetaObject::InvokeMetaMethod, 60, _a);
 }
 
 inline void InternetExplorer::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt };
     qt_metacall(QMetaObject::InvokeMetaMethod, 61, _a);
 }
 
 inline void InternetExplorer::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 62, _a);
 }
 
 inline void InternetExplorer::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn, QVariant& pvaOut)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut };
     qt_metacall(QMetaObject::InvokeMetaMethod, 63, _a);
 }
 
 inline QVariant InternetExplorer::GetProperty(const QString& Property)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&Property};
+    void* _a[] = { (void*)&qax_result, (void*)&Property };
     qt_metacall(QMetaObject::InvokeMetaMethod, 64, _a);
     return qax_result;
 }
 
 inline void InternetExplorer::GoBack()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 65, _a);
 }
 
 inline void InternetExplorer::GoForward()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 66, _a);
 }
 
 inline void InternetExplorer::GoHome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 67, _a);
 }
 
 inline void InternetExplorer::GoSearch()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 68, _a);
 }
 
 inline void InternetExplorer::Navigate(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 69, _a);
 }
 
 inline void InternetExplorer::Navigate(const QString& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 70, _a);
 }
 
 inline void InternetExplorer::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 71, _a);
 }
 
 inline void InternetExplorer::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 72, _a);
 }
 
 inline void InternetExplorer::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 73, _a);
 }
 
 inline void InternetExplorer::Navigate2(QVariant& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 74, _a);
 }
 
 inline void InternetExplorer::Navigate2(QVariant& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 75, _a);
 }
 
 inline void InternetExplorer::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 76, _a);
 }
 
 inline void InternetExplorer::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 77, _a);
 }
 
 inline void InternetExplorer::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 78, _a);
 }
 
 inline void InternetExplorer::PutProperty(const QString& Property, const QVariant& vtValue)
 {
-    void *_a[] = {0, (void*)&Property, (void*)&vtValue};
+    void* _a[] = { 0, (void*)&Property, (void*)&vtValue };
     qt_metacall(QMetaObject::InvokeMetaMethod, 79, _a);
 }
 
 inline OLECMDF InternetExplorer::QueryStatusWB(SHDocVw::OLECMDID cmdID)
 {
     OLECMDF qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&cmdID};
+    void* _a[] = { (void*)&qax_result, (void*)&cmdID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 80, _a);
     return qax_result;
 }
 
 inline void InternetExplorer::Quit()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 81, _a);
 }
 
 inline void InternetExplorer::Refresh()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 82, _a);
 }
 
 inline void InternetExplorer::Refresh2()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 83, _a);
 }
 
 inline void InternetExplorer::Refresh2(QVariant& Level)
 {
-    void *_a[] = {0, (void*)&Level};
+    void* _a[] = { 0, (void*)&Level };
     qt_metacall(QMetaObject::InvokeMetaMethod, 84, _a);
 }
 
 inline void InternetExplorer::ShowBrowserBar(QVariant& pvaClsid)
 {
-    void *_a[] = {0, (void*)&pvaClsid};
+    void* _a[] = { 0, (void*)&pvaClsid };
     qt_metacall(QMetaObject::InvokeMetaMethod, 102, _a);
 }
 
 inline void InternetExplorer::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow };
     qt_metacall(QMetaObject::InvokeMetaMethod, 103, _a);
 }
 
 inline void InternetExplorer::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow, QVariant& pvarSize)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize };
     qt_metacall(QMetaObject::InvokeMetaMethod, 104, _a);
 }
 
 inline void InternetExplorer::Stop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 105, _a);
 }
-
 
 inline bool InternetExplorerMedium::AddressBar() const
 {
@@ -9194,12 +9189,13 @@ inline bool InternetExplorerMedium::AddressBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetAddressBar(bool value){ setProperty("AddressBar", QVariant(value)); }
+inline void InternetExplorerMedium::SetAddressBar(bool value) { setProperty("AddressBar", QVariant(value)); }
 
 inline IDispatch* InternetExplorerMedium::Application() const
 {
     QVariant qax_result = property("Application");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -9214,7 +9210,8 @@ inline bool InternetExplorerMedium::Busy() const
 inline IDispatch* InternetExplorerMedium::Container() const
 {
     QVariant qax_result = property("Container");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -9222,7 +9219,8 @@ inline IDispatch* InternetExplorerMedium::Container() const
 inline IDispatch* InternetExplorerMedium::Document() const
 {
     QVariant qax_result = property("Document");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -9240,7 +9238,7 @@ inline bool InternetExplorerMedium::FullScreen() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetFullScreen(bool value){ setProperty("FullScreen", QVariant(value)); }
+inline void InternetExplorerMedium::SetFullScreen(bool value) { setProperty("FullScreen", QVariant(value)); }
 
 inline int InternetExplorerMedium::HWND() const
 {
@@ -9255,7 +9253,7 @@ inline int InternetExplorerMedium::Height() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetHeight(int value){ setProperty("Height", QVariant(value)); }
+inline void InternetExplorerMedium::SetHeight(int value) { setProperty("Height", QVariant(value)); }
 
 inline int InternetExplorerMedium::Left() const
 {
@@ -9263,7 +9261,7 @@ inline int InternetExplorerMedium::Left() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetLeft(int value){ setProperty("Left", QVariant(value)); }
+inline void InternetExplorerMedium::SetLeft(int value) { setProperty("Left", QVariant(value)); }
 
 inline QString InternetExplorerMedium::LocationName() const
 {
@@ -9285,7 +9283,7 @@ inline bool InternetExplorerMedium::MenuBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetMenuBar(bool value){ setProperty("MenuBar", QVariant(value)); }
+inline void InternetExplorerMedium::SetMenuBar(bool value) { setProperty("MenuBar", QVariant(value)); }
 
 inline QString InternetExplorerMedium::Name() const
 {
@@ -9300,12 +9298,13 @@ inline bool InternetExplorerMedium::Offline() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetOffline(bool value){ setProperty("Offline", QVariant(value)); }
+inline void InternetExplorerMedium::SetOffline(bool value) { setProperty("Offline", QVariant(value)); }
 
 inline IDispatch* InternetExplorerMedium::Parent() const
 {
     QVariant qax_result = property("Parent");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -9330,7 +9329,7 @@ inline bool InternetExplorerMedium::RegisterAsBrowser() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetRegisterAsBrowser(bool value){ setProperty("RegisterAsBrowser", QVariant(value)); }
+inline void InternetExplorerMedium::SetRegisterAsBrowser(bool value) { setProperty("RegisterAsBrowser", QVariant(value)); }
 
 inline bool InternetExplorerMedium::RegisterAsDropTarget() const
 {
@@ -9338,7 +9337,7 @@ inline bool InternetExplorerMedium::RegisterAsDropTarget() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetRegisterAsDropTarget(bool value){ setProperty("RegisterAsDropTarget", QVariant(value)); }
+inline void InternetExplorerMedium::SetRegisterAsDropTarget(bool value) { setProperty("RegisterAsDropTarget", QVariant(value)); }
 
 inline bool InternetExplorerMedium::Resizable() const
 {
@@ -9346,7 +9345,7 @@ inline bool InternetExplorerMedium::Resizable() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetResizable(bool value){ setProperty("Resizable", QVariant(value)); }
+inline void InternetExplorerMedium::SetResizable(bool value) { setProperty("Resizable", QVariant(value)); }
 
 inline bool InternetExplorerMedium::Silent() const
 {
@@ -9354,7 +9353,7 @@ inline bool InternetExplorerMedium::Silent() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetSilent(bool value){ setProperty("Silent", QVariant(value)); }
+inline void InternetExplorerMedium::SetSilent(bool value) { setProperty("Silent", QVariant(value)); }
 
 inline bool InternetExplorerMedium::StatusBar() const
 {
@@ -9362,7 +9361,7 @@ inline bool InternetExplorerMedium::StatusBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetStatusBar(bool value){ setProperty("StatusBar", QVariant(value)); }
+inline void InternetExplorerMedium::SetStatusBar(bool value) { setProperty("StatusBar", QVariant(value)); }
 
 inline QString InternetExplorerMedium::StatusText() const
 {
@@ -9370,7 +9369,7 @@ inline QString InternetExplorerMedium::StatusText() const
     Q_ASSERT(qax_result.isValid());
     return *(QString*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetStatusText(const QString& value){ setProperty("StatusText", QVariant(value)); }
+inline void InternetExplorerMedium::SetStatusText(const QString& value) { setProperty("StatusText", QVariant(value)); }
 
 inline bool InternetExplorerMedium::TheaterMode() const
 {
@@ -9378,7 +9377,7 @@ inline bool InternetExplorerMedium::TheaterMode() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetTheaterMode(bool value){ setProperty("TheaterMode", QVariant(value)); }
+inline void InternetExplorerMedium::SetTheaterMode(bool value) { setProperty("TheaterMode", QVariant(value)); }
 
 inline int InternetExplorerMedium::ToolBar() const
 {
@@ -9386,7 +9385,7 @@ inline int InternetExplorerMedium::ToolBar() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetToolBar(int value){ setProperty("ToolBar", QVariant(value)); }
+inline void InternetExplorerMedium::SetToolBar(int value) { setProperty("ToolBar", QVariant(value)); }
 
 inline int InternetExplorerMedium::Top() const
 {
@@ -9394,7 +9393,7 @@ inline int InternetExplorerMedium::Top() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetTop(int value){ setProperty("Top", QVariant(value)); }
+inline void InternetExplorerMedium::SetTop(int value) { setProperty("Top", QVariant(value)); }
 
 inline bool InternetExplorerMedium::TopLevelContainer() const
 {
@@ -9416,7 +9415,7 @@ inline bool InternetExplorerMedium::Visible() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetVisible(bool value){ setProperty("Visible", QVariant(value)); }
+inline void InternetExplorerMedium::SetVisible(bool value) { setProperty("Visible", QVariant(value)); }
 
 inline int InternetExplorerMedium::Width() const
 {
@@ -9424,186 +9423,185 @@ inline int InternetExplorerMedium::Width() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void InternetExplorerMedium::SetWidth(int value){ setProperty("Width", QVariant(value)); }
+inline void InternetExplorerMedium::SetWidth(int value) { setProperty("Width", QVariant(value)); }
 
 inline void InternetExplorerMedium::ClientToWindow(int& pcx, int& pcy)
 {
-    void *_a[] = {0, (void*)&pcx, (void*)&pcy};
+    void* _a[] = { 0, (void*)&pcx, (void*)&pcy };
     qt_metacall(QMetaObject::InvokeMetaMethod, 60, _a);
 }
 
 inline void InternetExplorerMedium::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt };
     qt_metacall(QMetaObject::InvokeMetaMethod, 61, _a);
 }
 
 inline void InternetExplorerMedium::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 62, _a);
 }
 
 inline void InternetExplorerMedium::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn, QVariant& pvaOut)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut };
     qt_metacall(QMetaObject::InvokeMetaMethod, 63, _a);
 }
 
 inline QVariant InternetExplorerMedium::GetProperty(const QString& Property)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&Property};
+    void* _a[] = { (void*)&qax_result, (void*)&Property };
     qt_metacall(QMetaObject::InvokeMetaMethod, 64, _a);
     return qax_result;
 }
 
 inline void InternetExplorerMedium::GoBack()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 65, _a);
 }
 
 inline void InternetExplorerMedium::GoForward()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 66, _a);
 }
 
 inline void InternetExplorerMedium::GoHome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 67, _a);
 }
 
 inline void InternetExplorerMedium::GoSearch()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 68, _a);
 }
 
 inline void InternetExplorerMedium::Navigate(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 69, _a);
 }
 
 inline void InternetExplorerMedium::Navigate(const QString& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 70, _a);
 }
 
 inline void InternetExplorerMedium::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 71, _a);
 }
 
 inline void InternetExplorerMedium::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 72, _a);
 }
 
 inline void InternetExplorerMedium::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 73, _a);
 }
 
 inline void InternetExplorerMedium::Navigate2(QVariant& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 74, _a);
 }
 
 inline void InternetExplorerMedium::Navigate2(QVariant& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 75, _a);
 }
 
 inline void InternetExplorerMedium::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 76, _a);
 }
 
 inline void InternetExplorerMedium::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 77, _a);
 }
 
 inline void InternetExplorerMedium::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 78, _a);
 }
 
 inline void InternetExplorerMedium::PutProperty(const QString& Property, const QVariant& vtValue)
 {
-    void *_a[] = {0, (void*)&Property, (void*)&vtValue};
+    void* _a[] = { 0, (void*)&Property, (void*)&vtValue };
     qt_metacall(QMetaObject::InvokeMetaMethod, 79, _a);
 }
 
 inline OLECMDF InternetExplorerMedium::QueryStatusWB(SHDocVw::OLECMDID cmdID)
 {
     OLECMDF qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&cmdID};
+    void* _a[] = { (void*)&qax_result, (void*)&cmdID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 80, _a);
     return qax_result;
 }
 
 inline void InternetExplorerMedium::Quit()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 81, _a);
 }
 
 inline void InternetExplorerMedium::Refresh()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 82, _a);
 }
 
 inline void InternetExplorerMedium::Refresh2()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 83, _a);
 }
 
 inline void InternetExplorerMedium::Refresh2(QVariant& Level)
 {
-    void *_a[] = {0, (void*)&Level};
+    void* _a[] = { 0, (void*)&Level };
     qt_metacall(QMetaObject::InvokeMetaMethod, 84, _a);
 }
 
 inline void InternetExplorerMedium::ShowBrowserBar(QVariant& pvaClsid)
 {
-    void *_a[] = {0, (void*)&pvaClsid};
+    void* _a[] = { 0, (void*)&pvaClsid };
     qt_metacall(QMetaObject::InvokeMetaMethod, 102, _a);
 }
 
 inline void InternetExplorerMedium::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow };
     qt_metacall(QMetaObject::InvokeMetaMethod, 103, _a);
 }
 
 inline void InternetExplorerMedium::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow, QVariant& pvarSize)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize };
     qt_metacall(QMetaObject::InvokeMetaMethod, 104, _a);
 }
 
 inline void InternetExplorerMedium::Stop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 105, _a);
 }
-
 
 inline bool ShellBrowserWindow::AddressBar() const
 {
@@ -9611,12 +9609,13 @@ inline bool ShellBrowserWindow::AddressBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetAddressBar(bool value){ setProperty("AddressBar", QVariant(value)); }
+inline void ShellBrowserWindow::SetAddressBar(bool value) { setProperty("AddressBar", QVariant(value)); }
 
 inline IDispatch* ShellBrowserWindow::Application() const
 {
     QVariant qax_result = property("Application");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -9631,7 +9630,8 @@ inline bool ShellBrowserWindow::Busy() const
 inline IDispatch* ShellBrowserWindow::Container() const
 {
     QVariant qax_result = property("Container");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -9639,7 +9639,8 @@ inline IDispatch* ShellBrowserWindow::Container() const
 inline IDispatch* ShellBrowserWindow::Document() const
 {
     QVariant qax_result = property("Document");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -9657,7 +9658,7 @@ inline bool ShellBrowserWindow::FullScreen() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetFullScreen(bool value){ setProperty("FullScreen", QVariant(value)); }
+inline void ShellBrowserWindow::SetFullScreen(bool value) { setProperty("FullScreen", QVariant(value)); }
 
 inline int ShellBrowserWindow::HWND() const
 {
@@ -9672,7 +9673,7 @@ inline int ShellBrowserWindow::Height() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetHeight(int value){ setProperty("Height", QVariant(value)); }
+inline void ShellBrowserWindow::SetHeight(int value) { setProperty("Height", QVariant(value)); }
 
 inline int ShellBrowserWindow::Left() const
 {
@@ -9680,7 +9681,7 @@ inline int ShellBrowserWindow::Left() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetLeft(int value){ setProperty("Left", QVariant(value)); }
+inline void ShellBrowserWindow::SetLeft(int value) { setProperty("Left", QVariant(value)); }
 
 inline QString ShellBrowserWindow::LocationName() const
 {
@@ -9702,7 +9703,7 @@ inline bool ShellBrowserWindow::MenuBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetMenuBar(bool value){ setProperty("MenuBar", QVariant(value)); }
+inline void ShellBrowserWindow::SetMenuBar(bool value) { setProperty("MenuBar", QVariant(value)); }
 
 inline QString ShellBrowserWindow::Name() const
 {
@@ -9717,12 +9718,13 @@ inline bool ShellBrowserWindow::Offline() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetOffline(bool value){ setProperty("Offline", QVariant(value)); }
+inline void ShellBrowserWindow::SetOffline(bool value) { setProperty("Offline", QVariant(value)); }
 
 inline IDispatch* ShellBrowserWindow::Parent() const
 {
     QVariant qax_result = property("Parent");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
@@ -9747,7 +9749,7 @@ inline bool ShellBrowserWindow::RegisterAsBrowser() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetRegisterAsBrowser(bool value){ setProperty("RegisterAsBrowser", QVariant(value)); }
+inline void ShellBrowserWindow::SetRegisterAsBrowser(bool value) { setProperty("RegisterAsBrowser", QVariant(value)); }
 
 inline bool ShellBrowserWindow::RegisterAsDropTarget() const
 {
@@ -9755,7 +9757,7 @@ inline bool ShellBrowserWindow::RegisterAsDropTarget() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetRegisterAsDropTarget(bool value){ setProperty("RegisterAsDropTarget", QVariant(value)); }
+inline void ShellBrowserWindow::SetRegisterAsDropTarget(bool value) { setProperty("RegisterAsDropTarget", QVariant(value)); }
 
 inline bool ShellBrowserWindow::Resizable() const
 {
@@ -9763,7 +9765,7 @@ inline bool ShellBrowserWindow::Resizable() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetResizable(bool value){ setProperty("Resizable", QVariant(value)); }
+inline void ShellBrowserWindow::SetResizable(bool value) { setProperty("Resizable", QVariant(value)); }
 
 inline bool ShellBrowserWindow::Silent() const
 {
@@ -9771,7 +9773,7 @@ inline bool ShellBrowserWindow::Silent() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetSilent(bool value){ setProperty("Silent", QVariant(value)); }
+inline void ShellBrowserWindow::SetSilent(bool value) { setProperty("Silent", QVariant(value)); }
 
 inline bool ShellBrowserWindow::StatusBar() const
 {
@@ -9779,7 +9781,7 @@ inline bool ShellBrowserWindow::StatusBar() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetStatusBar(bool value){ setProperty("StatusBar", QVariant(value)); }
+inline void ShellBrowserWindow::SetStatusBar(bool value) { setProperty("StatusBar", QVariant(value)); }
 
 inline QString ShellBrowserWindow::StatusText() const
 {
@@ -9787,7 +9789,7 @@ inline QString ShellBrowserWindow::StatusText() const
     Q_ASSERT(qax_result.isValid());
     return *(QString*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetStatusText(const QString& value){ setProperty("StatusText", QVariant(value)); }
+inline void ShellBrowserWindow::SetStatusText(const QString& value) { setProperty("StatusText", QVariant(value)); }
 
 inline bool ShellBrowserWindow::TheaterMode() const
 {
@@ -9795,7 +9797,7 @@ inline bool ShellBrowserWindow::TheaterMode() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetTheaterMode(bool value){ setProperty("TheaterMode", QVariant(value)); }
+inline void ShellBrowserWindow::SetTheaterMode(bool value) { setProperty("TheaterMode", QVariant(value)); }
 
 inline int ShellBrowserWindow::ToolBar() const
 {
@@ -9803,7 +9805,7 @@ inline int ShellBrowserWindow::ToolBar() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetToolBar(int value){ setProperty("ToolBar", QVariant(value)); }
+inline void ShellBrowserWindow::SetToolBar(int value) { setProperty("ToolBar", QVariant(value)); }
 
 inline int ShellBrowserWindow::Top() const
 {
@@ -9811,7 +9813,7 @@ inline int ShellBrowserWindow::Top() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetTop(int value){ setProperty("Top", QVariant(value)); }
+inline void ShellBrowserWindow::SetTop(int value) { setProperty("Top", QVariant(value)); }
 
 inline bool ShellBrowserWindow::TopLevelContainer() const
 {
@@ -9833,7 +9835,7 @@ inline bool ShellBrowserWindow::Visible() const
     Q_ASSERT(qax_result.isValid());
     return *(bool*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetVisible(bool value){ setProperty("Visible", QVariant(value)); }
+inline void ShellBrowserWindow::SetVisible(bool value) { setProperty("Visible", QVariant(value)); }
 
 inline int ShellBrowserWindow::Width() const
 {
@@ -9841,186 +9843,185 @@ inline int ShellBrowserWindow::Width() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void ShellBrowserWindow::SetWidth(int value){ setProperty("Width", QVariant(value)); }
+inline void ShellBrowserWindow::SetWidth(int value) { setProperty("Width", QVariant(value)); }
 
 inline void ShellBrowserWindow::ClientToWindow(int& pcx, int& pcy)
 {
-    void *_a[] = {0, (void*)&pcx, (void*)&pcy};
+    void* _a[] = { 0, (void*)&pcx, (void*)&pcy };
     qt_metacall(QMetaObject::InvokeMetaMethod, 60, _a);
 }
 
 inline void ShellBrowserWindow::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt };
     qt_metacall(QMetaObject::InvokeMetaMethod, 61, _a);
 }
 
 inline void ShellBrowserWindow::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 62, _a);
 }
 
 inline void ShellBrowserWindow::ExecWB(SHDocVw::OLECMDID cmdID, SHDocVw::OLECMDEXECOPT cmdexecopt, QVariant& pvaIn, QVariant& pvaOut)
 {
-    void *_a[] = {0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut};
+    void* _a[] = { 0, (void*)&cmdID, (void*)&cmdexecopt, (void*)&pvaIn, (void*)&pvaOut };
     qt_metacall(QMetaObject::InvokeMetaMethod, 63, _a);
 }
 
 inline QVariant ShellBrowserWindow::GetProperty(const QString& Property)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&Property};
+    void* _a[] = { (void*)&qax_result, (void*)&Property };
     qt_metacall(QMetaObject::InvokeMetaMethod, 64, _a);
     return qax_result;
 }
 
 inline void ShellBrowserWindow::GoBack()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 65, _a);
 }
 
 inline void ShellBrowserWindow::GoForward()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 66, _a);
 }
 
 inline void ShellBrowserWindow::GoHome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 67, _a);
 }
 
 inline void ShellBrowserWindow::GoSearch()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 68, _a);
 }
 
 inline void ShellBrowserWindow::Navigate(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 69, _a);
 }
 
 inline void ShellBrowserWindow::Navigate(const QString& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 70, _a);
 }
 
 inline void ShellBrowserWindow::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 71, _a);
 }
 
 inline void ShellBrowserWindow::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 72, _a);
 }
 
 inline void ShellBrowserWindow::Navigate(const QString& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 73, _a);
 }
 
 inline void ShellBrowserWindow::Navigate2(QVariant& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 74, _a);
 }
 
 inline void ShellBrowserWindow::Navigate2(QVariant& URL, QVariant& Flags)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags };
     qt_metacall(QMetaObject::InvokeMetaMethod, 75, _a);
 }
 
 inline void ShellBrowserWindow::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 76, _a);
 }
 
 inline void ShellBrowserWindow::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData };
     qt_metacall(QMetaObject::InvokeMetaMethod, 77, _a);
 }
 
 inline void ShellBrowserWindow::Navigate2(QVariant& URL, QVariant& Flags, QVariant& TargetFrameName, QVariant& PostData, QVariant& Headers)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers};
+    void* _a[] = { 0, (void*)&URL, (void*)&Flags, (void*)&TargetFrameName, (void*)&PostData, (void*)&Headers };
     qt_metacall(QMetaObject::InvokeMetaMethod, 78, _a);
 }
 
 inline void ShellBrowserWindow::PutProperty(const QString& Property, const QVariant& vtValue)
 {
-    void *_a[] = {0, (void*)&Property, (void*)&vtValue};
+    void* _a[] = { 0, (void*)&Property, (void*)&vtValue };
     qt_metacall(QMetaObject::InvokeMetaMethod, 79, _a);
 }
 
 inline OLECMDF ShellBrowserWindow::QueryStatusWB(SHDocVw::OLECMDID cmdID)
 {
     OLECMDF qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&cmdID};
+    void* _a[] = { (void*)&qax_result, (void*)&cmdID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 80, _a);
     return qax_result;
 }
 
 inline void ShellBrowserWindow::Quit()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 81, _a);
 }
 
 inline void ShellBrowserWindow::Refresh()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 82, _a);
 }
 
 inline void ShellBrowserWindow::Refresh2()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 83, _a);
 }
 
 inline void ShellBrowserWindow::Refresh2(QVariant& Level)
 {
-    void *_a[] = {0, (void*)&Level};
+    void* _a[] = { 0, (void*)&Level };
     qt_metacall(QMetaObject::InvokeMetaMethod, 84, _a);
 }
 
 inline void ShellBrowserWindow::ShowBrowserBar(QVariant& pvaClsid)
 {
-    void *_a[] = {0, (void*)&pvaClsid};
+    void* _a[] = { 0, (void*)&pvaClsid };
     qt_metacall(QMetaObject::InvokeMetaMethod, 102, _a);
 }
 
 inline void ShellBrowserWindow::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow };
     qt_metacall(QMetaObject::InvokeMetaMethod, 103, _a);
 }
 
 inline void ShellBrowserWindow::ShowBrowserBar(QVariant& pvaClsid, QVariant& pvarShow, QVariant& pvarSize)
 {
-    void *_a[] = {0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize};
+    void* _a[] = { 0, (void*)&pvaClsid, (void*)&pvarShow, (void*)&pvarSize };
     qt_metacall(QMetaObject::InvokeMetaMethod, 104, _a);
 }
 
 inline void ShellBrowserWindow::Stop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 105, _a);
 }
-
 
 inline int IShellWindows::Count() const
 {
@@ -10032,7 +10033,7 @@ inline int IShellWindows::Count() const
 inline IDispatch* IShellWindows::FindWindowSW(QVariant& pvarloc, QVariant& pvarlocRoot, int swClass, int& pHWND, int swfwOptions)
 {
     IDispatch* qax_result = 0;
-    void *_a[] = {(void*)&qax_result, (void*)&pvarloc, (void*)&pvarlocRoot, (void*)&swClass, (void*)&pHWND, (void*)&swfwOptions};
+    void* _a[] = { (void*)&qax_result, (void*)&pvarloc, (void*)&pvarlocRoot, (void*)&swClass, (void*)&pHWND, (void*)&swfwOptions };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
     return qax_result;
 }
@@ -10040,7 +10041,7 @@ inline IDispatch* IShellWindows::FindWindowSW(QVariant& pvarloc, QVariant& pvarl
 inline IDispatch* IShellWindows::Item()
 {
     IDispatch* qax_result = 0;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
     return qax_result;
 }
@@ -10048,61 +10049,60 @@ inline IDispatch* IShellWindows::Item()
 inline IDispatch* IShellWindows::Item(const QVariant& index)
 {
     IDispatch* qax_result = 0;
-    void *_a[] = {(void*)&qax_result, (void*)&index};
+    void* _a[] = { (void*)&qax_result, (void*)&index };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
     return qax_result;
 }
 
 inline void IShellWindows::OnActivated(int lCookie, bool fActive)
 {
-    void *_a[] = {0, (void*)&lCookie, (void*)&fActive};
+    void* _a[] = { 0, (void*)&lCookie, (void*)&fActive };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IShellWindows::OnCreated(int lCookie, IUnknown* punk)
 {
-    void *_a[] = {0, (void*)&lCookie, (void*)&punk};
+    void* _a[] = { 0, (void*)&lCookie, (void*)&punk };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IShellWindows::OnNavigate(int lCookie, QVariant& pvarloc)
 {
-    void *_a[] = {0, (void*)&lCookie, (void*)&pvarloc};
+    void* _a[] = { 0, (void*)&lCookie, (void*)&pvarloc };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IShellWindows::ProcessAttachDetach(bool fAttach)
 {
-    void *_a[] = {0, (void*)&fAttach};
+    void* _a[] = { 0, (void*)&fAttach };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IShellWindows::Register(IDispatch* pid, int HWND, int swClass, int& plCookie)
 {
-    void *_a[] = {0, (void*)&pid, (void*)&HWND, (void*)&swClass, (void*)&plCookie};
+    void* _a[] = { 0, (void*)&pid, (void*)&HWND, (void*)&swClass, (void*)&plCookie };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShellWindows::RegisterPending(int lThreadId, QVariant& pvarloc, QVariant& pvarlocRoot, int swClass, int& plCookie)
 {
-    void *_a[] = {0, (void*)&lThreadId, (void*)&pvarloc, (void*)&pvarlocRoot, (void*)&swClass, (void*)&plCookie};
+    void* _a[] = { 0, (void*)&lThreadId, (void*)&pvarloc, (void*)&pvarlocRoot, (void*)&swClass, (void*)&plCookie };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IShellWindows::Revoke(int lCookie)
 {
-    void *_a[] = {0, (void*)&lCookie};
+    void* _a[] = { 0, (void*)&lCookie };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline IUnknown* IShellWindows::_NewEnum()
 {
     IUnknown* qax_result = 0;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
     return qax_result;
 }
-
 
 inline int ShellWindows::Count() const
 {
@@ -10114,7 +10114,7 @@ inline int ShellWindows::Count() const
 inline IDispatch* ShellWindows::FindWindowSW(QVariant& pvarloc, QVariant& pvarlocRoot, int swClass, int& pHWND, int swfwOptions)
 {
     IDispatch* qax_result = 0;
-    void *_a[] = {(void*)&qax_result, (void*)&pvarloc, (void*)&pvarlocRoot, (void*)&swClass, (void*)&pHWND, (void*)&swfwOptions};
+    void* _a[] = { (void*)&qax_result, (void*)&pvarloc, (void*)&pvarlocRoot, (void*)&swClass, (void*)&pHWND, (void*)&swfwOptions };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
     return qax_result;
 }
@@ -10122,7 +10122,7 @@ inline IDispatch* ShellWindows::FindWindowSW(QVariant& pvarloc, QVariant& pvarlo
 inline IDispatch* ShellWindows::Item()
 {
     IDispatch* qax_result = 0;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
     return qax_result;
 }
@@ -10130,327 +10130,325 @@ inline IDispatch* ShellWindows::Item()
 inline IDispatch* ShellWindows::Item(const QVariant& index)
 {
     IDispatch* qax_result = 0;
-    void *_a[] = {(void*)&qax_result, (void*)&index};
+    void* _a[] = { (void*)&qax_result, (void*)&index };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
     return qax_result;
 }
 
 inline void ShellWindows::OnActivated(int lCookie, bool fActive)
 {
-    void *_a[] = {0, (void*)&lCookie, (void*)&fActive};
+    void* _a[] = { 0, (void*)&lCookie, (void*)&fActive };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void ShellWindows::OnCreated(int lCookie, IUnknown* punk)
 {
-    void *_a[] = {0, (void*)&lCookie, (void*)&punk};
+    void* _a[] = { 0, (void*)&lCookie, (void*)&punk };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void ShellWindows::OnNavigate(int lCookie, QVariant& pvarloc)
 {
-    void *_a[] = {0, (void*)&lCookie, (void*)&pvarloc};
+    void* _a[] = { 0, (void*)&lCookie, (void*)&pvarloc };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void ShellWindows::ProcessAttachDetach(bool fAttach)
 {
-    void *_a[] = {0, (void*)&fAttach};
+    void* _a[] = { 0, (void*)&fAttach };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void ShellWindows::Register(IDispatch* pid, int HWND, int swClass, int& plCookie)
 {
-    void *_a[] = {0, (void*)&pid, (void*)&HWND, (void*)&swClass, (void*)&plCookie};
+    void* _a[] = { 0, (void*)&pid, (void*)&HWND, (void*)&swClass, (void*)&plCookie };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void ShellWindows::RegisterPending(int lThreadId, QVariant& pvarloc, QVariant& pvarlocRoot, int swClass, int& plCookie)
 {
-    void *_a[] = {0, (void*)&lThreadId, (void*)&pvarloc, (void*)&pvarlocRoot, (void*)&swClass, (void*)&plCookie};
+    void* _a[] = { 0, (void*)&lThreadId, (void*)&pvarloc, (void*)&pvarlocRoot, (void*)&swClass, (void*)&plCookie };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void ShellWindows::Revoke(int lCookie)
 {
-    void *_a[] = {0, (void*)&lCookie};
+    void* _a[] = { 0, (void*)&lCookie };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline IUnknown* ShellWindows::_NewEnum()
 {
     IUnknown* qax_result = 0;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
     return qax_result;
 }
 
-
 inline void IShellUIHelper::AddChannel(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline void IShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
 }
 
 inline void IShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width, QVariant& Height)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IShellUIHelper::AddFavorite(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IShellUIHelper::AddFavorite(const QString& URL, QVariant& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShellUIHelper::AutoCompleteAttach()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IShellUIHelper::AutoCompleteAttach(QVariant& Reserved)
 {
-    void *_a[] = {0, (void*)&Reserved};
+    void* _a[] = { 0, (void*)&Reserved };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IShellUIHelper::AutoCompleteSaveForm()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IShellUIHelper::AutoCompleteSaveForm(QVariant& Form)
 {
-    void *_a[] = {0, (void*)&Form};
+    void* _a[] = { 0, (void*)&Form };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IShellUIHelper::AutoScan(const QString& strSearch, const QString& strFailureUrl)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void IShellUIHelper::AutoScan(const QString& strSearch, const QString& strFailureUrl, QVariant& pvarTargetFrame)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void IShellUIHelper::ImportExportFavorites(bool fImport, const QString& strImpExpPath)
 {
-    void *_a[] = {0, (void*)&fImport, (void*)&strImpExpPath};
+    void* _a[] = { 0, (void*)&fImport, (void*)&strImpExpPath };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline bool IShellUIHelper::IsSubscribed(const QString& URL)
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper::NavigateAndFind(const QString& URL, const QString& strQuery, QVariant& varTargetFrame)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame};
+    void* _a[] = { 0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 24, _a);
 }
 
 inline void IShellUIHelper::RefreshOfflineDesktop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 25, _a);
 }
 
 inline void IShellUIHelper::ResetFirstBootMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 26, _a);
 }
 
 inline void IShellUIHelper::ResetSafeMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 27, _a);
 }
 
 inline QVariant IShellUIHelper::ShowBrowserUI(const QString& bstrName, QVariant& pvarIn)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrName, (void*)&pvarIn};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrName, (void*)&pvarIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 28, _a);
     return qax_result;
 }
 
-
 inline void IShellUIHelper2::AddChannel(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline void IShellUIHelper2::AddDesktopComponent(const QString& URL, const QString& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
 }
 
 inline void IShellUIHelper2::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IShellUIHelper2::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IShellUIHelper2::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IShellUIHelper2::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width, QVariant& Height)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IShellUIHelper2::AddFavorite(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IShellUIHelper2::AddFavorite(const QString& URL, QVariant& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShellUIHelper2::AddSearchProvider(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IShellUIHelper2::AutoCompleteAttach()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IShellUIHelper2::AutoCompleteAttach(QVariant& Reserved)
 {
-    void *_a[] = {0, (void*)&Reserved};
+    void* _a[] = { 0, (void*)&Reserved };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IShellUIHelper2::AutoCompleteSaveForm()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IShellUIHelper2::AutoCompleteSaveForm(QVariant& Form)
 {
-    void *_a[] = {0, (void*)&Form};
+    void* _a[] = { 0, (void*)&Form };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void IShellUIHelper2::AutoScan(const QString& strSearch, const QString& strFailureUrl)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void IShellUIHelper2::AutoScan(const QString& strSearch, const QString& strFailureUrl, QVariant& pvarTargetFrame)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline QString IShellUIHelper2::BrandImageUri()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper2::CustomizeClearType(bool fSet)
 {
-    void *_a[] = {0, (void*)&fSet};
+    void* _a[] = { 0, (void*)&fSet };
     qt_metacall(QMetaObject::InvokeMetaMethod, 24, _a);
 }
 
 inline void IShellUIHelper2::CustomizeSettings(bool fSQM, bool fPhishing, const QString& bstrLocale)
 {
-    void *_a[] = {0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale};
+    void* _a[] = { 0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale };
     qt_metacall(QMetaObject::InvokeMetaMethod, 25, _a);
 }
 
 inline QString IShellUIHelper2::DefaultSearchProvider()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 26, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper2::DiagnoseConnection()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 27, _a);
 }
 
 inline void IShellUIHelper2::ImportExportFavorites(bool fImport, const QString& strImpExpPath)
 {
-    void *_a[] = {0, (void*)&fImport, (void*)&strImpExpPath};
+    void* _a[] = { 0, (void*)&fImport, (void*)&strImpExpPath };
     qt_metacall(QMetaObject::InvokeMetaMethod, 28, _a);
 }
 
 inline bool IShellUIHelper2::IsSearchMigrated()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 29, _a);
     return qax_result;
 }
@@ -10458,7 +10456,7 @@ inline bool IShellUIHelper2::IsSearchMigrated()
 inline uint IShellUIHelper2::IsSearchProviderInstalled(const QString& URL)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 30, _a);
     return qax_result;
 }
@@ -10466,67 +10464,67 @@ inline uint IShellUIHelper2::IsSearchProviderInstalled(const QString& URL)
 inline bool IShellUIHelper2::IsSubscribed(const QString& URL)
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 31, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper2::NavigateAndFind(const QString& URL, const QString& strQuery, QVariant& varTargetFrame)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame};
+    void* _a[] = { 0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 32, _a);
 }
 
 inline bool IShellUIHelper2::PhishingEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 33, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper2::RefreshOfflineDesktop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 34, _a);
 }
 
 inline void IShellUIHelper2::ResetFirstBootMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 35, _a);
 }
 
 inline void IShellUIHelper2::ResetSafeMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 36, _a);
 }
 
 inline bool IShellUIHelper2::RunOnceHasShown()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 37, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper2::RunOnceRequiredSettingsComplete(bool fComplete)
 {
-    void *_a[] = {0, (void*)&fComplete};
+    void* _a[] = { 0, (void*)&fComplete };
     qt_metacall(QMetaObject::InvokeMetaMethod, 38, _a);
 }
 
 inline void IShellUIHelper2::RunOnceShown()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 39, _a);
 }
 
 inline QString IShellUIHelper2::SearchGuideUrl()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 40, _a);
     return qax_result;
 }
@@ -10534,202 +10532,201 @@ inline QString IShellUIHelper2::SearchGuideUrl()
 inline QVariant IShellUIHelper2::ShowBrowserUI(const QString& bstrName, QVariant& pvarIn)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrName, (void*)&pvarIn};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrName, (void*)&pvarIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 41, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper2::SkipRunOnce()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 42, _a);
 }
 
 inline void IShellUIHelper2::SkipTabsWelcome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 43, _a);
 }
 
 inline bool IShellUIHelper2::SqmEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 44, _a);
     return qax_result;
 }
 
-
 inline void IShellUIHelper3::AddChannel(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline void IShellUIHelper3::AddDesktopComponent(const QString& URL, const QString& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
 }
 
 inline void IShellUIHelper3::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IShellUIHelper3::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IShellUIHelper3::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IShellUIHelper3::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width, QVariant& Height)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IShellUIHelper3::AddFavorite(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IShellUIHelper3::AddFavorite(const QString& URL, QVariant& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShellUIHelper3::AddSearchProvider(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IShellUIHelper3::AddService(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IShellUIHelper3::AddToFavoritesBar(const QString& URL, const QString& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IShellUIHelper3::AddToFavoritesBar(const QString& URL, const QString& Title, QVariant& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IShellUIHelper3::AutoCompleteAttach()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void IShellUIHelper3::AutoCompleteAttach(QVariant& Reserved)
 {
-    void *_a[] = {0, (void*)&Reserved};
+    void* _a[] = { 0, (void*)&Reserved };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void IShellUIHelper3::AutoCompleteSaveForm()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline void IShellUIHelper3::AutoCompleteSaveForm(QVariant& Form)
 {
-    void *_a[] = {0, (void*)&Form};
+    void* _a[] = { 0, (void*)&Form };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
 }
 
 inline void IShellUIHelper3::AutoScan(const QString& strSearch, const QString& strFailureUrl)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 24, _a);
 }
 
 inline void IShellUIHelper3::AutoScan(const QString& strSearch, const QString& strFailureUrl, QVariant& pvarTargetFrame)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 25, _a);
 }
 
 inline QString IShellUIHelper3::BrandImageUri()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 26, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper3::BuildNewTabPage()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 27, _a);
 }
 
 inline void IShellUIHelper3::ContentDiscoveryReset()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 28, _a);
 }
 
 inline void IShellUIHelper3::CustomizeClearType(bool fSet)
 {
-    void *_a[] = {0, (void*)&fSet};
+    void* _a[] = { 0, (void*)&fSet };
     qt_metacall(QMetaObject::InvokeMetaMethod, 29, _a);
 }
 
 inline void IShellUIHelper3::CustomizeSettings(bool fSQM, bool fPhishing, const QString& bstrLocale)
 {
-    void *_a[] = {0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale};
+    void* _a[] = { 0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale };
     qt_metacall(QMetaObject::InvokeMetaMethod, 30, _a);
 }
 
 inline QString IShellUIHelper3::DefaultSearchProvider()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 31, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper3::DiagnoseConnection()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 32, _a);
 }
 
 inline void IShellUIHelper3::EnableSuggestedSites(bool fEnable)
 {
-    void *_a[] = {0, (void*)&fEnable};
+    void* _a[] = { 0, (void*)&fEnable };
     qt_metacall(QMetaObject::InvokeMetaMethod, 33, _a);
 }
 
 inline void IShellUIHelper3::ImportExportFavorites(bool fImport, const QString& strImpExpPath)
 {
-    void *_a[] = {0, (void*)&fImport, (void*)&strImpExpPath};
+    void* _a[] = { 0, (void*)&fImport, (void*)&strImpExpPath };
     qt_metacall(QMetaObject::InvokeMetaMethod, 34, _a);
 }
 
 inline bool IShellUIHelper3::InPrivateFilteringEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 35, _a);
     return qax_result;
 }
@@ -10737,7 +10734,7 @@ inline bool IShellUIHelper3::InPrivateFilteringEnabled()
 inline bool IShellUIHelper3::IsSearchMigrated()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 36, _a);
     return qax_result;
 }
@@ -10745,7 +10742,7 @@ inline bool IShellUIHelper3::IsSearchMigrated()
 inline uint IShellUIHelper3::IsSearchProviderInstalled(const QString& URL)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 37, _a);
     return qax_result;
 }
@@ -10753,7 +10750,7 @@ inline uint IShellUIHelper3::IsSearchProviderInstalled(const QString& URL)
 inline uint IShellUIHelper3::IsServiceInstalled(const QString& URL, const QString& Verb)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL, (void*)&Verb};
+    void* _a[] = { (void*)&qax_result, (void*)&URL, (void*)&Verb };
     qt_metacall(QMetaObject::InvokeMetaMethod, 38, _a);
     return qax_result;
 }
@@ -10761,7 +10758,7 @@ inline uint IShellUIHelper3::IsServiceInstalled(const QString& URL, const QStrin
 inline bool IShellUIHelper3::IsSubscribed(const QString& URL)
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 39, _a);
     return qax_result;
 }
@@ -10769,300 +10766,299 @@ inline bool IShellUIHelper3::IsSubscribed(const QString& URL)
 inline bool IShellUIHelper3::IsSuggestedSitesEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 40, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper3::NavigateAndFind(const QString& URL, const QString& strQuery, QVariant& varTargetFrame)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame};
+    void* _a[] = { 0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 41, _a);
 }
 
 inline void IShellUIHelper3::NavigateToSuggestedSites(const QString& bstrRelativeUrl)
 {
-    void *_a[] = {0, (void*)&bstrRelativeUrl};
+    void* _a[] = { 0, (void*)&bstrRelativeUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 42, _a);
 }
 
 inline bool IShellUIHelper3::PhishingEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 43, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper3::RefreshOfflineDesktop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 44, _a);
 }
 
 inline void IShellUIHelper3::ResetFirstBootMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 45, _a);
 }
 
 inline void IShellUIHelper3::ResetSafeMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 46, _a);
 }
 
 inline bool IShellUIHelper3::RunOnceHasShown()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 47, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper3::RunOnceRequiredSettingsComplete(bool fComplete)
 {
-    void *_a[] = {0, (void*)&fComplete};
+    void* _a[] = { 0, (void*)&fComplete };
     qt_metacall(QMetaObject::InvokeMetaMethod, 48, _a);
 }
 
 inline void IShellUIHelper3::RunOnceShown()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 49, _a);
 }
 
 inline QString IShellUIHelper3::SearchGuideUrl()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 50, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper3::SetActivitiesVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 51, _a);
 }
 
 inline void IShellUIHelper3::SetRecentlyClosedVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 52, _a);
 }
 
 inline QVariant IShellUIHelper3::ShowBrowserUI(const QString& bstrName, QVariant& pvarIn)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrName, (void*)&pvarIn};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrName, (void*)&pvarIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 53, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper3::ShowInPrivateHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 54, _a);
 }
 
 inline void IShellUIHelper3::ShowTabsHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 55, _a);
 }
 
 inline void IShellUIHelper3::SkipRunOnce()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 56, _a);
 }
 
 inline void IShellUIHelper3::SkipTabsWelcome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 57, _a);
 }
 
 inline bool IShellUIHelper3::SqmEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 58, _a);
     return qax_result;
 }
 
-
 inline void IShellUIHelper4::AddChannel(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline void IShellUIHelper4::AddDesktopComponent(const QString& URL, const QString& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
 }
 
 inline void IShellUIHelper4::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IShellUIHelper4::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IShellUIHelper4::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IShellUIHelper4::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width, QVariant& Height)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IShellUIHelper4::AddFavorite(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IShellUIHelper4::AddFavorite(const QString& URL, QVariant& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShellUIHelper4::AddSearchProvider(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IShellUIHelper4::AddService(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IShellUIHelper4::AddToFavoritesBar(const QString& URL, const QString& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IShellUIHelper4::AddToFavoritesBar(const QString& URL, const QString& Title, QVariant& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IShellUIHelper4::AutoCompleteAttach()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void IShellUIHelper4::AutoCompleteAttach(QVariant& Reserved)
 {
-    void *_a[] = {0, (void*)&Reserved};
+    void* _a[] = { 0, (void*)&Reserved };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void IShellUIHelper4::AutoCompleteSaveForm()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline void IShellUIHelper4::AutoCompleteSaveForm(QVariant& Form)
 {
-    void *_a[] = {0, (void*)&Form};
+    void* _a[] = { 0, (void*)&Form };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
 }
 
 inline void IShellUIHelper4::AutoScan(const QString& strSearch, const QString& strFailureUrl)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 24, _a);
 }
 
 inline void IShellUIHelper4::AutoScan(const QString& strSearch, const QString& strFailureUrl, QVariant& pvarTargetFrame)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 25, _a);
 }
 
 inline QString IShellUIHelper4::BrandImageUri()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 26, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::BuildNewTabPage()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 27, _a);
 }
 
 inline void IShellUIHelper4::ContentDiscoveryReset()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 28, _a);
 }
 
 inline void IShellUIHelper4::CustomizeClearType(bool fSet)
 {
-    void *_a[] = {0, (void*)&fSet};
+    void* _a[] = { 0, (void*)&fSet };
     qt_metacall(QMetaObject::InvokeMetaMethod, 29, _a);
 }
 
 inline void IShellUIHelper4::CustomizeSettings(bool fSQM, bool fPhishing, const QString& bstrLocale)
 {
-    void *_a[] = {0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale};
+    void* _a[] = { 0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale };
     qt_metacall(QMetaObject::InvokeMetaMethod, 30, _a);
 }
 
 inline QString IShellUIHelper4::DefaultSearchProvider()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 31, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::DiagnoseConnection()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 32, _a);
 }
 
 inline void IShellUIHelper4::EnableSuggestedSites(bool fEnable)
 {
-    void *_a[] = {0, (void*)&fEnable};
+    void* _a[] = { 0, (void*)&fEnable };
     qt_metacall(QMetaObject::InvokeMetaMethod, 33, _a);
 }
 
 inline void IShellUIHelper4::ImportExportFavorites(bool fImport, const QString& strImpExpPath)
 {
-    void *_a[] = {0, (void*)&fImport, (void*)&strImpExpPath};
+    void* _a[] = { 0, (void*)&fImport, (void*)&strImpExpPath };
     qt_metacall(QMetaObject::InvokeMetaMethod, 34, _a);
 }
 
 inline bool IShellUIHelper4::InPrivateFilteringEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 35, _a);
     return qax_result;
 }
@@ -11070,7 +11066,7 @@ inline bool IShellUIHelper4::InPrivateFilteringEnabled()
 inline bool IShellUIHelper4::IsSearchMigrated()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 36, _a);
     return qax_result;
 }
@@ -11078,7 +11074,7 @@ inline bool IShellUIHelper4::IsSearchMigrated()
 inline uint IShellUIHelper4::IsSearchProviderInstalled(const QString& URL)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 37, _a);
     return qax_result;
 }
@@ -11086,7 +11082,7 @@ inline uint IShellUIHelper4::IsSearchProviderInstalled(const QString& URL)
 inline uint IShellUIHelper4::IsServiceInstalled(const QString& URL, const QString& Verb)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL, (void*)&Verb};
+    void* _a[] = { (void*)&qax_result, (void*)&URL, (void*)&Verb };
     qt_metacall(QMetaObject::InvokeMetaMethod, 38, _a);
     return qax_result;
 }
@@ -11094,7 +11090,7 @@ inline uint IShellUIHelper4::IsServiceInstalled(const QString& URL, const QStrin
 inline bool IShellUIHelper4::IsSubscribed(const QString& URL)
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 39, _a);
     return qax_result;
 }
@@ -11102,125 +11098,125 @@ inline bool IShellUIHelper4::IsSubscribed(const QString& URL)
 inline bool IShellUIHelper4::IsSuggestedSitesEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 40, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::NavigateAndFind(const QString& URL, const QString& strQuery, QVariant& varTargetFrame)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame};
+    void* _a[] = { 0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 41, _a);
 }
 
 inline void IShellUIHelper4::NavigateToSuggestedSites(const QString& bstrRelativeUrl)
 {
-    void *_a[] = {0, (void*)&bstrRelativeUrl};
+    void* _a[] = { 0, (void*)&bstrRelativeUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 42, _a);
 }
 
 inline bool IShellUIHelper4::PhishingEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 43, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::RefreshOfflineDesktop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 44, _a);
 }
 
 inline void IShellUIHelper4::ResetFirstBootMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 45, _a);
 }
 
 inline void IShellUIHelper4::ResetSafeMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 46, _a);
 }
 
 inline bool IShellUIHelper4::RunOnceHasShown()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 47, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::RunOnceRequiredSettingsComplete(bool fComplete)
 {
-    void *_a[] = {0, (void*)&fComplete};
+    void* _a[] = { 0, (void*)&fComplete };
     qt_metacall(QMetaObject::InvokeMetaMethod, 48, _a);
 }
 
 inline void IShellUIHelper4::RunOnceShown()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 49, _a);
 }
 
 inline QString IShellUIHelper4::SearchGuideUrl()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 50, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::SetActivitiesVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 51, _a);
 }
 
 inline void IShellUIHelper4::SetRecentlyClosedVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 52, _a);
 }
 
 inline QVariant IShellUIHelper4::ShowBrowserUI(const QString& bstrName, QVariant& pvarIn)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrName, (void*)&pvarIn};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrName, (void*)&pvarIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 53, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::ShowInPrivateHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 54, _a);
 }
 
 inline void IShellUIHelper4::ShowTabsHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 55, _a);
 }
 
 inline void IShellUIHelper4::SkipRunOnce()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 56, _a);
 }
 
 inline void IShellUIHelper4::SkipTabsWelcome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 57, _a);
 }
 
 inline bool IShellUIHelper4::SqmEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 58, _a);
     return qax_result;
 }
@@ -11228,27 +11224,27 @@ inline bool IShellUIHelper4::SqmEnabled()
 inline bool IShellUIHelper4::msActiveXFilteringEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 59, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::msAddSiteMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 60, _a);
 }
 
 inline void IShellUIHelper4::msAddTrackingProtectionList(const QString& URL, const QString& bstrFilterName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&bstrFilterName};
+    void* _a[] = { 0, (void*)&URL, (void*)&bstrFilterName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 61, _a);
 }
 
 inline bool IShellUIHelper4::msIsSiteMode()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 62, _a);
     return qax_result;
 }
@@ -11256,278 +11252,277 @@ inline bool IShellUIHelper4::msIsSiteMode()
 inline QVariant IShellUIHelper4::msIsSiteModeFirstRun(bool fPreserveState)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&fPreserveState};
+    void* _a[] = { (void*)&qax_result, (void*)&fPreserveState };
     qt_metacall(QMetaObject::InvokeMetaMethod, 63, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::msSiteModeActivate()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 64, _a);
 }
 
 inline QVariant IShellUIHelper4::msSiteModeAddButtonStyle(const QVariant& uiButtonID, const QString& bstrIconURL, const QString& bstrTooltip)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&uiButtonID, (void*)&bstrIconURL, (void*)&bstrTooltip};
+    void* _a[] = { (void*)&qax_result, (void*)&uiButtonID, (void*)&bstrIconURL, (void*)&bstrTooltip };
     qt_metacall(QMetaObject::InvokeMetaMethod, 65, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::msSiteModeAddJumpListItem(const QString& bstrName, const QString& bstrActionUri, const QString& bstrIconUri)
 {
-    void *_a[] = {0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri};
+    void* _a[] = { 0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri };
     qt_metacall(QMetaObject::InvokeMetaMethod, 66, _a);
 }
 
 inline void IShellUIHelper4::msSiteModeAddJumpListItem(const QString& bstrName, const QString& bstrActionUri, const QString& bstrIconUri, QVariant& pvarWindowType)
 {
-    void *_a[] = {0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri, (void*)&pvarWindowType};
+    void* _a[] = { 0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri, (void*)&pvarWindowType };
     qt_metacall(QMetaObject::InvokeMetaMethod, 67, _a);
 }
 
 inline QVariant IShellUIHelper4::msSiteModeAddThumbBarButton(const QString& bstrIconURL, const QString& bstrTooltip)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrIconURL, (void*)&bstrTooltip};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrIconURL, (void*)&bstrTooltip };
     qt_metacall(QMetaObject::InvokeMetaMethod, 68, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper4::msSiteModeClearIconOverlay()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 69, _a);
 }
 
 inline void IShellUIHelper4::msSiteModeClearJumpList()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 70, _a);
 }
 
 inline void IShellUIHelper4::msSiteModeCreateJumpList(const QString& bstrHeader)
 {
-    void *_a[] = {0, (void*)&bstrHeader};
+    void* _a[] = { 0, (void*)&bstrHeader };
     qt_metacall(QMetaObject::InvokeMetaMethod, 71, _a);
 }
 
 inline void IShellUIHelper4::msSiteModeSetIconOverlay(const QString& IconUrl)
 {
-    void *_a[] = {0, (void*)&IconUrl};
+    void* _a[] = { 0, (void*)&IconUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 72, _a);
 }
 
 inline void IShellUIHelper4::msSiteModeSetIconOverlay(const QString& IconUrl, QVariant& pvarDescription)
 {
-    void *_a[] = {0, (void*)&IconUrl, (void*)&pvarDescription};
+    void* _a[] = { 0, (void*)&IconUrl, (void*)&pvarDescription };
     qt_metacall(QMetaObject::InvokeMetaMethod, 73, _a);
 }
 
 inline void IShellUIHelper4::msSiteModeShowButtonStyle(const QVariant& uiButtonID, const QVariant& uiStyleID)
 {
-    void *_a[] = {0, (void*)&uiButtonID, (void*)&uiStyleID};
+    void* _a[] = { 0, (void*)&uiButtonID, (void*)&uiStyleID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 74, _a);
 }
 
 inline void IShellUIHelper4::msSiteModeShowJumpList()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 75, _a);
 }
 
 inline void IShellUIHelper4::msSiteModeShowThumbBar()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 76, _a);
 }
 
 inline void IShellUIHelper4::msSiteModeUpdateThumbBarButton(const QVariant& ButtonID, bool fEnabled, bool fVisible)
 {
-    void *_a[] = {0, (void*)&ButtonID, (void*)&fEnabled, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&ButtonID, (void*)&fEnabled, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 77, _a);
 }
 
 inline bool IShellUIHelper4::msTrackingProtectionEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 78, _a);
     return qax_result;
 }
 
-
 inline void IShellUIHelper5::AddChannel(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline void IShellUIHelper5::AddDesktopComponent(const QString& URL, const QString& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
 }
 
 inline void IShellUIHelper5::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IShellUIHelper5::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IShellUIHelper5::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IShellUIHelper5::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width, QVariant& Height)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IShellUIHelper5::AddFavorite(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IShellUIHelper5::AddFavorite(const QString& URL, QVariant& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShellUIHelper5::AddSearchProvider(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IShellUIHelper5::AddService(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IShellUIHelper5::AddToFavoritesBar(const QString& URL, const QString& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IShellUIHelper5::AddToFavoritesBar(const QString& URL, const QString& Title, QVariant& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IShellUIHelper5::AutoCompleteAttach()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void IShellUIHelper5::AutoCompleteAttach(QVariant& Reserved)
 {
-    void *_a[] = {0, (void*)&Reserved};
+    void* _a[] = { 0, (void*)&Reserved };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void IShellUIHelper5::AutoCompleteSaveForm()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline void IShellUIHelper5::AutoCompleteSaveForm(QVariant& Form)
 {
-    void *_a[] = {0, (void*)&Form};
+    void* _a[] = { 0, (void*)&Form };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
 }
 
 inline void IShellUIHelper5::AutoScan(const QString& strSearch, const QString& strFailureUrl)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 24, _a);
 }
 
 inline void IShellUIHelper5::AutoScan(const QString& strSearch, const QString& strFailureUrl, QVariant& pvarTargetFrame)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 25, _a);
 }
 
 inline QString IShellUIHelper5::BrandImageUri()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 26, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::BuildNewTabPage()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 27, _a);
 }
 
 inline void IShellUIHelper5::ContentDiscoveryReset()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 28, _a);
 }
 
 inline void IShellUIHelper5::CustomizeClearType(bool fSet)
 {
-    void *_a[] = {0, (void*)&fSet};
+    void* _a[] = { 0, (void*)&fSet };
     qt_metacall(QMetaObject::InvokeMetaMethod, 29, _a);
 }
 
 inline void IShellUIHelper5::CustomizeSettings(bool fSQM, bool fPhishing, const QString& bstrLocale)
 {
-    void *_a[] = {0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale};
+    void* _a[] = { 0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale };
     qt_metacall(QMetaObject::InvokeMetaMethod, 30, _a);
 }
 
 inline QString IShellUIHelper5::DefaultSearchProvider()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 31, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::DiagnoseConnection()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 32, _a);
 }
 
 inline void IShellUIHelper5::EnableSuggestedSites(bool fEnable)
 {
-    void *_a[] = {0, (void*)&fEnable};
+    void* _a[] = { 0, (void*)&fEnable };
     qt_metacall(QMetaObject::InvokeMetaMethod, 33, _a);
 }
 
 inline void IShellUIHelper5::ImportExportFavorites(bool fImport, const QString& strImpExpPath)
 {
-    void *_a[] = {0, (void*)&fImport, (void*)&strImpExpPath};
+    void* _a[] = { 0, (void*)&fImport, (void*)&strImpExpPath };
     qt_metacall(QMetaObject::InvokeMetaMethod, 34, _a);
 }
 
 inline bool IShellUIHelper5::InPrivateFilteringEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 35, _a);
     return qax_result;
 }
@@ -11535,7 +11530,7 @@ inline bool IShellUIHelper5::InPrivateFilteringEnabled()
 inline bool IShellUIHelper5::IsSearchMigrated()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 36, _a);
     return qax_result;
 }
@@ -11543,7 +11538,7 @@ inline bool IShellUIHelper5::IsSearchMigrated()
 inline uint IShellUIHelper5::IsSearchProviderInstalled(const QString& URL)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 37, _a);
     return qax_result;
 }
@@ -11551,7 +11546,7 @@ inline uint IShellUIHelper5::IsSearchProviderInstalled(const QString& URL)
 inline uint IShellUIHelper5::IsServiceInstalled(const QString& URL, const QString& Verb)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL, (void*)&Verb};
+    void* _a[] = { (void*)&qax_result, (void*)&URL, (void*)&Verb };
     qt_metacall(QMetaObject::InvokeMetaMethod, 38, _a);
     return qax_result;
 }
@@ -11559,7 +11554,7 @@ inline uint IShellUIHelper5::IsServiceInstalled(const QString& URL, const QStrin
 inline bool IShellUIHelper5::IsSubscribed(const QString& URL)
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 39, _a);
     return qax_result;
 }
@@ -11567,125 +11562,125 @@ inline bool IShellUIHelper5::IsSubscribed(const QString& URL)
 inline bool IShellUIHelper5::IsSuggestedSitesEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 40, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::NavigateAndFind(const QString& URL, const QString& strQuery, QVariant& varTargetFrame)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame};
+    void* _a[] = { 0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 41, _a);
 }
 
 inline void IShellUIHelper5::NavigateToSuggestedSites(const QString& bstrRelativeUrl)
 {
-    void *_a[] = {0, (void*)&bstrRelativeUrl};
+    void* _a[] = { 0, (void*)&bstrRelativeUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 42, _a);
 }
 
 inline bool IShellUIHelper5::PhishingEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 43, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::RefreshOfflineDesktop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 44, _a);
 }
 
 inline void IShellUIHelper5::ResetFirstBootMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 45, _a);
 }
 
 inline void IShellUIHelper5::ResetSafeMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 46, _a);
 }
 
 inline bool IShellUIHelper5::RunOnceHasShown()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 47, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::RunOnceRequiredSettingsComplete(bool fComplete)
 {
-    void *_a[] = {0, (void*)&fComplete};
+    void* _a[] = { 0, (void*)&fComplete };
     qt_metacall(QMetaObject::InvokeMetaMethod, 48, _a);
 }
 
 inline void IShellUIHelper5::RunOnceShown()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 49, _a);
 }
 
 inline QString IShellUIHelper5::SearchGuideUrl()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 50, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::SetActivitiesVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 51, _a);
 }
 
 inline void IShellUIHelper5::SetRecentlyClosedVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 52, _a);
 }
 
 inline QVariant IShellUIHelper5::ShowBrowserUI(const QString& bstrName, QVariant& pvarIn)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrName, (void*)&pvarIn};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrName, (void*)&pvarIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 53, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::ShowInPrivateHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 54, _a);
 }
 
 inline void IShellUIHelper5::ShowTabsHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 55, _a);
 }
 
 inline void IShellUIHelper5::SkipRunOnce()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 56, _a);
 }
 
 inline void IShellUIHelper5::SkipTabsWelcome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 57, _a);
 }
 
 inline bool IShellUIHelper5::SqmEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 58, _a);
     return qax_result;
 }
@@ -11693,39 +11688,39 @@ inline bool IShellUIHelper5::SqmEnabled()
 inline bool IShellUIHelper5::msActiveXFilteringEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 59, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::msAddSiteMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 60, _a);
 }
 
 inline void IShellUIHelper5::msAddTrackingProtectionList(const QString& URL, const QString& bstrFilterName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&bstrFilterName};
+    void* _a[] = { 0, (void*)&URL, (void*)&bstrFilterName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 61, _a);
 }
 
 inline void IShellUIHelper5::msChangeDefaultBrowser(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 62, _a);
 }
 
 inline void IShellUIHelper5::msDiagnoseConnectionUILess()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 63, _a);
 }
 
 inline bool IShellUIHelper5::msIsSiteMode()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 64, _a);
     return qax_result;
 }
@@ -11733,310 +11728,309 @@ inline bool IShellUIHelper5::msIsSiteMode()
 inline QVariant IShellUIHelper5::msIsSiteModeFirstRun(bool fPreserveState)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&fPreserveState};
+    void* _a[] = { (void*)&qax_result, (void*)&fPreserveState };
     qt_metacall(QMetaObject::InvokeMetaMethod, 65, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::msLaunchNetworkClientHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 66, _a);
 }
 
 inline QVariant IShellUIHelper5::msProvisionNetworks(const QString& bstrProvisioningXml)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrProvisioningXml};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrProvisioningXml };
     qt_metacall(QMetaObject::InvokeMetaMethod, 67, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::msReportSafeUrl()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 68, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeActivate()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 69, _a);
 }
 
 inline QVariant IShellUIHelper5::msSiteModeAddButtonStyle(const QVariant& uiButtonID, const QString& bstrIconURL, const QString& bstrTooltip)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&uiButtonID, (void*)&bstrIconURL, (void*)&bstrTooltip};
+    void* _a[] = { (void*)&qax_result, (void*)&uiButtonID, (void*)&bstrIconURL, (void*)&bstrTooltip };
     qt_metacall(QMetaObject::InvokeMetaMethod, 70, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::msSiteModeAddJumpListItem(const QString& bstrName, const QString& bstrActionUri, const QString& bstrIconUri)
 {
-    void *_a[] = {0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri};
+    void* _a[] = { 0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri };
     qt_metacall(QMetaObject::InvokeMetaMethod, 71, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeAddJumpListItem(const QString& bstrName, const QString& bstrActionUri, const QString& bstrIconUri, QVariant& pvarWindowType)
 {
-    void *_a[] = {0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri, (void*)&pvarWindowType};
+    void* _a[] = { 0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri, (void*)&pvarWindowType };
     qt_metacall(QMetaObject::InvokeMetaMethod, 72, _a);
 }
 
 inline QVariant IShellUIHelper5::msSiteModeAddThumbBarButton(const QString& bstrIconURL, const QString& bstrTooltip)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrIconURL, (void*)&bstrTooltip};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrIconURL, (void*)&bstrTooltip };
     qt_metacall(QMetaObject::InvokeMetaMethod, 73, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper5::msSiteModeClearBadge()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 74, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeClearIconOverlay()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 75, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeClearJumpList()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 76, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeCreateJumpList(const QString& bstrHeader)
 {
-    void *_a[] = {0, (void*)&bstrHeader};
+    void* _a[] = { 0, (void*)&bstrHeader };
     qt_metacall(QMetaObject::InvokeMetaMethod, 77, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeRefreshBadge()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 78, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeSetIconOverlay(const QString& IconUrl)
 {
-    void *_a[] = {0, (void*)&IconUrl};
+    void* _a[] = { 0, (void*)&IconUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 79, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeSetIconOverlay(const QString& IconUrl, QVariant& pvarDescription)
 {
-    void *_a[] = {0, (void*)&IconUrl, (void*)&pvarDescription};
+    void* _a[] = { 0, (void*)&IconUrl, (void*)&pvarDescription };
     qt_metacall(QMetaObject::InvokeMetaMethod, 80, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeShowButtonStyle(const QVariant& uiButtonID, const QVariant& uiStyleID)
 {
-    void *_a[] = {0, (void*)&uiButtonID, (void*)&uiStyleID};
+    void* _a[] = { 0, (void*)&uiButtonID, (void*)&uiStyleID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 81, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeShowJumpList()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 82, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeShowThumbBar()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 83, _a);
 }
 
 inline void IShellUIHelper5::msSiteModeUpdateThumbBarButton(const QVariant& ButtonID, bool fEnabled, bool fVisible)
 {
-    void *_a[] = {0, (void*)&ButtonID, (void*)&fEnabled, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&ButtonID, (void*)&fEnabled, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 84, _a);
 }
 
 inline bool IShellUIHelper5::msTrackingProtectionEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 85, _a);
     return qax_result;
 }
 
-
 inline void IShellUIHelper6::AddChannel(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline void IShellUIHelper6::AddDesktopComponent(const QString& URL, const QString& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
 }
 
 inline void IShellUIHelper6::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IShellUIHelper6::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IShellUIHelper6::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IShellUIHelper6::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width, QVariant& Height)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IShellUIHelper6::AddFavorite(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IShellUIHelper6::AddFavorite(const QString& URL, QVariant& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShellUIHelper6::AddSearchProvider(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IShellUIHelper6::AddService(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IShellUIHelper6::AddToFavoritesBar(const QString& URL, const QString& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IShellUIHelper6::AddToFavoritesBar(const QString& URL, const QString& Title, QVariant& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IShellUIHelper6::AutoCompleteAttach()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void IShellUIHelper6::AutoCompleteAttach(QVariant& Reserved)
 {
-    void *_a[] = {0, (void*)&Reserved};
+    void* _a[] = { 0, (void*)&Reserved };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void IShellUIHelper6::AutoCompleteSaveForm()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline void IShellUIHelper6::AutoCompleteSaveForm(QVariant& Form)
 {
-    void *_a[] = {0, (void*)&Form};
+    void* _a[] = { 0, (void*)&Form };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
 }
 
 inline void IShellUIHelper6::AutoScan(const QString& strSearch, const QString& strFailureUrl)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 24, _a);
 }
 
 inline void IShellUIHelper6::AutoScan(const QString& strSearch, const QString& strFailureUrl, QVariant& pvarTargetFrame)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 25, _a);
 }
 
 inline QString IShellUIHelper6::BrandImageUri()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 26, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::BuildNewTabPage()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 27, _a);
 }
 
 inline void IShellUIHelper6::ContentDiscoveryReset()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 28, _a);
 }
 
 inline void IShellUIHelper6::CustomizeClearType(bool fSet)
 {
-    void *_a[] = {0, (void*)&fSet};
+    void* _a[] = { 0, (void*)&fSet };
     qt_metacall(QMetaObject::InvokeMetaMethod, 29, _a);
 }
 
 inline void IShellUIHelper6::CustomizeSettings(bool fSQM, bool fPhishing, const QString& bstrLocale)
 {
-    void *_a[] = {0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale};
+    void* _a[] = { 0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale };
     qt_metacall(QMetaObject::InvokeMetaMethod, 30, _a);
 }
 
 inline QString IShellUIHelper6::DefaultSearchProvider()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 31, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::DiagnoseConnection()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 32, _a);
 }
 
 inline void IShellUIHelper6::EnableSuggestedSites(bool fEnable)
 {
-    void *_a[] = {0, (void*)&fEnable};
+    void* _a[] = { 0, (void*)&fEnable };
     qt_metacall(QMetaObject::InvokeMetaMethod, 33, _a);
 }
 
 inline void IShellUIHelper6::ImportExportFavorites(bool fImport, const QString& strImpExpPath)
 {
-    void *_a[] = {0, (void*)&fImport, (void*)&strImpExpPath};
+    void* _a[] = { 0, (void*)&fImport, (void*)&strImpExpPath };
     qt_metacall(QMetaObject::InvokeMetaMethod, 34, _a);
 }
 
 inline bool IShellUIHelper6::InPrivateFilteringEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 35, _a);
     return qax_result;
 }
@@ -12044,7 +12038,7 @@ inline bool IShellUIHelper6::InPrivateFilteringEnabled()
 inline bool IShellUIHelper6::IsSearchMigrated()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 36, _a);
     return qax_result;
 }
@@ -12052,7 +12046,7 @@ inline bool IShellUIHelper6::IsSearchMigrated()
 inline uint IShellUIHelper6::IsSearchProviderInstalled(const QString& URL)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 37, _a);
     return qax_result;
 }
@@ -12060,7 +12054,7 @@ inline uint IShellUIHelper6::IsSearchProviderInstalled(const QString& URL)
 inline uint IShellUIHelper6::IsServiceInstalled(const QString& URL, const QString& Verb)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL, (void*)&Verb};
+    void* _a[] = { (void*)&qax_result, (void*)&URL, (void*)&Verb };
     qt_metacall(QMetaObject::InvokeMetaMethod, 38, _a);
     return qax_result;
 }
@@ -12068,7 +12062,7 @@ inline uint IShellUIHelper6::IsServiceInstalled(const QString& URL, const QStrin
 inline bool IShellUIHelper6::IsSubscribed(const QString& URL)
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 39, _a);
     return qax_result;
 }
@@ -12076,125 +12070,125 @@ inline bool IShellUIHelper6::IsSubscribed(const QString& URL)
 inline bool IShellUIHelper6::IsSuggestedSitesEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 40, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::NavigateAndFind(const QString& URL, const QString& strQuery, QVariant& varTargetFrame)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame};
+    void* _a[] = { 0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 41, _a);
 }
 
 inline void IShellUIHelper6::NavigateToSuggestedSites(const QString& bstrRelativeUrl)
 {
-    void *_a[] = {0, (void*)&bstrRelativeUrl};
+    void* _a[] = { 0, (void*)&bstrRelativeUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 42, _a);
 }
 
 inline bool IShellUIHelper6::PhishingEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 43, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::RefreshOfflineDesktop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 44, _a);
 }
 
 inline void IShellUIHelper6::ResetFirstBootMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 45, _a);
 }
 
 inline void IShellUIHelper6::ResetSafeMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 46, _a);
 }
 
 inline bool IShellUIHelper6::RunOnceHasShown()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 47, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::RunOnceRequiredSettingsComplete(bool fComplete)
 {
-    void *_a[] = {0, (void*)&fComplete};
+    void* _a[] = { 0, (void*)&fComplete };
     qt_metacall(QMetaObject::InvokeMetaMethod, 48, _a);
 }
 
 inline void IShellUIHelper6::RunOnceShown()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 49, _a);
 }
 
 inline QString IShellUIHelper6::SearchGuideUrl()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 50, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::SetActivitiesVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 51, _a);
 }
 
 inline void IShellUIHelper6::SetRecentlyClosedVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 52, _a);
 }
 
 inline QVariant IShellUIHelper6::ShowBrowserUI(const QString& bstrName, QVariant& pvarIn)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrName, (void*)&pvarIn};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrName, (void*)&pvarIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 53, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::ShowInPrivateHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 54, _a);
 }
 
 inline void IShellUIHelper6::ShowTabsHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 55, _a);
 }
 
 inline void IShellUIHelper6::SkipRunOnce()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 56, _a);
 }
 
 inline void IShellUIHelper6::SkipTabsWelcome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 57, _a);
 }
 
 inline bool IShellUIHelper6::SqmEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 58, _a);
     return qax_result;
 }
@@ -12202,69 +12196,69 @@ inline bool IShellUIHelper6::SqmEnabled()
 inline bool IShellUIHelper6::msActiveXFilteringEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 59, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::msAddSiteMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 60, _a);
 }
 
 inline void IShellUIHelper6::msAddTrackingProtectionList(const QString& URL, const QString& bstrFilterName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&bstrFilterName};
+    void* _a[] = { 0, (void*)&URL, (void*)&bstrFilterName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 61, _a);
 }
 
 inline void IShellUIHelper6::msChangeDefaultBrowser(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 62, _a);
 }
 
 inline void IShellUIHelper6::msClearTile()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 63, _a);
 }
 
 inline void IShellUIHelper6::msDiagnoseConnectionUILess()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 64, _a);
 }
 
 inline void IShellUIHelper6::msEnableTileNotificationQueue(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 65, _a);
 }
 
 inline void IShellUIHelper6::msEnableTileNotificationQueueForSquare150x150(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 66, _a);
 }
 
 inline void IShellUIHelper6::msEnableTileNotificationQueueForSquare310x310(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 67, _a);
 }
 
 inline void IShellUIHelper6::msEnableTileNotificationQueueForWide310x150(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 68, _a);
 }
 
 inline bool IShellUIHelper6::msIsSiteMode()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 69, _a);
     return qax_result;
 }
@@ -12272,27 +12266,27 @@ inline bool IShellUIHelper6::msIsSiteMode()
 inline QVariant IShellUIHelper6::msIsSiteModeFirstRun(bool fPreserveState)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&fPreserveState};
+    void* _a[] = { (void*)&qax_result, (void*)&fPreserveState };
     qt_metacall(QMetaObject::InvokeMetaMethod, 70, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::msLaunchInternetOptions()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 71, _a);
 }
 
 inline void IShellUIHelper6::msLaunchNetworkClientHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 72, _a);
 }
 
 inline QVariant IShellUIHelper6::msPinnedSiteState()
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 73, _a);
     return qax_result;
 }
@@ -12300,386 +12294,385 @@ inline QVariant IShellUIHelper6::msPinnedSiteState()
 inline QVariant IShellUIHelper6::msProvisionNetworks(const QString& bstrProvisioningXml)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrProvisioningXml};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrProvisioningXml };
     qt_metacall(QMetaObject::InvokeMetaMethod, 74, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::msRemoveScheduledTileNotification(const QString& bstrNotificationId)
 {
-    void *_a[] = {0, (void*)&bstrNotificationId};
+    void* _a[] = { 0, (void*)&bstrNotificationId };
     qt_metacall(QMetaObject::InvokeMetaMethod, 75, _a);
 }
 
 inline void IShellUIHelper6::msReportSafeUrl()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 76, _a);
 }
 
 inline void IShellUIHelper6::msScheduledTileNotification(const QString& bstrNotificationXml, const QString& bstrNotificationId, const QString& bstrNotificationTag)
 {
-    void *_a[] = {0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag};
+    void* _a[] = { 0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag };
     qt_metacall(QMetaObject::InvokeMetaMethod, 77, _a);
 }
 
 inline void IShellUIHelper6::msScheduledTileNotification(const QString& bstrNotificationXml, const QString& bstrNotificationId, const QString& bstrNotificationTag, const QVariant& startTime)
 {
-    void *_a[] = {0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag, (void*)&startTime};
+    void* _a[] = { 0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag, (void*)&startTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 78, _a);
 }
 
 inline void IShellUIHelper6::msScheduledTileNotification(const QString& bstrNotificationXml, const QString& bstrNotificationId, const QString& bstrNotificationTag, const QVariant& startTime, const QVariant& expirationTime)
 {
-    void *_a[] = {0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag, (void*)&startTime, (void*)&expirationTime};
+    void* _a[] = { 0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag, (void*)&startTime, (void*)&expirationTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 79, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeActivate()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 80, _a);
 }
 
 inline QVariant IShellUIHelper6::msSiteModeAddButtonStyle(const QVariant& uiButtonID, const QString& bstrIconURL, const QString& bstrTooltip)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&uiButtonID, (void*)&bstrIconURL, (void*)&bstrTooltip};
+    void* _a[] = { (void*)&qax_result, (void*)&uiButtonID, (void*)&bstrIconURL, (void*)&bstrTooltip };
     qt_metacall(QMetaObject::InvokeMetaMethod, 81, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::msSiteModeAddJumpListItem(const QString& bstrName, const QString& bstrActionUri, const QString& bstrIconUri)
 {
-    void *_a[] = {0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri};
+    void* _a[] = { 0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri };
     qt_metacall(QMetaObject::InvokeMetaMethod, 82, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeAddJumpListItem(const QString& bstrName, const QString& bstrActionUri, const QString& bstrIconUri, QVariant& pvarWindowType)
 {
-    void *_a[] = {0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri, (void*)&pvarWindowType};
+    void* _a[] = { 0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri, (void*)&pvarWindowType };
     qt_metacall(QMetaObject::InvokeMetaMethod, 83, _a);
 }
 
 inline QVariant IShellUIHelper6::msSiteModeAddThumbBarButton(const QString& bstrIconURL, const QString& bstrTooltip)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrIconURL, (void*)&bstrTooltip};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrIconURL, (void*)&bstrTooltip };
     qt_metacall(QMetaObject::InvokeMetaMethod, 84, _a);
     return qax_result;
 }
 
 inline void IShellUIHelper6::msSiteModeClearBadge()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 85, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeClearIconOverlay()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 86, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeClearJumpList()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 87, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeCreateJumpList(const QString& bstrHeader)
 {
-    void *_a[] = {0, (void*)&bstrHeader};
+    void* _a[] = { 0, (void*)&bstrHeader };
     qt_metacall(QMetaObject::InvokeMetaMethod, 88, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeRefreshBadge()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 89, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeSetIconOverlay(const QString& IconUrl)
 {
-    void *_a[] = {0, (void*)&IconUrl};
+    void* _a[] = { 0, (void*)&IconUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 90, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeSetIconOverlay(const QString& IconUrl, QVariant& pvarDescription)
 {
-    void *_a[] = {0, (void*)&IconUrl, (void*)&pvarDescription};
+    void* _a[] = { 0, (void*)&IconUrl, (void*)&pvarDescription };
     qt_metacall(QMetaObject::InvokeMetaMethod, 91, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeShowButtonStyle(const QVariant& uiButtonID, const QVariant& uiStyleID)
 {
-    void *_a[] = {0, (void*)&uiButtonID, (void*)&uiStyleID};
+    void* _a[] = { 0, (void*)&uiButtonID, (void*)&uiStyleID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 92, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeShowJumpList()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 93, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeShowThumbBar()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 94, _a);
 }
 
 inline void IShellUIHelper6::msSiteModeUpdateThumbBarButton(const QVariant& ButtonID, bool fEnabled, bool fVisible)
 {
-    void *_a[] = {0, (void*)&ButtonID, (void*)&fEnabled, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&ButtonID, (void*)&fEnabled, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 95, _a);
 }
 
 inline void IShellUIHelper6::msStartPeriodicBadgeUpdate(const QString& pollingUri)
 {
-    void *_a[] = {0, (void*)&pollingUri};
+    void* _a[] = { 0, (void*)&pollingUri };
     qt_metacall(QMetaObject::InvokeMetaMethod, 96, _a);
 }
 
 inline void IShellUIHelper6::msStartPeriodicBadgeUpdate(const QString& pollingUri, const QVariant& startTime)
 {
-    void *_a[] = {0, (void*)&pollingUri, (void*)&startTime};
+    void* _a[] = { 0, (void*)&pollingUri, (void*)&startTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 97, _a);
 }
 
 inline void IShellUIHelper6::msStartPeriodicBadgeUpdate(const QString& pollingUri, const QVariant& startTime, const QVariant& uiUpdateRecurrence)
 {
-    void *_a[] = {0, (void*)&pollingUri, (void*)&startTime, (void*)&uiUpdateRecurrence};
+    void* _a[] = { 0, (void*)&pollingUri, (void*)&startTime, (void*)&uiUpdateRecurrence };
     qt_metacall(QMetaObject::InvokeMetaMethod, 98, _a);
 }
 
 inline void IShellUIHelper6::msStartPeriodicTileUpdate(const QVariant& pollingUris)
 {
-    void *_a[] = {0, (void*)&pollingUris};
+    void* _a[] = { 0, (void*)&pollingUris };
     qt_metacall(QMetaObject::InvokeMetaMethod, 99, _a);
 }
 
 inline void IShellUIHelper6::msStartPeriodicTileUpdate(const QVariant& pollingUris, const QVariant& startTime)
 {
-    void *_a[] = {0, (void*)&pollingUris, (void*)&startTime};
+    void* _a[] = { 0, (void*)&pollingUris, (void*)&startTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 100, _a);
 }
 
 inline void IShellUIHelper6::msStartPeriodicTileUpdate(const QVariant& pollingUris, const QVariant& startTime, const QVariant& uiUpdateRecurrence)
 {
-    void *_a[] = {0, (void*)&pollingUris, (void*)&startTime, (void*)&uiUpdateRecurrence};
+    void* _a[] = { 0, (void*)&pollingUris, (void*)&startTime, (void*)&uiUpdateRecurrence };
     qt_metacall(QMetaObject::InvokeMetaMethod, 101, _a);
 }
 
 inline void IShellUIHelper6::msStartPeriodicTileUpdateBatch(const QVariant& pollingUris)
 {
-    void *_a[] = {0, (void*)&pollingUris};
+    void* _a[] = { 0, (void*)&pollingUris };
     qt_metacall(QMetaObject::InvokeMetaMethod, 102, _a);
 }
 
 inline void IShellUIHelper6::msStartPeriodicTileUpdateBatch(const QVariant& pollingUris, const QVariant& startTime)
 {
-    void *_a[] = {0, (void*)&pollingUris, (void*)&startTime};
+    void* _a[] = { 0, (void*)&pollingUris, (void*)&startTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 103, _a);
 }
 
 inline void IShellUIHelper6::msStartPeriodicTileUpdateBatch(const QVariant& pollingUris, const QVariant& startTime, const QVariant& uiUpdateRecurrence)
 {
-    void *_a[] = {0, (void*)&pollingUris, (void*)&startTime, (void*)&uiUpdateRecurrence};
+    void* _a[] = { 0, (void*)&pollingUris, (void*)&startTime, (void*)&uiUpdateRecurrence };
     qt_metacall(QMetaObject::InvokeMetaMethod, 104, _a);
 }
 
 inline void IShellUIHelper6::msStopPeriodicBadgeUpdate()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 105, _a);
 }
 
 inline void IShellUIHelper6::msStopPeriodicTileUpdate()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 106, _a);
 }
 
 inline bool IShellUIHelper6::msTrackingProtectionEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 107, _a);
     return qax_result;
 }
 
-
 inline void ShellUIHelper::AddChannel(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline void ShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
 }
 
 inline void ShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void ShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void ShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void ShellUIHelper::AddDesktopComponent(const QString& URL, const QString& Type, QVariant& Left, QVariant& Top, QVariant& Width, QVariant& Height)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height};
+    void* _a[] = { 0, (void*)&URL, (void*)&Type, (void*)&Left, (void*)&Top, (void*)&Width, (void*)&Height };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void ShellUIHelper::AddFavorite(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void ShellUIHelper::AddFavorite(const QString& URL, QVariant& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void ShellUIHelper::AddSearchProvider(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void ShellUIHelper::AddService(const QString& URL)
 {
-    void *_a[] = {0, (void*)&URL};
+    void* _a[] = { 0, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void ShellUIHelper::AddToFavoritesBar(const QString& URL, const QString& Title)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void ShellUIHelper::AddToFavoritesBar(const QString& URL, const QString& Title, QVariant& Type)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&Title, (void*)&Type};
+    void* _a[] = { 0, (void*)&URL, (void*)&Title, (void*)&Type };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void ShellUIHelper::AutoCompleteAttach()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void ShellUIHelper::AutoCompleteAttach(QVariant& Reserved)
 {
-    void *_a[] = {0, (void*)&Reserved};
+    void* _a[] = { 0, (void*)&Reserved };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void ShellUIHelper::AutoCompleteSaveForm()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline void ShellUIHelper::AutoCompleteSaveForm(QVariant& Form)
 {
-    void *_a[] = {0, (void*)&Form};
+    void* _a[] = { 0, (void*)&Form };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
 }
 
 inline void ShellUIHelper::AutoScan(const QString& strSearch, const QString& strFailureUrl)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 24, _a);
 }
 
 inline void ShellUIHelper::AutoScan(const QString& strSearch, const QString& strFailureUrl, QVariant& pvarTargetFrame)
 {
-    void *_a[] = {0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame};
+    void* _a[] = { 0, (void*)&strSearch, (void*)&strFailureUrl, (void*)&pvarTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 25, _a);
 }
 
 inline QString ShellUIHelper::BrandImageUri()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 26, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::BuildNewTabPage()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 27, _a);
 }
 
 inline void ShellUIHelper::ContentDiscoveryReset()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 28, _a);
 }
 
 inline void ShellUIHelper::CustomizeClearType(bool fSet)
 {
-    void *_a[] = {0, (void*)&fSet};
+    void* _a[] = { 0, (void*)&fSet };
     qt_metacall(QMetaObject::InvokeMetaMethod, 29, _a);
 }
 
 inline void ShellUIHelper::CustomizeSettings(bool fSQM, bool fPhishing, const QString& bstrLocale)
 {
-    void *_a[] = {0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale};
+    void* _a[] = { 0, (void*)&fSQM, (void*)&fPhishing, (void*)&bstrLocale };
     qt_metacall(QMetaObject::InvokeMetaMethod, 30, _a);
 }
 
 inline QString ShellUIHelper::DefaultSearchProvider()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 31, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::DiagnoseConnection()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 32, _a);
 }
 
 inline void ShellUIHelper::EnableSuggestedSites(bool fEnable)
 {
-    void *_a[] = {0, (void*)&fEnable};
+    void* _a[] = { 0, (void*)&fEnable };
     qt_metacall(QMetaObject::InvokeMetaMethod, 33, _a);
 }
 
 inline void ShellUIHelper::ImportExportFavorites(bool fImport, const QString& strImpExpPath)
 {
-    void *_a[] = {0, (void*)&fImport, (void*)&strImpExpPath};
+    void* _a[] = { 0, (void*)&fImport, (void*)&strImpExpPath };
     qt_metacall(QMetaObject::InvokeMetaMethod, 34, _a);
 }
 
 inline bool ShellUIHelper::InPrivateFilteringEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 35, _a);
     return qax_result;
 }
@@ -12687,7 +12680,7 @@ inline bool ShellUIHelper::InPrivateFilteringEnabled()
 inline bool ShellUIHelper::IsSearchMigrated()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 36, _a);
     return qax_result;
 }
@@ -12695,7 +12688,7 @@ inline bool ShellUIHelper::IsSearchMigrated()
 inline uint ShellUIHelper::IsSearchProviderInstalled(const QString& URL)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 37, _a);
     return qax_result;
 }
@@ -12703,7 +12696,7 @@ inline uint ShellUIHelper::IsSearchProviderInstalled(const QString& URL)
 inline uint ShellUIHelper::IsServiceInstalled(const QString& URL, const QString& Verb)
 {
     uint qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL, (void*)&Verb};
+    void* _a[] = { (void*)&qax_result, (void*)&URL, (void*)&Verb };
     qt_metacall(QMetaObject::InvokeMetaMethod, 38, _a);
     return qax_result;
 }
@@ -12711,7 +12704,7 @@ inline uint ShellUIHelper::IsServiceInstalled(const QString& URL, const QString&
 inline bool ShellUIHelper::IsSubscribed(const QString& URL)
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&URL};
+    void* _a[] = { (void*)&qax_result, (void*)&URL };
     qt_metacall(QMetaObject::InvokeMetaMethod, 39, _a);
     return qax_result;
 }
@@ -12719,125 +12712,125 @@ inline bool ShellUIHelper::IsSubscribed(const QString& URL)
 inline bool ShellUIHelper::IsSuggestedSitesEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 40, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::NavigateAndFind(const QString& URL, const QString& strQuery, QVariant& varTargetFrame)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame};
+    void* _a[] = { 0, (void*)&URL, (void*)&strQuery, (void*)&varTargetFrame };
     qt_metacall(QMetaObject::InvokeMetaMethod, 41, _a);
 }
 
 inline void ShellUIHelper::NavigateToSuggestedSites(const QString& bstrRelativeUrl)
 {
-    void *_a[] = {0, (void*)&bstrRelativeUrl};
+    void* _a[] = { 0, (void*)&bstrRelativeUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 42, _a);
 }
 
 inline bool ShellUIHelper::PhishingEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 43, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::RefreshOfflineDesktop()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 44, _a);
 }
 
 inline void ShellUIHelper::ResetFirstBootMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 45, _a);
 }
 
 inline void ShellUIHelper::ResetSafeMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 46, _a);
 }
 
 inline bool ShellUIHelper::RunOnceHasShown()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 47, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::RunOnceRequiredSettingsComplete(bool fComplete)
 {
-    void *_a[] = {0, (void*)&fComplete};
+    void* _a[] = { 0, (void*)&fComplete };
     qt_metacall(QMetaObject::InvokeMetaMethod, 48, _a);
 }
 
 inline void ShellUIHelper::RunOnceShown()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 49, _a);
 }
 
 inline QString ShellUIHelper::SearchGuideUrl()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 50, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::SetActivitiesVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 51, _a);
 }
 
 inline void ShellUIHelper::SetRecentlyClosedVisible(bool fVisible)
 {
-    void *_a[] = {0, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 52, _a);
 }
 
 inline QVariant ShellUIHelper::ShowBrowserUI(const QString& bstrName, QVariant& pvarIn)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrName, (void*)&pvarIn};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrName, (void*)&pvarIn };
     qt_metacall(QMetaObject::InvokeMetaMethod, 53, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::ShowInPrivateHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 54, _a);
 }
 
 inline void ShellUIHelper::ShowTabsHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 55, _a);
 }
 
 inline void ShellUIHelper::SkipRunOnce()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 56, _a);
 }
 
 inline void ShellUIHelper::SkipTabsWelcome()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 57, _a);
 }
 
 inline bool ShellUIHelper::SqmEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 58, _a);
     return qax_result;
 }
@@ -12845,69 +12838,69 @@ inline bool ShellUIHelper::SqmEnabled()
 inline bool ShellUIHelper::msActiveXFilteringEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 59, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::msAddSiteMode()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 60, _a);
 }
 
 inline void ShellUIHelper::msAddTrackingProtectionList(const QString& URL, const QString& bstrFilterName)
 {
-    void *_a[] = {0, (void*)&URL, (void*)&bstrFilterName};
+    void* _a[] = { 0, (void*)&URL, (void*)&bstrFilterName };
     qt_metacall(QMetaObject::InvokeMetaMethod, 61, _a);
 }
 
 inline void ShellUIHelper::msChangeDefaultBrowser(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 62, _a);
 }
 
 inline void ShellUIHelper::msClearTile()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 63, _a);
 }
 
 inline void ShellUIHelper::msDiagnoseConnectionUILess()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 64, _a);
 }
 
 inline void ShellUIHelper::msEnableTileNotificationQueue(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 65, _a);
 }
 
 inline void ShellUIHelper::msEnableTileNotificationQueueForSquare150x150(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 66, _a);
 }
 
 inline void ShellUIHelper::msEnableTileNotificationQueueForSquare310x310(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 67, _a);
 }
 
 inline void ShellUIHelper::msEnableTileNotificationQueueForWide310x150(bool fChange)
 {
-    void *_a[] = {0, (void*)&fChange};
+    void* _a[] = { 0, (void*)&fChange };
     qt_metacall(QMetaObject::InvokeMetaMethod, 68, _a);
 }
 
 inline bool ShellUIHelper::msIsSiteMode()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 69, _a);
     return qax_result;
 }
@@ -12915,27 +12908,27 @@ inline bool ShellUIHelper::msIsSiteMode()
 inline QVariant ShellUIHelper::msIsSiteModeFirstRun(bool fPreserveState)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&fPreserveState};
+    void* _a[] = { (void*)&qax_result, (void*)&fPreserveState };
     qt_metacall(QMetaObject::InvokeMetaMethod, 70, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::msLaunchInternetOptions()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 71, _a);
 }
 
 inline void ShellUIHelper::msLaunchNetworkClientHelp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 72, _a);
 }
 
 inline QVariant ShellUIHelper::msPinnedSiteState()
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 73, _a);
     return qax_result;
 }
@@ -12943,215 +12936,214 @@ inline QVariant ShellUIHelper::msPinnedSiteState()
 inline QVariant ShellUIHelper::msProvisionNetworks(const QString& bstrProvisioningXml)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrProvisioningXml};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrProvisioningXml };
     qt_metacall(QMetaObject::InvokeMetaMethod, 74, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::msRemoveScheduledTileNotification(const QString& bstrNotificationId)
 {
-    void *_a[] = {0, (void*)&bstrNotificationId};
+    void* _a[] = { 0, (void*)&bstrNotificationId };
     qt_metacall(QMetaObject::InvokeMetaMethod, 75, _a);
 }
 
 inline void ShellUIHelper::msReportSafeUrl()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 76, _a);
 }
 
 inline void ShellUIHelper::msScheduledTileNotification(const QString& bstrNotificationXml, const QString& bstrNotificationId, const QString& bstrNotificationTag)
 {
-    void *_a[] = {0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag};
+    void* _a[] = { 0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag };
     qt_metacall(QMetaObject::InvokeMetaMethod, 77, _a);
 }
 
 inline void ShellUIHelper::msScheduledTileNotification(const QString& bstrNotificationXml, const QString& bstrNotificationId, const QString& bstrNotificationTag, const QVariant& startTime)
 {
-    void *_a[] = {0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag, (void*)&startTime};
+    void* _a[] = { 0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag, (void*)&startTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 78, _a);
 }
 
 inline void ShellUIHelper::msScheduledTileNotification(const QString& bstrNotificationXml, const QString& bstrNotificationId, const QString& bstrNotificationTag, const QVariant& startTime, const QVariant& expirationTime)
 {
-    void *_a[] = {0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag, (void*)&startTime, (void*)&expirationTime};
+    void* _a[] = { 0, (void*)&bstrNotificationXml, (void*)&bstrNotificationId, (void*)&bstrNotificationTag, (void*)&startTime, (void*)&expirationTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 79, _a);
 }
 
 inline void ShellUIHelper::msSiteModeActivate()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 80, _a);
 }
 
 inline QVariant ShellUIHelper::msSiteModeAddButtonStyle(const QVariant& uiButtonID, const QString& bstrIconURL, const QString& bstrTooltip)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&uiButtonID, (void*)&bstrIconURL, (void*)&bstrTooltip};
+    void* _a[] = { (void*)&qax_result, (void*)&uiButtonID, (void*)&bstrIconURL, (void*)&bstrTooltip };
     qt_metacall(QMetaObject::InvokeMetaMethod, 81, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::msSiteModeAddJumpListItem(const QString& bstrName, const QString& bstrActionUri, const QString& bstrIconUri)
 {
-    void *_a[] = {0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri};
+    void* _a[] = { 0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri };
     qt_metacall(QMetaObject::InvokeMetaMethod, 82, _a);
 }
 
 inline void ShellUIHelper::msSiteModeAddJumpListItem(const QString& bstrName, const QString& bstrActionUri, const QString& bstrIconUri, QVariant& pvarWindowType)
 {
-    void *_a[] = {0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri, (void*)&pvarWindowType};
+    void* _a[] = { 0, (void*)&bstrName, (void*)&bstrActionUri, (void*)&bstrIconUri, (void*)&pvarWindowType };
     qt_metacall(QMetaObject::InvokeMetaMethod, 83, _a);
 }
 
 inline QVariant ShellUIHelper::msSiteModeAddThumbBarButton(const QString& bstrIconURL, const QString& bstrTooltip)
 {
     QVariant qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&bstrIconURL, (void*)&bstrTooltip};
+    void* _a[] = { (void*)&qax_result, (void*)&bstrIconURL, (void*)&bstrTooltip };
     qt_metacall(QMetaObject::InvokeMetaMethod, 84, _a);
     return qax_result;
 }
 
 inline void ShellUIHelper::msSiteModeClearBadge()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 85, _a);
 }
 
 inline void ShellUIHelper::msSiteModeClearIconOverlay()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 86, _a);
 }
 
 inline void ShellUIHelper::msSiteModeClearJumpList()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 87, _a);
 }
 
 inline void ShellUIHelper::msSiteModeCreateJumpList(const QString& bstrHeader)
 {
-    void *_a[] = {0, (void*)&bstrHeader};
+    void* _a[] = { 0, (void*)&bstrHeader };
     qt_metacall(QMetaObject::InvokeMetaMethod, 88, _a);
 }
 
 inline void ShellUIHelper::msSiteModeRefreshBadge()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 89, _a);
 }
 
 inline void ShellUIHelper::msSiteModeSetIconOverlay(const QString& IconUrl)
 {
-    void *_a[] = {0, (void*)&IconUrl};
+    void* _a[] = { 0, (void*)&IconUrl };
     qt_metacall(QMetaObject::InvokeMetaMethod, 90, _a);
 }
 
 inline void ShellUIHelper::msSiteModeSetIconOverlay(const QString& IconUrl, QVariant& pvarDescription)
 {
-    void *_a[] = {0, (void*)&IconUrl, (void*)&pvarDescription};
+    void* _a[] = { 0, (void*)&IconUrl, (void*)&pvarDescription };
     qt_metacall(QMetaObject::InvokeMetaMethod, 91, _a);
 }
 
 inline void ShellUIHelper::msSiteModeShowButtonStyle(const QVariant& uiButtonID, const QVariant& uiStyleID)
 {
-    void *_a[] = {0, (void*)&uiButtonID, (void*)&uiStyleID};
+    void* _a[] = { 0, (void*)&uiButtonID, (void*)&uiStyleID };
     qt_metacall(QMetaObject::InvokeMetaMethod, 92, _a);
 }
 
 inline void ShellUIHelper::msSiteModeShowJumpList()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 93, _a);
 }
 
 inline void ShellUIHelper::msSiteModeShowThumbBar()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 94, _a);
 }
 
 inline void ShellUIHelper::msSiteModeUpdateThumbBarButton(const QVariant& ButtonID, bool fEnabled, bool fVisible)
 {
-    void *_a[] = {0, (void*)&ButtonID, (void*)&fEnabled, (void*)&fVisible};
+    void* _a[] = { 0, (void*)&ButtonID, (void*)&fEnabled, (void*)&fVisible };
     qt_metacall(QMetaObject::InvokeMetaMethod, 95, _a);
 }
 
 inline void ShellUIHelper::msStartPeriodicBadgeUpdate(const QString& pollingUri)
 {
-    void *_a[] = {0, (void*)&pollingUri};
+    void* _a[] = { 0, (void*)&pollingUri };
     qt_metacall(QMetaObject::InvokeMetaMethod, 96, _a);
 }
 
 inline void ShellUIHelper::msStartPeriodicBadgeUpdate(const QString& pollingUri, const QVariant& startTime)
 {
-    void *_a[] = {0, (void*)&pollingUri, (void*)&startTime};
+    void* _a[] = { 0, (void*)&pollingUri, (void*)&startTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 97, _a);
 }
 
 inline void ShellUIHelper::msStartPeriodicBadgeUpdate(const QString& pollingUri, const QVariant& startTime, const QVariant& uiUpdateRecurrence)
 {
-    void *_a[] = {0, (void*)&pollingUri, (void*)&startTime, (void*)&uiUpdateRecurrence};
+    void* _a[] = { 0, (void*)&pollingUri, (void*)&startTime, (void*)&uiUpdateRecurrence };
     qt_metacall(QMetaObject::InvokeMetaMethod, 98, _a);
 }
 
 inline void ShellUIHelper::msStartPeriodicTileUpdate(const QVariant& pollingUris)
 {
-    void *_a[] = {0, (void*)&pollingUris};
+    void* _a[] = { 0, (void*)&pollingUris };
     qt_metacall(QMetaObject::InvokeMetaMethod, 99, _a);
 }
 
 inline void ShellUIHelper::msStartPeriodicTileUpdate(const QVariant& pollingUris, const QVariant& startTime)
 {
-    void *_a[] = {0, (void*)&pollingUris, (void*)&startTime};
+    void* _a[] = { 0, (void*)&pollingUris, (void*)&startTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 100, _a);
 }
 
 inline void ShellUIHelper::msStartPeriodicTileUpdate(const QVariant& pollingUris, const QVariant& startTime, const QVariant& uiUpdateRecurrence)
 {
-    void *_a[] = {0, (void*)&pollingUris, (void*)&startTime, (void*)&uiUpdateRecurrence};
+    void* _a[] = { 0, (void*)&pollingUris, (void*)&startTime, (void*)&uiUpdateRecurrence };
     qt_metacall(QMetaObject::InvokeMetaMethod, 101, _a);
 }
 
 inline void ShellUIHelper::msStartPeriodicTileUpdateBatch(const QVariant& pollingUris)
 {
-    void *_a[] = {0, (void*)&pollingUris};
+    void* _a[] = { 0, (void*)&pollingUris };
     qt_metacall(QMetaObject::InvokeMetaMethod, 102, _a);
 }
 
 inline void ShellUIHelper::msStartPeriodicTileUpdateBatch(const QVariant& pollingUris, const QVariant& startTime)
 {
-    void *_a[] = {0, (void*)&pollingUris, (void*)&startTime};
+    void* _a[] = { 0, (void*)&pollingUris, (void*)&startTime };
     qt_metacall(QMetaObject::InvokeMetaMethod, 103, _a);
 }
 
 inline void ShellUIHelper::msStartPeriodicTileUpdateBatch(const QVariant& pollingUris, const QVariant& startTime, const QVariant& uiUpdateRecurrence)
 {
-    void *_a[] = {0, (void*)&pollingUris, (void*)&startTime, (void*)&uiUpdateRecurrence};
+    void* _a[] = { 0, (void*)&pollingUris, (void*)&startTime, (void*)&uiUpdateRecurrence };
     qt_metacall(QMetaObject::InvokeMetaMethod, 104, _a);
 }
 
 inline void ShellUIHelper::msStopPeriodicBadgeUpdate()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 105, _a);
 }
 
 inline void ShellUIHelper::msStopPeriodicTileUpdate()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 106, _a);
 }
 
 inline bool ShellUIHelper::msTrackingProtectionEnabled()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 107, _a);
     return qax_result;
 }
-
 
 inline bool IShellFavoritesNameSpace::SubscriptionsEnabled() const
 {
@@ -13163,7 +13155,7 @@ inline bool IShellFavoritesNameSpace::SubscriptionsEnabled() const
 inline bool IShellFavoritesNameSpace::CreateSubscriptionForSelection()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
     return qax_result;
 }
@@ -13171,71 +13163,70 @@ inline bool IShellFavoritesNameSpace::CreateSubscriptionForSelection()
 inline bool IShellFavoritesNameSpace::DeleteSubscriptionForSelection()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
     return qax_result;
 }
 
 inline void IShellFavoritesNameSpace::Export()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IShellFavoritesNameSpace::Import()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IShellFavoritesNameSpace::InvokeContextMenuCommand(const QString& strCommand)
 {
-    void *_a[] = {0, (void*)&strCommand};
+    void* _a[] = { 0, (void*)&strCommand };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IShellFavoritesNameSpace::MoveSelectionDown()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IShellFavoritesNameSpace::MoveSelectionTo()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IShellFavoritesNameSpace::MoveSelectionUp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShellFavoritesNameSpace::NewFolder()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IShellFavoritesNameSpace::ResetSort()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IShellFavoritesNameSpace::SetRoot(const QString& bstrFullPath)
 {
-    void *_a[] = {0, (void*)&bstrFullPath};
+    void* _a[] = { 0, (void*)&bstrFullPath };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void IShellFavoritesNameSpace::Synchronize()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
-
 
 inline QString IShellNameSpace::Columns() const
 {
@@ -13243,7 +13234,7 @@ inline QString IShellNameSpace::Columns() const
     Q_ASSERT(qax_result.isValid());
     return *(QString*)qax_result.constData();
 }
-inline void IShellNameSpace::SetColumns(const QString& value){ setProperty("Columns", QVariant(value)); }
+inline void IShellNameSpace::SetColumns(const QString& value) { setProperty("Columns", QVariant(value)); }
 
 inline int IShellNameSpace::CountViewTypes() const
 {
@@ -13258,7 +13249,7 @@ inline int IShellNameSpace::Depth() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IShellNameSpace::SetDepth(int value){ setProperty("Depth", QVariant(value)); }
+inline void IShellNameSpace::SetDepth(int value) { setProperty("Depth", QVariant(value)); }
 
 inline int IShellNameSpace::EnumOptions() const
 {
@@ -13266,7 +13257,7 @@ inline int IShellNameSpace::EnumOptions() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void IShellNameSpace::SetEnumOptions(int value){ setProperty("EnumOptions", QVariant(value)); }
+inline void IShellNameSpace::SetEnumOptions(int value) { setProperty("EnumOptions", QVariant(value)); }
 
 inline uint IShellNameSpace::Flags() const
 {
@@ -13274,7 +13265,7 @@ inline uint IShellNameSpace::Flags() const
     Q_ASSERT(qax_result.isValid());
     return *(uint*)qax_result.constData();
 }
-inline void IShellNameSpace::SetFlags(uint value){ setProperty("Flags", QVariant(value)); }
+inline void IShellNameSpace::SetFlags(uint value) { setProperty("Flags", QVariant(value)); }
 
 inline uint IShellNameSpace::Mode() const
 {
@@ -13282,7 +13273,7 @@ inline uint IShellNameSpace::Mode() const
     Q_ASSERT(qax_result.isValid());
     return *(uint*)qax_result.constData();
 }
-inline void IShellNameSpace::SetMode(uint value){ setProperty("Mode", QVariant(value)); }
+inline void IShellNameSpace::SetMode(uint value) { setProperty("Mode", QVariant(value)); }
 
 inline QVariant IShellNameSpace::Root() const
 {
@@ -13290,16 +13281,18 @@ inline QVariant IShellNameSpace::Root() const
     Q_ASSERT(qax_result.isValid());
     return *(QVariant*)qax_result.constData();
 }
-inline void IShellNameSpace::SetRoot(const QVariant& value){ setProperty("Root", QVariant(value)); }
+inline void IShellNameSpace::SetRoot(const QVariant& value) { setProperty("Root", QVariant(value)); }
 
 inline IDispatch* IShellNameSpace::SelectedItem() const
 {
     QVariant qax_result = property("SelectedItem");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
-inline void IShellNameSpace::SetSelectedItem(IDispatch* value){
+inline void IShellNameSpace::SetSelectedItem(IDispatch* value)
+{
     int typeId = qRegisterMetaType<IDispatch*>("IDispatch*", &value);
     setProperty("SelectedItem", QVariant(typeId, &value));
 }
@@ -13317,12 +13310,12 @@ inline uint IShellNameSpace::TVFlags() const
     Q_ASSERT(qax_result.isValid());
     return *(uint*)qax_result.constData();
 }
-inline void IShellNameSpace::SetTVFlags(uint value){ setProperty("TVFlags", QVariant(value)); }
+inline void IShellNameSpace::SetTVFlags(uint value) { setProperty("TVFlags", QVariant(value)); }
 
 inline bool IShellNameSpace::CreateSubscriptionForSelection()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
     return qax_result;
 }
@@ -13330,91 +13323,90 @@ inline bool IShellNameSpace::CreateSubscriptionForSelection()
 inline bool IShellNameSpace::DeleteSubscriptionForSelection()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
     return qax_result;
 }
 
 inline void IShellNameSpace::Expand(const QVariant& var, int iDepth)
 {
-    void *_a[] = {0, (void*)&var, (void*)&iDepth};
+    void* _a[] = { 0, (void*)&var, (void*)&iDepth };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
 }
 
 inline void IShellNameSpace::Export()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
 }
 
 inline void IShellNameSpace::Import()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
 }
 
 inline void IShellNameSpace::InvokeContextMenuCommand(const QString& strCommand)
 {
-    void *_a[] = {0, (void*)&strCommand};
+    void* _a[] = { 0, (void*)&strCommand };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline void IShellNameSpace::MoveSelectionDown()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void IShellNameSpace::MoveSelectionTo()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShellNameSpace::MoveSelectionUp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void IShellNameSpace::NewFolder()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void IShellNameSpace::ResetSort()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline IDispatch* IShellNameSpace::SelectedItems()
 {
     IDispatch* qax_result = 0;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
     return qax_result;
 }
 
 inline void IShellNameSpace::SetViewType(int iType)
 {
-    void *_a[] = {0, (void*)&iType};
+    void* _a[] = { 0, (void*)&iType };
     qt_metacall(QMetaObject::InvokeMetaMethod, 29, _a);
 }
 
 inline void IShellNameSpace::Synchronize()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 30, _a);
 }
 
 inline void IShellNameSpace::UnselectAll()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 31, _a);
 }
-
 
 inline QString ShellNameSpace::Columns() const
 {
@@ -13422,7 +13414,7 @@ inline QString ShellNameSpace::Columns() const
     Q_ASSERT(qax_result.isValid());
     return *(QString*)qax_result.constData();
 }
-inline void ShellNameSpace::SetColumns(const QString& value){ setProperty("Columns", QVariant(value)); }
+inline void ShellNameSpace::SetColumns(const QString& value) { setProperty("Columns", QVariant(value)); }
 
 inline int ShellNameSpace::CountViewTypes() const
 {
@@ -13437,7 +13429,7 @@ inline int ShellNameSpace::Depth() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void ShellNameSpace::SetDepth(int value){ setProperty("Depth", QVariant(value)); }
+inline void ShellNameSpace::SetDepth(int value) { setProperty("Depth", QVariant(value)); }
 
 inline int ShellNameSpace::EnumOptions() const
 {
@@ -13445,7 +13437,7 @@ inline int ShellNameSpace::EnumOptions() const
     Q_ASSERT(qax_result.isValid());
     return *(int*)qax_result.constData();
 }
-inline void ShellNameSpace::SetEnumOptions(int value){ setProperty("EnumOptions", QVariant(value)); }
+inline void ShellNameSpace::SetEnumOptions(int value) { setProperty("EnumOptions", QVariant(value)); }
 
 inline uint ShellNameSpace::Flags() const
 {
@@ -13453,7 +13445,7 @@ inline uint ShellNameSpace::Flags() const
     Q_ASSERT(qax_result.isValid());
     return *(uint*)qax_result.constData();
 }
-inline void ShellNameSpace::SetFlags(uint value){ setProperty("Flags", QVariant(value)); }
+inline void ShellNameSpace::SetFlags(uint value) { setProperty("Flags", QVariant(value)); }
 
 inline uint ShellNameSpace::Mode() const
 {
@@ -13461,7 +13453,7 @@ inline uint ShellNameSpace::Mode() const
     Q_ASSERT(qax_result.isValid());
     return *(uint*)qax_result.constData();
 }
-inline void ShellNameSpace::SetMode(uint value){ setProperty("Mode", QVariant(value)); }
+inline void ShellNameSpace::SetMode(uint value) { setProperty("Mode", QVariant(value)); }
 
 inline QVariant ShellNameSpace::Root() const
 {
@@ -13469,16 +13461,18 @@ inline QVariant ShellNameSpace::Root() const
     Q_ASSERT(qax_result.isValid());
     return *(QVariant*)qax_result.constData();
 }
-inline void ShellNameSpace::SetRoot(const QVariant& value){ setProperty("Root", QVariant(value)); }
+inline void ShellNameSpace::SetRoot(const QVariant& value) { setProperty("Root", QVariant(value)); }
 
 inline IDispatch* ShellNameSpace::SelectedItem() const
 {
     QVariant qax_result = property("SelectedItem");
-    if (!qax_result.constData()) return 0;
+    if (!qax_result.constData())
+        return 0;
     Q_ASSERT(qax_result.isValid());
     return *(IDispatch**)qax_result.constData();
 }
-inline void ShellNameSpace::SetSelectedItem(IDispatch* value){
+inline void ShellNameSpace::SetSelectedItem(IDispatch* value)
+{
     int typeId = qRegisterMetaType<IDispatch*>("IDispatch*", &value);
     setProperty("SelectedItem", QVariant(typeId, &value));
 }
@@ -13496,12 +13490,12 @@ inline uint ShellNameSpace::TVFlags() const
     Q_ASSERT(qax_result.isValid());
     return *(uint*)qax_result.constData();
 }
-inline void ShellNameSpace::SetTVFlags(uint value){ setProperty("TVFlags", QVariant(value)); }
+inline void ShellNameSpace::SetTVFlags(uint value) { setProperty("TVFlags", QVariant(value)); }
 
 inline bool ShellNameSpace::CreateSubscriptionForSelection()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
     return qax_result;
 }
@@ -13509,102 +13503,101 @@ inline bool ShellNameSpace::CreateSubscriptionForSelection()
 inline bool ShellNameSpace::DeleteSubscriptionForSelection()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
     return qax_result;
 }
 
 inline void ShellNameSpace::Expand(const QVariant& var, int iDepth)
 {
-    void *_a[] = {0, (void*)&var, (void*)&iDepth};
+    void* _a[] = { 0, (void*)&var, (void*)&iDepth };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
 }
 
 inline void ShellNameSpace::Export()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void ShellNameSpace::Import()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline void ShellNameSpace::InvokeContextMenuCommand(const QString& strCommand)
 {
-    void *_a[] = {0, (void*)&strCommand};
+    void* _a[] = { 0, (void*)&strCommand };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
 }
 
 inline void ShellNameSpace::MoveSelectionDown()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
 }
 
 inline void ShellNameSpace::MoveSelectionTo()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void ShellNameSpace::MoveSelectionUp()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void ShellNameSpace::NewFolder()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
 inline void ShellNameSpace::ResetSort()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 22, _a);
 }
 
 inline IDispatch* ShellNameSpace::SelectedItems()
 {
     IDispatch* qax_result = 0;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 23, _a);
     return qax_result;
 }
 
 inline void ShellNameSpace::SetViewType(int iType)
 {
-    void *_a[] = {0, (void*)&iType};
+    void* _a[] = { 0, (void*)&iType };
     qt_metacall(QMetaObject::InvokeMetaMethod, 33, _a);
 }
 
 inline void ShellNameSpace::Synchronize()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 34, _a);
 }
 
 inline void ShellNameSpace::UnselectAll()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 35, _a);
 }
 
-
 inline void IScriptErrorList::advanceError()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline int IScriptErrorList::canAdvanceError()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
     return qax_result;
 }
@@ -13612,7 +13605,7 @@ inline int IScriptErrorList::canAdvanceError()
 inline int IScriptErrorList::canRetreatError()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
     return qax_result;
 }
@@ -13620,7 +13613,7 @@ inline int IScriptErrorList::canRetreatError()
 inline int IScriptErrorList::getAlwaysShowLockState()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
     return qax_result;
 }
@@ -13628,7 +13621,7 @@ inline int IScriptErrorList::getAlwaysShowLockState()
 inline int IScriptErrorList::getDetailsPaneOpen()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
     return qax_result;
 }
@@ -13636,7 +13629,7 @@ inline int IScriptErrorList::getDetailsPaneOpen()
 inline int IScriptErrorList::getErrorChar()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
     return qax_result;
 }
@@ -13644,7 +13637,7 @@ inline int IScriptErrorList::getErrorChar()
 inline int IScriptErrorList::getErrorCode()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
     return qax_result;
 }
@@ -13652,7 +13645,7 @@ inline int IScriptErrorList::getErrorCode()
 inline int IScriptErrorList::getErrorLine()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
     return qax_result;
 }
@@ -13660,7 +13653,7 @@ inline int IScriptErrorList::getErrorLine()
 inline QString IScriptErrorList::getErrorMsg()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
     return qax_result;
 }
@@ -13668,7 +13661,7 @@ inline QString IScriptErrorList::getErrorMsg()
 inline QString IScriptErrorList::getErrorUrl()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
     return qax_result;
 }
@@ -13676,40 +13669,39 @@ inline QString IScriptErrorList::getErrorUrl()
 inline int IScriptErrorList::getPerErrorDisplay()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
     return qax_result;
 }
 
 inline void IScriptErrorList::retreatError()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void IScriptErrorList::setDetailsPaneOpen(int fDetailsPaneOpen)
 {
-    void *_a[] = {0, (void*)&fDetailsPaneOpen};
+    void* _a[] = { 0, (void*)&fDetailsPaneOpen };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void IScriptErrorList::setPerErrorDisplay(int fPerErrorDisplay)
 {
-    void *_a[] = {0, (void*)&fPerErrorDisplay};
+    void* _a[] = { 0, (void*)&fPerErrorDisplay };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
-
 inline void CScriptErrorList::advanceError()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
 }
 
 inline int CScriptErrorList::canAdvanceError()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
     return qax_result;
 }
@@ -13717,7 +13709,7 @@ inline int CScriptErrorList::canAdvanceError()
 inline int CScriptErrorList::canRetreatError()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 10, _a);
     return qax_result;
 }
@@ -13725,7 +13717,7 @@ inline int CScriptErrorList::canRetreatError()
 inline int CScriptErrorList::getAlwaysShowLockState()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
     return qax_result;
 }
@@ -13733,7 +13725,7 @@ inline int CScriptErrorList::getAlwaysShowLockState()
 inline int CScriptErrorList::getDetailsPaneOpen()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
     return qax_result;
 }
@@ -13741,7 +13733,7 @@ inline int CScriptErrorList::getDetailsPaneOpen()
 inline int CScriptErrorList::getErrorChar()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
     return qax_result;
 }
@@ -13749,7 +13741,7 @@ inline int CScriptErrorList::getErrorChar()
 inline int CScriptErrorList::getErrorCode()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
     return qax_result;
 }
@@ -13757,7 +13749,7 @@ inline int CScriptErrorList::getErrorCode()
 inline int CScriptErrorList::getErrorLine()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
     return qax_result;
 }
@@ -13765,7 +13757,7 @@ inline int CScriptErrorList::getErrorLine()
 inline QString CScriptErrorList::getErrorMsg()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
     return qax_result;
 }
@@ -13773,7 +13765,7 @@ inline QString CScriptErrorList::getErrorMsg()
 inline QString CScriptErrorList::getErrorUrl()
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
     return qax_result;
 }
@@ -13781,453 +13773,516 @@ inline QString CScriptErrorList::getErrorUrl()
 inline int CScriptErrorList::getPerErrorDisplay()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void* _a[] = { (void*)&qax_result };
     qt_metacall(QMetaObject::InvokeMetaMethod, 18, _a);
     return qax_result;
 }
 
 inline void CScriptErrorList::retreatError()
 {
-    void *_a[] = {0};
+    void* _a[] = { 0 };
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
 inline void CScriptErrorList::setDetailsPaneOpen(int fDetailsPaneOpen)
 {
-    void *_a[] = {0, (void*)&fDetailsPaneOpen};
+    void* _a[] = { 0, (void*)&fDetailsPaneOpen };
     qt_metacall(QMetaObject::InvokeMetaMethod, 20, _a);
 }
 
 inline void CScriptErrorList::setPerErrorDisplay(int fPerErrorDisplay)
 {
-    void *_a[] = {0, (void*)&fPerErrorDisplay};
+    void* _a[] = { 0, (void*)&fPerErrorDisplay };
     qt_metacall(QMetaObject::InvokeMetaMethod, 21, _a);
 }
 
-
-
 #endif
-
 }
 
 QT_BEGIN_NAMESPACE
 
 namespace QtMetaTypePrivate {
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IWebBrowser, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IWebBrowser*>(t)->SHDocVw::IWebBrowser::~IWebBrowser();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IWebBrowser;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IWebBrowser*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IWebBrowser*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IWebBrowser*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IWebBrowser*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IWebBrowserApp, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IWebBrowserApp*>(t)->SHDocVw::IWebBrowserApp::~IWebBrowserApp();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IWebBrowserApp;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IWebBrowserApp*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IWebBrowserApp*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IWebBrowserApp*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IWebBrowserApp*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IWebBrowser2, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IWebBrowser2*>(t)->SHDocVw::IWebBrowser2::~IWebBrowser2();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IWebBrowser2;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IWebBrowser2*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IWebBrowser2*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IWebBrowser2*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IWebBrowser2*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::WebBrowser_V1, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::WebBrowser_V1*>(t)->SHDocVw::WebBrowser_V1::~WebBrowser_V1();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::WebBrowser_V1;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::WebBrowser_V1*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::WebBrowser_V1*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::WebBrowser_V1*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::WebBrowser_V1*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::WebBrowser, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::WebBrowser*>(t)->SHDocVw::WebBrowser::~WebBrowser();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::WebBrowser;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::WebBrowser*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::WebBrowser*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::WebBrowser*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::WebBrowser*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::InternetExplorer, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::InternetExplorer*>(t)->SHDocVw::InternetExplorer::~InternetExplorer();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::InternetExplorer;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::InternetExplorer*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::InternetExplorer*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::InternetExplorer*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::InternetExplorer*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::InternetExplorerMedium, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::InternetExplorerMedium*>(t)->SHDocVw::InternetExplorerMedium::~InternetExplorerMedium();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::InternetExplorerMedium;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::InternetExplorerMedium*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::InternetExplorerMedium*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::InternetExplorerMedium*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::InternetExplorerMedium*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::ShellBrowserWindow, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::ShellBrowserWindow*>(t)->SHDocVw::ShellBrowserWindow::~ShellBrowserWindow();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::ShellBrowserWindow;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::ShellBrowserWindow*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::ShellBrowserWindow*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::ShellBrowserWindow*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::ShellBrowserWindow*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IShellWindows, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IShellWindows*>(t)->SHDocVw::IShellWindows::~IShellWindows();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IShellWindows;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IShellWindows*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IShellWindows*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IShellWindows*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IShellWindows*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::ShellWindows, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::ShellWindows*>(t)->SHDocVw::ShellWindows::~ShellWindows();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::ShellWindows;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::ShellWindows*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::ShellWindows*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::ShellWindows*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::ShellWindows*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IShellUIHelper, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IShellUIHelper*>(t)->SHDocVw::IShellUIHelper::~IShellUIHelper();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IShellUIHelper;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IShellUIHelper*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IShellUIHelper*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IShellUIHelper*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IShellUIHelper*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IShellUIHelper2, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IShellUIHelper2*>(t)->SHDocVw::IShellUIHelper2::~IShellUIHelper2();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IShellUIHelper2;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IShellUIHelper2*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IShellUIHelper2*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IShellUIHelper2*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IShellUIHelper2*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IShellUIHelper3, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IShellUIHelper3*>(t)->SHDocVw::IShellUIHelper3::~IShellUIHelper3();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IShellUIHelper3;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IShellUIHelper3*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IShellUIHelper3*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IShellUIHelper3*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IShellUIHelper3*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IShellUIHelper4, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IShellUIHelper4*>(t)->SHDocVw::IShellUIHelper4::~IShellUIHelper4();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IShellUIHelper4;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IShellUIHelper4*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IShellUIHelper4*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IShellUIHelper4*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IShellUIHelper4*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IShellUIHelper5, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IShellUIHelper5*>(t)->SHDocVw::IShellUIHelper5::~IShellUIHelper5();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IShellUIHelper5;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IShellUIHelper5*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IShellUIHelper5*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IShellUIHelper5*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IShellUIHelper5*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IShellUIHelper6, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IShellUIHelper6*>(t)->SHDocVw::IShellUIHelper6::~IShellUIHelper6();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IShellUIHelper6;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IShellUIHelper6*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IShellUIHelper6*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IShellUIHelper6*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IShellUIHelper6*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::ShellUIHelper, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::ShellUIHelper*>(t)->SHDocVw::ShellUIHelper::~ShellUIHelper();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::ShellUIHelper;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::ShellUIHelper*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::ShellUIHelper*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::ShellUIHelper*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::ShellUIHelper*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IShellFavoritesNameSpace, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IShellFavoritesNameSpace*>(t)->SHDocVw::IShellFavoritesNameSpace::~IShellFavoritesNameSpace();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IShellFavoritesNameSpace;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IShellFavoritesNameSpace*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IShellFavoritesNameSpace*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IShellFavoritesNameSpace*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IShellFavoritesNameSpace*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IShellNameSpace, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IShellNameSpace*>(t)->SHDocVw::IShellNameSpace::~IShellNameSpace();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IShellNameSpace;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IShellNameSpace*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IShellNameSpace*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IShellNameSpace*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IShellNameSpace*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::ShellNameSpace, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::ShellNameSpace*>(t)->SHDocVw::ShellNameSpace::~ShellNameSpace();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::ShellNameSpace;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::ShellNameSpace*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::ShellNameSpace*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::ShellNameSpace*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::ShellNameSpace*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::IScriptErrorList, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::IScriptErrorList*>(t)->SHDocVw::IScriptErrorList::~IScriptErrorList();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::IScriptErrorList;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::IScriptErrorList*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::IScriptErrorList*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::IScriptErrorList*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::IScriptErrorList*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
-template<>
+template <>
 struct QMetaTypeFunctionHelper<SHDocVw::CScriptErrorList, /* Accepted */ true> {
-    static void Destruct(void *t)
+    static void Destruct(void* t)
     {
         Q_UNUSED(t)
         static_cast<SHDocVw::CScriptErrorList*>(t)->SHDocVw::CScriptErrorList::~CScriptErrorList();
     }
-    static void *Construct(void *where, const void *t)
+    static void* Construct(void* where, const void* t)
     {
         Q_ASSERT(!t);
         Q_UNUSED(t)
         return new (where) SHDocVw::CScriptErrorList;
     }
 #ifndef QT_NO_DATASTREAM
-    static void Save(QDataStream &stream, const void *t) { stream << *static_cast<const SHDocVw::CScriptErrorList*>(t); }
-    static void Load(QDataStream &stream, void *t) { stream >> *static_cast<SHDocVw::CScriptErrorList*>(t); }
+    static void Save(QDataStream& stream, const void* t)
+    {
+        stream << *static_cast<const SHDocVw::CScriptErrorList*>(t);
+    }
+    static void Load(QDataStream& stream, void* t) { stream >> *static_cast<SHDocVw::CScriptErrorList*>(t); }
 #endif // QT_NO_DATASTREAM
 };
 
@@ -14235,4 +14290,3 @@ struct QMetaTypeFunctionHelper<SHDocVw::CScriptErrorList, /* Accepted */ true> {
 QT_END_NAMESPACE
 
 #endif
-

@@ -20,7 +20,7 @@ void DigitalOsc::ping()
         viFindRsrc(rm, const_cast<const ViString>("USB?*"), nullptr, nullptr, matches);
         viOpen(rm, matches, VI_NULL, VI_NULL, &vi);
         if (vi)
-            qDebug() << (m_conected = wrRdData("*IDN?", false, VI_FIND_BUFLEN));
+            qDebug() << (m_conected = wrRdData("*IDN?", VI_FIND_BUFLEN, false));
     }
 }
 
@@ -49,7 +49,7 @@ ViStatus DigitalOsc::SetComand(const QString& s)
     return viPrintf(vi, QString(s).append('\n').toLocal8Bit().data());
 }
 
-QByteArray DigitalOsc::wrRdData(QByteArray data, bool exception, int len)
+QByteArray DigitalOsc::wrRdData(QByteArray data, int len, bool exception)
 {
     qDebug() << "Wr" << data;
     static QMutex m;
@@ -57,8 +57,8 @@ QByteArray DigitalOsc::wrRdData(QByteArray data, bool exception, int len)
     ViStatus status;
     int c = 0;
     do {
-        if (/* DISABLES CODE */ (0))
-            do {
+        do {
+            if constexpr (/* DISABLES CODE */ (0)) {
                 // viReadAsync/viWriteAsync example --
                 // These commands can potentially decrease test time by allowing
                 // several read or write commands to happen in parallel.   ViJobId jobid;
@@ -90,10 +90,8 @@ QByteArray DigitalOsc::wrRdData(QByteArray data, bool exception, int len)
                     break;
                 retData.resize(static_cast<int>(strlen(retData.data())));
                 return retData;
-            } while (0);
-        else
-            do {
-                ViUInt32 size;
+            } else {
+                ViUInt32 size = 0;
                 QByteArray retData(len, 0);
                 status = viWrite(vi, reinterpret_cast<ViBuf>(data.data()), static_cast<ViUInt32>(data.size()), &size);
                 if (status < VI_SUCCESS)
@@ -103,10 +101,13 @@ QByteArray DigitalOsc::wrRdData(QByteArray data, bool exception, int len)
                     break;
                 retData.resize(static_cast<int>(strlen(retData.data())));
                 emit errStr("");
-                qDebug() << "Rd" << retData;
+                qDebug() << "Rd" << retData << size;
                 return retData;
-            } while (0);
-        if (status != VI_SUCCESS) { //          VI_ERROR_IO;            VI_ERROR_TMO;
+            }
+        } while (0);
+        if (status != VI_SUCCESS) {
+            // VI_ERROR_IO;
+            // VI_ERROR_TMO;
             char desc[512]; //The size of the desc parameter should be at _least_ 256 bytes.
             viStatusDesc(vi, status, desc);
             QString str(QString("Code 0x%1 (%2)").arg(status, 0, 16).arg(desc));
@@ -198,44 +199,94 @@ void DigitalOsc::getWav() // rigol ds1000
     //    }
 }
 
-//        mi::man->oscilloscope(1);
-//        QStringList list(QString("MAX|MIN|PKPK|VTOP|VBASe|VAMP|AVERage"
-//                                 "|SQUAresum|CYCRms|CURSorrms|OVERShoot"
-//                                 "|PREShoot|PERiod|FREQuency|RTime|FTime"
-//                                 "|PWIDth|NWIDth|PDUTy|NDUTy|SCREenduty"
-//                                 "|FRR|FRF|FFR|FFF|LRR|LRF|LFR|LFF|RDELay"
-//                                 "|FDELay|RPHAse|PPULsenum|NPULsenum"
-//                                 "|RISEedgenum|FALLedgenum|AREA|CYCLearea"
-//                                 "|HARDfrequency")
-//                             .split('|'));
-//        for (auto var : list) {
-//            mi::osc->wrRdData(":MEASUrement:CH2:" + var.toLocal8Bit() + "?");
-//            //break;
-//        }
-
 double DigitalOsc::PKPK(int ch)
 {
-    //V : -154.3mV->\n"
-    QRegExp exp("Vpp : ([+-]?\\d+\\.?\\d*)(\\w+).*");
-    const QMap<QString, double> k({ { "mV", 0.001 }, { "V", 1.0 } });
-    exp.exactMatch(wrRdData(":MEASUrement:CH" + QByteArray::number(ch) + ":PKPK?"));
-    return exp.cap(1).toDouble() * k[exp.cap(2)];
+    try {
+        //V : -154.3mV->\n"
+        QRegExp exp("Vpp : ([+-]?\\d+\\.?\\d*)(\\w+).*");
+        const QMap<QString, double> k({ { "mV", 0.001 }, { "V", 1.0 } });
+        exp.exactMatch(wrRdData(":MEASUrement:CH" + QByteArray::number(ch) + ":PKPK?"));
+        return exp.cap(1).toDouble() * k[exp.cap(2)];
+    } catch (const QString& str) {
+        qDebug() << str;
+    } catch (...) {
+        qDebug() << "Unknown Err";
+    }
+    return 9999.9;
 }
 
 double DigitalOsc::MIN(int ch)
 {
-    //V : -154.3mV->\n"
-    QRegExp exp("Mi : ([+-]?\\d+\\.?\\d*)(\\w+).*");
-    const QMap<QString, double> k({ { "mV", 0.001 }, { "V", 1.0 } });
-    exp.exactMatch(wrRdData(":MEASUrement:CH" + QByteArray::number(ch) + ":MIN?"));
-    return exp.cap(1).toDouble() * k[exp.cap(2)];
+    try {
+        //V : -154.3mV->\n"
+        QRegExp exp("Mi : ([+-]?\\d+\\.?\\d*)(\\w+).*");
+        const QMap<QString, double> k({ { "mV", 0.001 }, { "V", 1.0 } });
+        exp.exactMatch(wrRdData(":MEASUrement:CH" + QByteArray::number(ch) + ":MIN?"));
+        return exp.cap(1).toDouble() * k[exp.cap(2)];
+    } catch (const QString& str) {
+        qDebug() << str;
+    } catch (...) {
+        qDebug() << "Unknown Err";
+    }
+    return 9999.9;
 }
 
 double DigitalOsc::AVERage(int ch)
 {
-    //V : -154.3mV->\n"
-    QRegExp exp("V : ([+-]?\\d+\\.?\\d*)(\\w+).*");
-    const QMap<QString, double> k({ { "mV", 0.001 }, { "V", 1.0 } });
-    exp.exactMatch(wrRdData(":MEASUrement:CH" + QByteArray::number(ch) + ":AVERage?"));
-    return exp.cap(1).toDouble() * k[exp.cap(2)];
+    try {
+        //V : -154.3mV->\n"
+        QRegExp exp("V : ([+-]?\\d+\\.?\\d*)(\\w+).*");
+        const QMap<QString, double> k({ { "mV", 0.001 }, { "V", 1.0 } });
+        exp.exactMatch(wrRdData(":MEASUrement:CH" + QByteArray::number(ch) + ":AVERage?"));
+        return exp.cap(1).toDouble() * k[exp.cap(2)];
+    } catch (const QString& str) {
+        qDebug() << str;
+    } catch (...) {
+        qDebug() << "Unknown Err";
+    }
+    return 9999.9;
+}
+
+double DigitalOsc::VAMP(int ch)
+{
+    try {
+        //V : -154.3mV->\n"
+        QRegExp exp("Va : ([+-]?\\d+\\.?\\d*)(\\w+).*");
+        const QMap<QString, double> k({ { "mV", 0.001 }, { "V", 1.0 } });
+        exp.exactMatch(wrRdData(":MEASUrement:CH" + QByteArray::number(ch) + ":VAMP?"));
+        return exp.cap(1).toDouble() * k[exp.cap(2)];
+    } catch (const QString& str) {
+        qDebug() << str;
+    } catch (...) {
+        qDebug() << "Unknown Err";
+    }
+    return 9999.9;
+}
+
+double DigitalOsc::CYCRms(int ch)
+{
+    try {
+        //V : -154.3mV->\n"
+        QRegExp exp("TR : ([+-]?\\d+\\.?\\d*)(\\w+).*");
+        const QMap<QString, double> k({ { "mV", 0.001 }, { "V", 1.0 } });
+        //    QStringList list(QString("MAX|MIN|PKPK|VTOP|VBASe|VAMP|AVERage"
+        //                             "|SQUAresum|CYCRms|CURSorrms|OVERShoot"
+        //                             "|PREShoot|PERiod|FREQuency|RTime|FTime"
+        //                             "|PWIDth|NWIDth|PDUTy|NDUTy|SCREenduty"
+        //                             "|FRR|FRF|FFR|FFF|LRR|LRF|LFR|LFF|RDELay"
+        //                             "|FDELay|RPHAse|PPULsenum|NPULsenum"
+        //                             "|RISEedgenum|FALLedgenum|AREA|CYCLearea"
+        //                             "|HARDfrequency")
+        //                         .split('|'));
+        //    for (auto var : list) {
+        //        wrRdData(":MEASUrement:CH2:" + var.toLocal8Bit() + "?");
+        //    }
+        exp.exactMatch(wrRdData(":MEASUrement:CH" + QByteArray::number(ch) + ":CYCRms?"));
+        return exp.cap(1).toDouble() * k[exp.cap(2)];
+    } catch (const QString& str) {
+        qDebug() << str;
+    } catch (...) {
+        qDebug() << "Unknown Err";
+    }
+    return 9999.9;
 }

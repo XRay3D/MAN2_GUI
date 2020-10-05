@@ -28,10 +28,10 @@ Measurements::Measurements(QWidget* parent)
             pbCurrent_1->setChecked(!checked);
     });
     connect(pbShort_1, &QPushButton::clicked, [=](bool checked) {
-        if (mi::man->shortCircuitTest(checked ? cbxSt->currentIndex() + 1 : 0, mi::man->address()))
-            pbShort_1->setText(checked ? "Выкл." : "Вкл.");
-        else
-            pbShort_1->setChecked(!checked);
+        //        if (mi::man->shortCircuitTest(checked ? cbxSt->currentIndex() + 1 : 0, mi::man->address()))
+        //            pbShort_1->setText(checked ? "Выкл." : "Вкл.");
+        //        else
+        //            pbShort_1->setChecked(!checked);
     });
     connect(pbOsc_1, &QPushButton::clicked, [=](bool checked) {
         if (mi::man->oscilloscope(checked ? mi::man->address() : 0))
@@ -83,10 +83,11 @@ Measurements::Measurements(QWidget* parent)
 void Measurements::timerEvent(QTimerEvent* event)
 {
     if (event->timerId() == m_timerMeasure) {
+        qDebug(Q_FUNC_INFO);
         QMutexLocker locker(&m_mutex);
-        if (m_semaphore.tryAcquire()) {
+        if (1 || m_semaphore.tryAcquire()) {
             m_semaphore.acquire(m_semaphore.available());
-            StartMeasure(static_cast<ValueType>(cbxValType->currentIndex()));
+            StartMeasure(static_cast<ValueType>(cbxValType->currentIndex()), mi::man->address());
         }
     }
 }
@@ -100,6 +101,8 @@ void Measurements::on_pbStart_clicked(bool checked)
         pbStart->setText("Стоп");
         m_semaphore.release();
         m_keyX = m_minX = QDateTime();
+        minY = +std::numeric_limits<double>::max();
+        maxY = -std::numeric_limits<double>::max();
     } else {
         killTimer(m_timerMeasure);
         m_timerMeasure = 0;
@@ -118,6 +121,8 @@ void Measurements::on_sbTimeout_valueChanged(int arg1)
 
 void Measurements::GetMeasuredValueSlot(const MeasuredValue& list)
 {
+    qDebug(Q_FUNC_INFO);
+
     QMutexLocker locker(&m_mutex);
     enum { MaxCount = 5000 };
     if (m_minX == m_keyX)
@@ -126,8 +131,6 @@ void Measurements::GetMeasuredValueSlot(const MeasuredValue& list)
     //    QElapsedTimer timer;
     //    timer.start();
 
-    double minY = +std::numeric_limits<double>::max();
-    double maxY = -std::numeric_limits<double>::max();
     bool flag = false;
 
     //    double rms = 0.0;
@@ -138,22 +141,19 @@ void Measurements::GetMeasuredValueSlot(const MeasuredValue& list)
     //    int i = iterator.key() - 1;
     //    m_listDsbVoltage[i]->setValue(iterator.value().Value1);
     //    m_listDsbCurrent[i]->setValue(iterator.value().Value2);
-    dsbVoltage_1->setValue(static_cast<double>(list.value1));
-    dsbVoltage_2->setValue(static_cast<double>(list.value2));
-    dsbVoltage_3->setValue(static_cast<double>(list.value3));
-    m_series[0]->append(m_keyX.toMSecsSinceEpoch(), list.value1);
-    m_series[1]->append(m_keyX.toMSecsSinceEpoch(), list.value2);
-    m_series[2]->append(m_keyX.toMSecsSinceEpoch(), list.value3);
+    dsbVoltage_1->setValue(static_cast<double>(list.ch1));
+    dsbVoltage_2->setValue(static_cast<double>(list.ch2));
+    dsbVoltage_3->setValue(static_cast<double>(list.ch3));
+    m_series[0]->append(m_keyX.toMSecsSinceEpoch(), list.ch1);
+    m_series[1]->append(m_keyX.toMSecsSinceEpoch(), list.ch2);
+    m_series[2]->append(m_keyX.toMSecsSinceEpoch(), list.ch3);
 
     for (auto var : m_series) {
         if (var->count() > MaxCount)
             var->remove(0);
-
         if (var->isVisible()) {
-            for (QPointF& p : var->points()) {
-                minY = qMin(minY, p.y());
-                maxY = qMax(maxY, p.y());
-            }
+            minY = qMin(minY, var->points().last().y());
+            maxY = qMax(maxY, var->points().last().y());
             flag = true;
         }
     }
@@ -172,28 +172,28 @@ void Measurements::GetMeasuredValueSlot(const MeasuredValue& list)
 
 void Measurements::showEvent(QShowEvent* /*event*/)
 {
-    if (mi::man->IsConnected()) {
+    if (mi::man->isConnected()) {
         MeasuredValue value;
         if (mi::man->getMeasuredValue(value, 0)) {
             m_disableSlots = true;
-            dsbVoltage_1->setValue(static_cast<double>(value.value1));
-            dsbVoltage_2->setValue(static_cast<double>(value.value2));
-            dsbVoltage_3->setValue(static_cast<double>(value.value3));
-            dsbSetCurrent_1->setValue(static_cast<double>(value.value3) * 1000);
+            dsbVoltage_1->setValue(static_cast<double>(value.ch1));
+            dsbVoltage_2->setValue(static_cast<double>(value.ch2));
+            dsbVoltage_3->setValue(static_cast<double>(value.ch3));
+            dsbSetCurrent_1->setValue(static_cast<double>(value.ch3) * 1000);
 
-            pbCurrent_1->setChecked(value.manState.Load);
-            pbCurrent_1->setText(value.manState.Load ? "Выкл." : "Вкл.");
+            pbCurrent_1->setChecked(value.manState.load);
+            pbCurrent_1->setText(value.manState.load ? "Выкл." : "Вкл.");
 
-            pbShort_1->setChecked(value.manState.ShortCircuit);
-            pbShort_1->setText(value.manState.ShortCircuit ? "Выкл." : "Вкл.");
+            pbShort_1->setChecked(value.manState.shortCircuit);
+            pbShort_1->setText(value.manState.shortCircuit ? "Выкл." : "Вкл.");
 
-            pbOsc_1->setChecked(value.manState.Oscilloscope);
-            pbOsc_1->setText(value.manState.Oscilloscope ? "Выкл." : "Вкл.");
+            pbOsc_1->setChecked(value.manState.oscilloscope);
+            pbOsc_1->setText(value.manState.oscilloscope ? "Выкл." : "Вкл.");
 
             m_disableSlots = false;
         }
-        connect(this, &Measurements::StartMeasure, mi::man, &MAN2::GetMeasuredValueSlot);
-        connect(mi::man, &MAN2::measCompleted, this, &Measurements::GetMeasuredValueSlot);
+        connect(this, &Measurements::StartMeasure, mi::man, &MAN2::startMeasure);
+        connect(mi::man, &MAN2::measureCompleted, this, &Measurements::GetMeasuredValueSlot);
         setEnabled(true);
         on_cbxValType_currentIndexChanged(0);
         on_pbStart_clicked(true);
@@ -205,8 +205,8 @@ void Measurements::showEvent(QShowEvent* /*event*/)
 void Measurements::hideEvent(QHideEvent* /*event*/)
 {
     on_pbStart_clicked(false);
-    disconnect(this, &Measurements::StartMeasure, mi::man, &MAN2::GetMeasuredValueSlot);
-    disconnect(mi::man, &MAN2::measCompleted, this, &Measurements::GetMeasuredValueSlot);
+    disconnect(this, &Measurements::StartMeasure, mi::man, &MAN2::startMeasure);
+    disconnect(mi::man, &MAN2::measureCompleted, this, &Measurements::GetMeasuredValueSlot);
 }
 
 void Measurements::on_pbClear_clicked()
@@ -215,6 +215,8 @@ void Measurements::on_pbClear_clicked()
     m_keyX = m_minX = QDateTime();
     for (QAbstractSeries* ser : graphicsView->chart()->series())
         static_cast<QLineSeries*>(ser)->clear();
+    minY = +std::numeric_limits<double>::max();
+    maxY = -std::numeric_limits<double>::max();
 }
 
 void Measurements::on_cbxValType_currentIndexChanged(int index)
@@ -222,7 +224,7 @@ void Measurements::on_cbxValType_currentIndexChanged(int index)
     switch (index) {
     case CurrentMeasuredValue:
         dsbVoltage_1->setSuffix(" B");
-        dsbVoltage_2->setSuffix(" A");
+        dsbVoltage_2->setSuffix(" mA");
         dsbVoltage_3->setSuffix(" mA(уст)");
         break;
 
@@ -237,14 +239,14 @@ void Measurements::on_cbxValType_currentIndexChanged(int index)
         dsbVoltage_3->setSuffix(" Нет");
         break;
     case CalibCurrent:
-        dsbVoltage_1->setSuffix(" A");
+        dsbVoltage_1->setSuffix(" mA");
         dsbVoltage_2->setSuffix(" Нет");
         dsbVoltage_3->setSuffix(" Нет");
         break;
     case RawData:
         dsbVoltage_1->setSuffix(" B(1)");
         dsbVoltage_2->setSuffix(" B(2)");
-        dsbVoltage_3->setSuffix(" А");
+        dsbVoltage_3->setSuffix(" mА");
         break;
     default:
         break;

@@ -59,19 +59,19 @@ void LinTest::measure()
     //    m_listDsbVoltage[i]->setValue(iterator.value().Value1);
     //    m_listDsbCurrent[i]->setValue(iterator.value().Value2);
 
-    ui->dsbxMeasMan->setValue(list.value2);
+    ui->dsbxMeasMan->setValue(list.ch2);
     ui->dsbxMeasScpi->setValue(mi::scpi->GetDcCurrent());
 
     //    dsbVoltage_1->setValue(static_cast<double>(list.Value1));
     //    dsbVoltage_2->setValue(static_cast<double>(list.Value2));
     //    dsbVoltage_3->setValue(static_cast<double>(list.Value3));
 
-    m_series[0]->append(m_keyX.toMSecsSinceEpoch(), list.value3 * 1000 /*ui->dsbxCurrent->value()*/);
+    m_series[0]->append(m_keyX.toMSecsSinceEpoch(), list.ch3 * 1000 /*ui->dsbxCurrent->value()*/);
     m_series[1]->append(m_keyX.toMSecsSinceEpoch(), ui->dsbxMeasMan->value() * 1000);
     m_series[2]->append(m_keyX.toMSecsSinceEpoch(), ui->dsbxMeasScpi->value() * 1000);
 
-    m_series2[1]->append(m_keyX.toMSecsSinceEpoch(), ui->dsbxMeasMan->value() * 1000 - list.value3 * 1000);
-    m_series2[2]->append(m_keyX.toMSecsSinceEpoch(), ui->dsbxMeasScpi->value() * 1000 - list.value3 * 1000);
+    m_series2[1]->append(m_keyX.toMSecsSinceEpoch(), ui->dsbxMeasMan->value() * 1000 - list.ch3 * 1000);
+    m_series2[2]->append(m_keyX.toMSecsSinceEpoch(), ui->dsbxMeasScpi->value() * 1000 - list.ch3 * 1000);
     //    m_series2[2]->append(m_keyX.toMSecsSinceEpoch(), ui->dsbxMeasScpi->value());
 
     for (auto var : m_series) {

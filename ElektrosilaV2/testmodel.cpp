@@ -168,11 +168,9 @@ Qt::ItemFlags TestModel::flags(const QModelIndex& index) const
 void TestModel::reset()
 {
     for (int i = 0; i < 8; ++i) {
-        if (dontSkip(i)) {
-            m_data[i].reset();
-            m_paths[i].clear();
-            m_serNum[i].clear();
-        }
+        m_data[i].reset(m_vChecked);
+        m_paths[i].clear();
+        m_serNum[i].clear();
     }
     dataChanged(createIndex(Test1, 0), createIndex(Test7, 7), { Qt::DisplayRole });
 }
@@ -431,7 +429,7 @@ void TestModel::showProtocol(int num)
     Dialog->LoadFile(m_paths[num]);
 }
 
-bool TestModel::dontSkip(int num) { return m_vChecked->at(num); }
+bool TestModel::dontSkip(int num) { return m_vChecked->size() ? m_vChecked->at(num) : false; }
 
 void TestModel::onChecked(int index, int orientation)
 {

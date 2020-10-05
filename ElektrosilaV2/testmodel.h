@@ -21,12 +21,31 @@ struct TestData {
     void reset()
     {
         test1 = 0.0;
+        test2 = Undefined;
         test3 = 0.0;
         test4 = 0.0;
         test5 = 0.0;
         test6 = 0.0;
         test7 = 0.0;
-        test2 = Undefined;
+    }
+    void reset(const QVector<bool>* flags)
+    {
+        if (!flags || (flags && flags->isEmpty()))
+            return;
+        if (flags->at(0))
+            test1 = 0.0;
+        if (flags->at(1))
+            test2 = Undefined;
+        if (flags->at(2))
+            test3 = 0.0;
+        if (flags->at(3))
+            test4 = 0.0;
+        if (flags->at(4))
+            test5 = 0.0;
+        if (flags->at(5))
+            test6 = 0.0;
+        if (flags->at(6))
+            test7 = 0.0;
     }
 
     friend inline QDataStream& operator>>(QDataStream& s, TestData& set)
@@ -65,7 +84,8 @@ public:
     };
 
     // QAbstractItemModel interface
-public : int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+public:
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;

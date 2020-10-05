@@ -30,6 +30,8 @@ private:
     void Test6();
     void Test7();
 
+    void configCh2(bool slow = false);
+
     void Msleep(unsigned long time);
 
     QMap<int, MeasuredValue> m_list;

@@ -17,10 +17,10 @@ struct Parcel {
     uint8_t length;
     uint8_t addres;
     uint8_t command;
-    uint8_t data[128];
+    uint8_t data[64];
     uint8_t crc() const { return data[length - MIN_LEN]; }
     template <typename T>
-    T value() const { return *reinterpret_cast<const T*>(data); }
+    const T& value() const { return *reinterpret_cast<const T*>(data); }
     QByteArray text() const { return QByteArray(reinterpret_cast<const char*>(data), length - MIN_LEN); }
 };
 

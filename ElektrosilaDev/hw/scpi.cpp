@@ -37,7 +37,7 @@ QByteArray& SCPI::WriteRead(const QByteArray& data)
     write(data + "\r\n");
     m_counter = 0;
     while (++m_counter < 100 && !canReadLine())
-        waitForReadyRead(10);
+        waitForReadyRead(100);
     m_data.append(readAll());
     return m_data;
 }
@@ -45,7 +45,7 @@ QByteArray& SCPI::WriteRead(const QByteArray& data)
 double SCPI::GetDcVoltage()
 {
     QMutexLocker locker(&m_mutex);
-    if (IsConnected()) {
+    if (isConnected()) {
         WriteRead("MEASure:VOLTage:DC?");
         if (m_data.endsWith("\r\n"))
             return QString(m_data).toDouble();
@@ -56,7 +56,7 @@ double SCPI::GetDcVoltage()
 double SCPI::GetAcVoltage()
 {
     QMutexLocker locker(&m_mutex);
-    if (IsConnected()) {
+    if (isConnected()) {
         WriteRead("MEASure:VOLTage:AC?");
         if (m_data.endsWith("\r\n"))
             return QString(m_data).toDouble();
@@ -67,7 +67,7 @@ double SCPI::GetAcVoltage()
 double SCPI::GetDcCurrent()
 {
     QMutexLocker locker(&m_mutex);
-    if (IsConnected()) {
+    if (isConnected()) {
         WriteRead("MEASure:CURRent:DC?");
         if (m_data.endsWith("\r\n")) {
             qDebug() << "GetDcCurrent" << m_data;

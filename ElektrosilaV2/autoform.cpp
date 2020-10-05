@@ -4,8 +4,9 @@
 #include "dialogeditbp.h"
 #include "manmodel.h"
 #include "sernummodel.h"
-#include "testmodel.h"
 #include "tester.h"
+#include "testmodel.h"
+#include <QAxWidget>
 #include <QMessageBox>
 
 int id = qRegisterMetaType<ScanSettings>("ScanSettings_t");
@@ -169,6 +170,7 @@ void PrepareForm::endSlot()
 {
     pbStartStopClicked(false);
     qDebug("Включить протоколы перед релизом.");
+    return;
     for (int i = 0; i < SerNumModel::serNumCount(); ++i) {
         TestModel::instance()->saveProtokol(SerNumModel::serNum(i), i);
         TestModel::instance()->showProtocol(i);
@@ -217,7 +219,7 @@ void PrepareForm::pbStartStopClicked(bool checked)
         progressBar->setValue(0);
 
         if (measureTimerId == 0)
-            measureTimerId = startTimer(200);
+            measureTimerId = startTimer(500);
     }
 }
 
@@ -251,4 +253,23 @@ void PrepareForm::timerEvent(QTimerEvent* event)
     if (event->timerId() == measureTimerId) {
         emit startMeasure();
     }
+}
+
+void PrepareForm::on_pbProto_clicked()
+{
+    QDialog* mainWidget = new QDialog;
+    QAxWidget* excel = new QAxWidget(mainWidget);
+    QHBoxLayout* hbox = new QHBoxLayout(mainWidget);
+    hbox->addWidget(excel);
+    mainWidget->setLayout(hbox);
+    excel->setProperty("Visible", true);
+    mainWidget->show();
+    excel->setControl("D:/PRO/QT/MAN2/protocol/protocol.xlsx");
+    mainWidget->exec();
+    connect(mainWidget, &QObject::destroyed, [excel] { excel->dynamicCall("Quit()"); });
+    mainWidget->deleteLater();
+    //    for (int i = 0; i < SerNumModel::serNumCount(); ++i) {
+    //        TestModel::instance()->saveProtokol(SerNumModel::serNum(i), i);
+    //        TestModel::instance()->showProtocol(i);
+    //    }
 }
