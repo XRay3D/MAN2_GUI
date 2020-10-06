@@ -10,44 +10,29 @@ Communications::Communications(QWidget* parent)
 {
     setupUi(this);
     QVector<QString> list;
-    foreach (QSerialPortInfo info, QSerialPortInfo::availablePorts()) {
+    for (auto& info : QSerialPortInfo::availablePorts()) {
         list << info.portName();
     }
     std::sort(list.begin(), list.end());
     cbManPort->addItems(list.toList());
+    connect(pbCheckConnection, &QPushButton::clicked, this, &Communications::checkConnection);
 }
 
-Communications::~Communications() { qDebug() << "~Communications()"; }
-
-void Communications::on_pbManCheckConnection_clicked()
+void Communications::checkConnection()
 {
     mi::man->ping(cbManPort->currentText());
     if (mi::man->isConnected()) {
-        QMessageBox::information(this, "", " Связь установлена.");
-        emit SetTabBarEnabled(true);
-    } else {
-        QMessageBox::critical(sender() != nullptr ? this : nullptr, "", "Не удалось установить связь с МАН-2!");
-        emit CurrentTabIndex(3);
-        emit SetTabBarEnabled(false);
-    }
-}
-
-void Communications::CheckConnection()
-{
-    mi::man->ping(cbManPort->currentText());
-    if (mi::man->isConnected()) {
-        emit SetTabBarEnabled(true);
         mi::osc->ping();
         if (mi::osc->isConnected()) {
-            emit SetTabBarEnabled(true);
+            leOscIdn->setText(mi::osc->idn());
+            emit setTabBarEnabled(true);
             return;
         } else {
             QMessageBox::critical(0, "", "Не удалось установить связь с Digital Osc!");
         }
-        return;
     } else {
         QMessageBox::critical(0, "", "Не удалось установить связь с МАН-2!");
     }
-    emit CurrentTabIndex(3);
-    emit SetTabBarEnabled(false);
+    emit currentTabIndex(3);
+    emit setTabBarEnabled(false);
 }

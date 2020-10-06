@@ -1,9 +1,9 @@
 #include "header.h"
 
+#include "settings.h"
 #include <QFile>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QSettings>
 
 Header::Header(Qt::Orientation orientation, QWidget* parent)
     : QHeaderView(orientation, parent)
@@ -12,7 +12,7 @@ Header::Header(Qt::Orientation orientation, QWidget* parent)
     connect(this, &QHeaderView::sectionCountChanged, [this, orientation](int /*oldCount*/, int newCount) {
         m_checked.resize(newCount);
         {
-            QSettings settings;
+            MySettings settings;
             settings.beginGroup("Header");
             for (int i = 0; i < m_checked.size(); ++i) {
                 m_checked[i] = settings.value("Header" + QString::number(i), false).toBool();
@@ -27,7 +27,7 @@ Header::Header(Qt::Orientation orientation, QWidget* parent)
 
 Header::~Header()
 {
-    QSettings settings;
+    MySettings settings;
     settings.beginGroup("Header");
     for (int i = 0; i < m_checked.size(); ++i) {
         settings.setValue("Header" + QString::number(i), m_checked[i]);
@@ -57,7 +57,7 @@ void Header::togle(int index)
 void Header::setSingle(int index)
 {
     for (int i = 0, fl = i == index; i < count(); fl = ++i == index) {
-        if (m_checked[i] != fl) {
+        if (m_checked[i] != static_cast<bool>(fl)) {
             m_checked[i] = fl;
             emit onChecked(i, orientation());
             updateSection(i);

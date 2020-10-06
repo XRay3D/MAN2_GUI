@@ -22,10 +22,10 @@ PrepareForm::PrepareForm(QWidget* parent)
     connect(cbxDevice, qOverload<int>(&QComboBox::currentIndexChanged), [](int index) {
         DeviceModel::setIndex(index);
         if (DeviceModel::scanSettings().NumberOfChannels > 0)
-            SerNumModel::setCount(8 / DeviceModel::scanSettings().NumberOfChannels);
+            SerNumModel::instance()->setCount(8 / DeviceModel::scanSettings().NumberOfChannels);
     });
     connect(pbStartStop, &QPushButton::clicked, [this](bool checked) {
-        if (checked && SerNumModel::isEmpty()) {
+        if (checked && SerNumModel::instance()->isEmpty()) {
             QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
             pbStartStop->setChecked(false); //pbStartStopClicked(false);
         } else
@@ -169,13 +169,11 @@ void PrepareForm::updateProgresBar()
 void PrepareForm::endSlot()
 {
     pbStartStopClicked(false);
-    qDebug("Включить протоколы перед релизом.");
-    return;
-    for (int i = 0; i < SerNumModel::serNumCount(); ++i) {
-        TestModel::instance()->saveProtokol(SerNumModel::serNum(i), i);
+    for (int i = 0; i < SerNumModel::instance()->serNumCount(); ++i) {
+        TestModel::instance()->saveProtokol(SerNumModel::instance()->serNum(i), i);
         TestModel::instance()->showProtocol(i);
     }
-    //    QMessageBox::information(nullptr, "", "Проверка закончена.");
+    QMessageBox::information(nullptr, "", "Проверка закончена.");
 }
 
 void PrepareForm::pbStartStopClicked(bool checked)
@@ -190,13 +188,13 @@ void PrepareForm::pbStartStopClicked(bool checked)
             killTimer(measureTimerId);
             measureTimerId = 0;
         }
-        if (SerNumModel::isEmpty()) {
+        if (SerNumModel::instance()->isEmpty()) {
             QMessageBox::critical(this, "", "Не введен ни один серийный номер!");
             pbStartStop->setChecked(false);
             return;
         }
 
-        int i = SerNumModel::serNumCount() * DeviceModel::scanSettings().NumberOfChannels;
+        int i = SerNumModel::instance()->serNumCount() * DeviceModel::scanSettings().NumberOfChannels;
         for (bool& val : m_doNotSkip)
             val = i-- > 0;
 
@@ -207,14 +205,14 @@ void PrepareForm::pbStartStopClicked(bool checked)
         connect(m_worker, &Tester::updateProgresBar, this, &PrepareForm::updateProgresBar);
 
         progressBar->setValue(0);
-        progressBar->setMaximum(7 + SerNumModel::serNumCount() * DeviceModel::scanSettings().NumberOfChannels * 2);
+        progressBar->setMaximum(7 + SerNumModel::instance()->serNumCount() * DeviceModel::scanSettings().NumberOfChannels * 2);
 
         m_worker->start();
     } else {
         pbStartStop->setText("Начать измерения");
 
         if (m_worker)
-            m_worker->FinishMeasurements();
+            m_worker->finishMeasurements();
 
         progressBar->setValue(0);
 

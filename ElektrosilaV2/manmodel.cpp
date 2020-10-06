@@ -2,15 +2,12 @@
 
 ManModel::ManModel(QObject* parent)
     : QAbstractTableModel(parent)
-    , m_u{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
-    , m_i{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
-    , m_acU(0.0)
 {
 }
 
-int ManModel::rowCount(const QModelIndex& /*parent*/) const { return 3; }
+int ManModel::rowCount(const QModelIndex&) const { return 3; }
 
-int ManModel::columnCount(const QModelIndex& /*parent*/) const { return 8; }
+int ManModel::columnCount(const QModelIndex&) const { return ManCount; }
 
 QVariant ManModel::data(const QModelIndex& index, int role) const
 {
@@ -43,17 +40,17 @@ Qt::ItemFlags ManModel::flags(const QModelIndex& /*index*/) const { return Qt::I
 
 void ManModel::setMeasuredValues(const QMap<int, MeasuredValue>& data)
 {
-    QMapIterator<int, MeasuredValue> iterator(data);
-    while (iterator.hasNext()) {
-        iterator.next();
-        if (iterator.key() == 10) {
-            m_acU = iterator.value().valCh1;
-        } else {
-            m_u[iterator.key() - 1] = iterator.value().valCh1;
-            m_i[iterator.key() - 1] = iterator.value().valCh2;
+    QMapIterator<int, MeasuredValue> it(data);
+    while (it.hasNext()) {
+        it.next();
+        if (it.key() == 10) {
+            m_acU = it.value().valCh1;
+        } else if (it.key() <= ManCount) {
+            m_u[it.key() - 1] = it.value().valCh1;
+            m_i[it.key() - 1] = it.value().valCh2;
         }
     }
-    dataChanged(createIndex(0, 0), createIndex(2, 7), { Qt::DisplayRole });
+    dataChanged(createIndex(0, 0), createIndex(2, ManCount - 1), { Qt::DisplayRole });
 }
 
 QVariant ManModel::headerData(int section, Qt::Orientation orientation, int role) const

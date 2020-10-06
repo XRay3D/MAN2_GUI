@@ -10,7 +10,7 @@ public:
     Tester(bool* doNotSkip, QObject* parent = nullptr);
     ~Tester() override;
     void Continue();
-    void FinishMeasurements();
+    void finishMeasurements();
     void run() override;
 
 signals:
@@ -18,30 +18,29 @@ signals:
     void updateProgresBar();
 
 private:
-    void WaitAnswer(int question);
-    void WaitAnswerManConnErr();
-    void CheckFinished();
-    void SetVoltage(int voltage);
-    void Test1();
-    void Test2();
-    void Test3();
-    void Test4();
-    void Test5();
-    void Test6();
-    void Test7();
+    void waitAnswer(int question);
+    void waitAnswerManConnErr();
+    void checkFinished();
+    void setVoltage(int voltage);
+    void test1();
+    void test2();
+    void test3();
+    void test4();
+    void test5();
+    void test6();
+    void test7();
 
     void configCh2(bool slow = false);
 
     void Msleep(unsigned long time);
 
-    QMap<int, MeasuredValue> m_list;
-    double m_inVoltage;
-    double m_minInVoltage;
-    double m_maxInVoltage;
+    QMap<int, MeasuredValue> list;
+    double acVoltage;
+    double minAcVoltage;
+    double maxAcVoltage;
 
-    const bool* m_doNotSkip;
-    QSemaphore m_semaphore;
-    int m_counter;
+    const bool* const doNotSkip;
+    QSemaphore semaphore;
 };
 
 #endif // WORKER_H

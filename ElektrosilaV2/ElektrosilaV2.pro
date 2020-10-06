@@ -27,12 +27,7 @@ contains(QT_ARCH, i386) {
         -lnivisa64 \
         -lvisa64
 }
-
-#msvc* {
-#    LIBS += -lsetupapi -lAdvapi32
-#    RC_FILE = myapp.rc
-#    TARGET = $$TARGET"_msvc"
-#}
+INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/include"
 
 DESTDIR = $$_PRO_FILE_PWD_/../bin
 
@@ -42,7 +37,6 @@ win32:RC_FILE = main_icon/myapp.rc
 
 CONFIG += c++17
 
-INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/include"
 
 SOURCES += \
     autoform.cpp \
@@ -50,6 +44,7 @@ SOURCES += \
     devicemodel.cpp \
     dialogeditbp.cpp \
     excel.cpp \
+    formchannel.cpp \
     header.cpp \
     hw/digitalosc.cpp \
     hw/interface.cpp \
@@ -75,6 +70,7 @@ HEADERS += \
     devicemodel.h \
     dialogeditbp.h \
     excel.h \
+    formchannel.h \
     header.h \
     hw/common_interfaces.h \
     hw/common_interfaces.h \
@@ -88,6 +84,7 @@ HEADERS += \
     measurements.h \
     mydialog.h \
     sernummodel.h \
+    settings.h \
     shdocvw.h \
     sntableview.h \
     tester.h \
@@ -98,6 +95,7 @@ FORMS += \
     autoform.ui \
     communications.ui \
     dialogeditbp.ui \
+    formchannel.ui \
     mainwindow.ui \
     measurements.ui \
 

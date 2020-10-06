@@ -40,8 +40,8 @@ void LinTest::measure()
     if (m_minX == m_keyX)
         m_minX = m_keyX = QDateTime::currentDateTime();
 
-    double minY = +std::numeric_limits<double>::max();
-    double maxY = -std::numeric_limits<double>::max();
+    double minY1 = +std::numeric_limits<double>::max();
+    double maxY1 = -std::numeric_limits<double>::max();
     double minY2 = +std::numeric_limits<double>::max();
     double maxY2 = -std::numeric_limits<double>::max();
 
@@ -80,8 +80,8 @@ void LinTest::measure()
 
         if (var->isVisible()) {
             for (QPointF& p : var->points()) {
-                minY = qMin(minY, p.y());
-                maxY = qMax(maxY, p.y());
+                minY1 = qMin(minY1, p.y());
+                maxY1 = qMax(maxY1, p.y());
             }
             flag = true;
         }
@@ -104,7 +104,7 @@ void LinTest::measure()
             m_minX = QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(m_series[0]->at(0).x()));
 
         cv1->chart()->axes(Qt::Horizontal).at(0) /*axisX()*/->setRange(m_minX, m_keyX);
-        cv1->chart()->axes(Qt::Vertical).at(0) /*axisY()*/->setRange(minY, maxY);
+        cv1->chart()->axes(Qt::Vertical).at(0) /*axisY()*/->setRange(minY1, maxY1);
 
         cv2->chart()->axes(Qt::Horizontal).at(0) /*axisX()*/->setRange(m_minX, m_keyX);
         cv2->chart()->axes(Qt::Vertical).at(0) /*axisY()*/->setRange(minY2, maxY2);

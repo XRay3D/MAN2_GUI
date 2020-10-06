@@ -79,7 +79,6 @@ public:
         Test6,
         Test7,
         TestCount,
-        Channels = 8,
         None = -1
     };
 
@@ -106,7 +105,11 @@ public:
     bool dontSkip(int num);
 
     void onChecked(int index, int orientation);
-
+    QString path(int index)
+    {
+        assert(index < 8);
+        return m_paths[index];
+    }
     static TestModel* instance();
     void reset();
 
@@ -115,9 +118,10 @@ private:
     const QVector<bool>* m_vChecked;
 
     int m_currentTest = -1;
-    TestData m_data[8];
-    QString m_paths[8];
-    QString m_serNum[8];
+    QVector<TestData> m_data;
+    QVector<QString> m_paths;
+    QVector<QString> m_serNum;
+    bool m_protocolVisible[ManCount] = { 0 };
 };
 
 #endif // MESUREMODEL_H

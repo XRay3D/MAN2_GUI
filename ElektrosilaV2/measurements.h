@@ -10,6 +10,8 @@ class QChartView;
 class QLineSeries;
 }
 
+class FormChannel;
+
 class Measurements : public QWidget, private Ui::Measurements {
     Q_OBJECT
 
@@ -31,8 +33,7 @@ private slots:
     void pbShortClicked(int channel);
     void obOscClicked(int channel);
 
-    void measuredValueSlot(const QMap<int, MeasuredValue>& list);
-    void measureCompletedSlot(const MeasuredValue&);
+    void measuredValueSlot(const QMap<int, MeasuredValue>& valMap);
 
     void gbChanneClicked(int channel);
 
@@ -42,13 +43,14 @@ signals:
     void startMeasure(ValueType type = CurrentMeasuredValue, uint8_t channel = 0);
 
 private:
-    QVector<QPushButton*> m_listPbCurrent;
-    QVector<QPushButton*> m_listPbShort;
-    QVector<QPushButton*> m_listPbOsc;
-    QVector<QDoubleSpinBox*> m_listDsbVoltage;
+    QVector<FormChannel*> m_listGroupBox;
     QVector<QDoubleSpinBox*> m_listDsbCurrent;
     QVector<QDoubleSpinBox*> m_listDsbSetCurrent;
-    QVector<QGroupBox*> m_listGroupBox;
+    QVector<QDoubleSpinBox*> m_listDsbVoltage;
+    QVector<QPushButton*> m_listPbCurrent;
+    QVector<QPushButton*> m_listPbOsc;
+    QVector<QPushButton*> m_listPbShort;
+
     QVector<QtCharts::QLineSeries*> m_series;
     int m_timerMeasure;
     bool m_disableSlots = false;

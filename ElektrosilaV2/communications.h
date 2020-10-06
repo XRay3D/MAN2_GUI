@@ -4,21 +4,20 @@
 #include "ui_communications.h"
 
 class MainWindow;
-class Communications : public QWidget, private Ui::Communications {
+
+class Communications final : public QWidget, private Ui::Communications {
     Q_OBJECT
     friend class MainWindow;
 
 public:
     explicit Communications(QWidget* parent = nullptr);
-    void CheckConnection();
-    ~Communications();
+    ~Communications() = default;
+
+    void checkConnection();
 
 signals:
-    void CurrentTabIndex(int);
-    void SetTabBarEnabled(bool);
-
-private slots:
-    void on_pbManCheckConnection_clicked();
+    void currentTabIndex(int);
+    void setTabBarEnabled(bool);
 };
 
 #endif // COMMUNICATIONS_H

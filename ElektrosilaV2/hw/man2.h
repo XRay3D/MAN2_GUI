@@ -20,7 +20,9 @@ enum StateEnum {
     On
 };
 
-enum { ChannelCount = 9 };
+enum { AdcCount = 1 };
+enum { ManCount = 8 };
+enum { ChannelCount = ManCount + AdcCount };
 
 enum Command {
     /*00*/ Ping,

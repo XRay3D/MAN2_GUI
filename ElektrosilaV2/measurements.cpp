@@ -1,11 +1,12 @@
 #include "measurements.h"
+#include "formchannel.h"
 #include "hw/interface.h"
+#include "settings.h"
 #include <QChart>
 #include <QChartView>
 #include <QDateTimeAxis>
 #include <QEvent>
 #include <QLineSeries>
-#include <QSettings>
 #include <QValueAxis>
 #include <limits>
 
@@ -13,7 +14,15 @@ QT_CHARTS_USE_NAMESPACE
 
 Measurements::Measurements(QWidget* parent)
     : QWidget(parent)
+    , m_listGroupBox(ManCount)
+    , m_listDsbCurrent(ManCount)
+    , m_listDsbSetCurrent(ManCount)
+    , m_listDsbVoltage(ManCount)
+    , m_listPbCurrent(ManCount)
+    , m_listPbOsc(ManCount)
+    , m_listPbShort(ManCount)
     , m_timerMeasure(0)
+
 {
     setupUi(this);
 
@@ -21,28 +30,36 @@ Measurements::Measurements(QWidget* parent)
     graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
     verticalLayout_11->addWidget(graphicsView, 1);
     gridLayout->setSpacing(6);
+    for (int i = 0; i < ManCount; ++i) {
+        auto ch = new FormChannel(this);
+        m_listGroupBox[i] = ch;
+        gridLayout->addWidget(ch, 0, 2 + i);
+        ch->setObjectName("gbChannel_" + QString::number(i + 1));
+        ch->setTitle(ch->title() + " " + QString::number(i + 1));
+        for (auto obj : ch->children()) {
+            obj->setObjectName(objectName() + QString::number(i + 1));
+        }
+        m_listDsbCurrent[i] = ch->dsbCurrent_;
+        m_listDsbSetCurrent[i] = ch->dsbSetCurrent_;
+        m_listDsbVoltage[i] = ch->dsbVoltage_;
+        m_listPbCurrent[i] = ch->pbCurrent_;
+        m_listPbOsc[i] = ch->pbOsc_;
+        m_listPbShort[i] = ch->pbShort_;
+    }
 
-    m_listPbCurrent = { pbCurrent_1, pbCurrent_2, pbCurrent_3, pbCurrent_4, pbCurrent_5, pbCurrent_6, pbCurrent_7, pbCurrent_8 };
-    m_listPbShort = { pbShort_1, pbShort_2, pbShort_3, pbShort_4, pbShort_5, pbShort_6, pbShort_7, pbShort_8 };
-    m_listPbOsc = { pbOsc_1, pbOsc_2, pbOsc_3, pbOsc_4, pbOsc_5, pbOsc_6, pbOsc_7, pbOsc_8 };
-    m_listDsbVoltage = { dsbVoltage_1, dsbVoltage_2, dsbVoltage_3, dsbVoltage_4, dsbVoltage_5, dsbVoltage_6, dsbVoltage_7, dsbVoltage_8 };
-    m_listDsbCurrent = { dsbCurrent_1, dsbCurrent_2, dsbCurrent_3, dsbCurrent_4, dsbCurrent_5, dsbCurrent_6, dsbCurrent_7, dsbCurrent_8 };
-    m_listDsbSetCurrent = { dsbSetCurrent_1, dsbSetCurrent_2, dsbSetCurrent_3, dsbSetCurrent_4, dsbSetCurrent_5, dsbSetCurrent_6, dsbSetCurrent_7, dsbSetCurrent_8 };
-    m_listGroupBox = { gbChannel_1, gbChannel_2, gbChannel_3, gbChannel_4, gbChannel_5, gbChannel_6, gbChannel_7, gbChannel_8 };
-
-    for (QPushButton* pbtn : m_listPbCurrent)
+    for (auto pbtn : m_listPbCurrent)
         connect(pbtn, &QPushButton::clicked, [=] { bbCurrentClicked(m_listPbCurrent.indexOf(pbtn)); });
 
-    for (QPushButton* pbtn : m_listPbShort)
+    for (auto pbtn : m_listPbShort)
         connect(pbtn, &QPushButton::clicked, [=] { pbShortClicked(m_listPbShort.indexOf(pbtn)); });
 
-    for (QPushButton* pbtn : m_listPbOsc)
+    for (auto pbtn : m_listPbOsc)
         connect(pbtn, &QPushButton::clicked, [=]() { obOscClicked(m_listPbOsc.indexOf(pbtn)); });
 
-    for (QDoubleSpinBox* dsbx : m_listDsbSetCurrent)
+    for (auto dsbx : m_listDsbSetCurrent)
         connect(dsbx, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [=] { dsbSetCurrent(m_listDsbSetCurrent.indexOf(dsbx)); });
 
-    for (QGroupBox* grbx : m_listGroupBox)
+    for (auto grbx : m_listGroupBox)
         connect(grbx, &QGroupBox::toggled, [=]() { gbChanneClicked(m_listGroupBox.indexOf(grbx)); });
 
     QChart* chart = new QChart();
@@ -56,7 +73,7 @@ Measurements::Measurements(QWidget* parent)
     axisX->setFormat("h:mm:ss");
     axisX->setTickCount(7);
     chart->addAxis(axisX, Qt::AlignBottom);
-    for (int i = 0; i < 8; ++i) {
+    for (int i = 0; i < ManCount; ++i) {
         QLineSeries* series = new QLineSeries(chart);
         m_series.append(series);
         QPen pen(QBrush(), 2.0);
@@ -77,32 +94,22 @@ Measurements::Measurements(QWidget* parent)
     graphicsView->setRenderHint(QPainter::Antialiasing);
     graphicsView->setPalette(QPalette(Qt::white));
 
-    QSettings settings;
+    MySettings settings;
     settings.setIniCodec("UTF-8");
     settings.beginGroup("Measurements");
-    gbChannel_1->setChecked(settings.value("gbChannel_1", true).toBool());
-    gbChannel_2->setChecked(settings.value("gbChannel_2", true).toBool());
-    gbChannel_3->setChecked(settings.value("gbChannel_3", true).toBool());
-    gbChannel_4->setChecked(settings.value("gbChannel_4", true).toBool());
-    gbChannel_5->setChecked(settings.value("gbChannel_5", true).toBool());
-    gbChannel_6->setChecked(settings.value("gbChannel_6", true).toBool());
-    gbChannel_7->setChecked(settings.value("gbChannel_7", true).toBool());
-    gbChannel_8->setChecked(settings.value("gbChannel_8", true).toBool());
+    for (auto groupBox : m_listGroupBox)
+        settings.getValue(groupBox, true);
+    settings.endGroup();
 }
 
 Measurements::~Measurements()
 {
-    QSettings settings;
+    MySettings settings;
     settings.setIniCodec("UTF-8");
     settings.beginGroup("Measurements");
-    settings.setValue("gbChannel_1", gbChannel_1->isChecked());
-    settings.setValue("gbChannel_2", gbChannel_2->isChecked());
-    settings.setValue("gbChannel_3", gbChannel_3->isChecked());
-    settings.setValue("gbChannel_4", gbChannel_4->isChecked());
-    settings.setValue("gbChannel_5", gbChannel_5->isChecked());
-    settings.setValue("gbChannel_6", gbChannel_6->isChecked());
-    settings.setValue("gbChannel_7", gbChannel_7->isChecked());
-    settings.setValue("gbChannel_8", gbChannel_8->isChecked());
+    for (auto groupBox : m_listGroupBox)
+        settings.setValue(groupBox);
+    settings.endGroup();
 }
 
 void Measurements::on_cbOsc_currentIndexChanged(int index)
@@ -167,7 +174,7 @@ void Measurements::on_dsbSetCurrentAll_valueChanged(double arg1)
 
 void Measurements::on_pbCurrentAll_clicked(bool checked)
 {
-    foreach (QPushButton* button, m_listPbCurrent) {
+    for (QPushButton* button : m_listPbCurrent) {
         button->setChecked(checked);
         button->setText(checked ? "Выкл." : "Вкл.");
     }
@@ -176,7 +183,7 @@ void Measurements::on_pbCurrentAll_clicked(bool checked)
 
 void Measurements::on_pbShortAll_clicked(bool checked)
 {
-    foreach (QPushButton* button, m_listPbShort) {
+    for (QPushButton* button : m_listPbShort) {
         button->setChecked(checked);
         button->setText(checked ? "Выкл." : "Вкл.");
     }
@@ -224,10 +231,9 @@ void Measurements::obOscClicked(int channel)
         cbOsc->setCurrentIndex(0); //        on_cbOsc_currentIndexChanged(0);
 }
 
-void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& list)
+void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& valMap)
 {
     QMutexLocker locker(&m_mutex);
-    qDebug() << list;
     enum { MaxCount = 500 };
     if (m_minX == m_keyX)
         m_minX = m_keyX = QDateTime::currentDateTime();
@@ -235,7 +241,7 @@ void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& list)
     //    QElapsedTimer timer;
     //    timer.start();
 
-    QMapIterator<int, MeasuredValue> iterator(list);
+    QMapIterator<int, MeasuredValue> iterator(valMap);
     double minY = +std::numeric_limits<double>::max();
     double maxY = -std::numeric_limits<double>::max();
     bool flag = false;
@@ -244,11 +250,15 @@ void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& list)
     //    dsbVoltage_9->setValue(rms);
     while (iterator.hasNext()) {
         iterator.next();
-        int i = iterator.key() - 1;
-        if (i > 7) {
+        if (iterator.key() == 10) {
             dsbVoltage_9->setValue(iterator.value().valCh1);
             continue;
         }
+        if (iterator.key() > ManCount) {
+            continue;
+        }
+        int i = iterator.key() - 1;
+
         m_listDsbVoltage[i]->setValue(iterator.value().valCh1);
         m_listDsbCurrent[i]->setValue(iterator.value().valCh2);
 
@@ -272,61 +282,8 @@ void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& list)
         graphicsView->chart()->axes(Qt::Horizontal).at(0) /*axisX()*/->setRange(m_minX, m_keyX);
         graphicsView->chart()->axes(Qt::Vertical).at(0) /*axisY()*/->setRange(minY, maxY);
     }
-    //    qDebug() << "GetMeasuredValueSlot" << timer.elapsed();
     m_keyX = QDateTime::currentDateTime();
     m_semaphore.release();
-}
-
-void Measurements::measureCompletedSlot(const MeasuredValue&)
-{
-    //    QMutexLocker locker(&m_mutex);
-    //    enum { MaxCount = 500 };
-    //    if (m_minX == m_keyX)
-    //        m_minX = m_keyX = QDateTime::currentDateTime();
-
-    //    //    QElapsedTimer timer;
-    //    //    timer.start();
-
-    //    QMapIterator<int, MeasuredValue> iterator(list);
-    //    double minY = +std::numeric_limits<double>::max();
-    //    double maxY = -std::numeric_limits<double>::max();
-    //    bool flag = false;
-
-    //    double rms = 0.0;
-    //    rms = mi::man->getRmsValue();
-    //    dsbVoltage_9->setValue(rms);
-    //    while (iterator.hasNext()) {
-    //        iterator.next();
-    //        int i = iterator.key() - 1;
-    //        if (i > 7) {
-    //            continue;; ///////////////
-    //        }
-    //        m_listDsbVoltage[i]->setValue(iterator.value().valCh1);
-    //        m_listDsbCurrent[i]->setValue(iterator.value().valCh2);
-
-    //        m_series[i]->append(m_keyX.toMSecsSinceEpoch(), iterator.value().valCh1);
-
-    //        if (m_series[i]->count() > MaxCount)
-    //            m_series[i]->remove(0);
-
-    //        if (m_series[i]->isVisible()) {
-    //            for (QPointF& p : m_series[i]->points()) {
-    //                minY = qMin(minY, p.y());
-    //                maxY = qMax(maxY, p.y());
-    //            }
-    //            flag = true;
-    //        }
-    //    }
-    //    if (flag) {
-    //        if (m_series[0]->count() == MaxCount)
-    //            m_minX = QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(m_series[0]->at(0).x()));
-
-    //        graphicsView->chart()->axes(Qt::Horizontal).at(0) /*axisX()*/->setRange(m_minX, m_keyX);
-    //        graphicsView->chart()->axes(Qt::Vertical).at(0) /*axisY()*/->setRange(minY, maxY);
-    //    }
-    //    //    qDebug() << "GetMeasuredValueSlot" << timer.elapsed();
-    //    m_keyX = QDateTime::currentDateTime();
-    //    m_semaphore.release();
 }
 
 void Measurements::showEvent(QShowEvent* /*event*/)
@@ -336,7 +293,7 @@ void Measurements::showEvent(QShowEvent* /*event*/)
         qWarning("Fix i");
         if (mi::man->getMeasuredValue(list)) {
             m_disableSlots = true;
-            for (int i = 0; i < 8; ++i) {
+            for (int i = 0; i < ManCount; ++i) {
                 const auto& mv = list[i];
                 m_listDsbVoltage[i]->setValue(static_cast<double>(mv.valCh1));
                 m_listDsbCurrent[i]->setValue(static_cast<double>(mv.valCh2));
@@ -356,6 +313,7 @@ void Measurements::showEvent(QShowEvent* /*event*/)
         }
         connect(this, &Measurements::startMeasure, mi::man, &MAN2::startMeasure);
         connect(mi::man, &MAN2::measuresCompleted, this, &Measurements::measuredValueSlot);
+        on_pbStart_clicked(true);
         return;
     }
     setEnabled(false);
