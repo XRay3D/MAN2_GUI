@@ -1,45 +1,27 @@
 #ifndef rigolOsc_H
 #define rigolOsc_H
 
-#include <QObject>
+#include <string>
+#include <vector>
 #include <visa.h>
 
-class DigitalOsc : public QObject {
-    Q_OBJECT
+using namespace std;
 
+class DigitalOsc {
     DigitalOsc(const DigitalOsc&) = delete;
     void operator=(const DigitalOsc&) = delete;
 
     ViSession rm = 0;
     ViSession vi = 0;
-    QString m_conected;
 
 public:
-    explicit DigitalOsc(QObject* parent = nullptr);
+    explicit DigitalOsc();
     ~DigitalOsc();
 
-    void ping();
     void close();
+    void ping();
 
-    ViStatus SetChannel(int chNum, const QString& s);
-    ViStatus SetComand(const QString& s);
-    QByteArray wrRdData(QByteArray data, int len = 128, bool exception = true);
-
-    void getWav();
-
-    bool isConnected() const { return !m_conected.isEmpty(); }
-    QString idn() const { return m_conected; }
-
-    double PKPK(int ch);
-    double MIN(int ch);
-    double AVERage(int ch);
-    double VAMP(int ch);
-    double CYCRms(int ch);
-
-signals:
-    //    void wavData(const QVector<QPointF>& ch1, const QVector<QPointF>& ch2, const QVector<double>& scale);
-    //    void peakData(double u, double i);
-    void errStr(const QString&);
+    string wrRdData(string data, int len = 128, bool exception = false);
 };
 
 #endif // rigolOsc_H

@@ -43,6 +43,7 @@ enum Command {
     TextualParcel = 0xf2,
     CrcError = 0xf3
 };
+Q_DECLARE_FLAGS(Commands, Command)
 
 enum ShortCircuit {
     ScOff,
@@ -57,6 +58,7 @@ enum Osc {
     OscU,
     OscIU,
 };
+Q_DECLARE_FLAGS(Oscs, Osc)
 
 enum ValueType {
     CurrentMeasuredValue, // Напряжение, ток и уставка.

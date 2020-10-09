@@ -2,7 +2,9 @@
 #define rigolOsc_H
 
 #include <QObject>
-#include <visa.h>
+#include <QSemaphore>
+
+class QProcess;
 
 class DigitalOsc : public QObject {
     Q_OBJECT
@@ -10,9 +12,9 @@ class DigitalOsc : public QObject {
     DigitalOsc(const DigitalOsc&) = delete;
     void operator=(const DigitalOsc&) = delete;
 
-    ViSession rm = 0;
-    ViSession vi = 0;
     QString m_conected;
+    QProcess* process;
+    QSemaphore semaphore;
 
 public:
     explicit DigitalOsc(QObject* parent = nullptr);
@@ -21,11 +23,9 @@ public:
     void ping();
     void close();
 
-    ViStatus SetChannel(int chNum, const QString& s);
-    ViStatus SetComand(const QString& s);
-    QByteArray wrRdData(QByteArray data, int len = 128, bool exception = true);
-
-    void getWav();
+    //    ViStatus SetChannel(int chNum, const QString& s);
+    //    ViStatus SetComand(const QString& s);
+    QByteArray wrRdData(QByteArray wrData);
 
     bool isConnected() const { return !m_conected.isEmpty(); }
     QString idn() const { return m_conected; }

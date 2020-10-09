@@ -13,21 +13,19 @@ DEFINES += \
     QT_DEPRECATED_WARNINGS \
     QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-#TARGET = GGEasyr#GeFtber2Gcode
-
-contains(QT_ARCH, i386) {
-    TARGET = $$TARGET"_x32"
-    LIBS += \
-        -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc/" \
-        -lvisa32
-} else {
-    TARGET = $$TARGET"_x64"
-    LIBS += \
-        -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Lib_x64/msc/" \
-        -lnivisa64 \
-        -lvisa64
-}
-INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/include"
+#contains(QT_ARCH, i386) {
+#    TARGET = $$TARGET"_x32"
+#    LIBS += \
+#        -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc/" \
+#        -lvisa32
+#} else {
+#    TARGET = $$TARGET"_x64"
+#    LIBS += \
+#        -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Lib_x64/msc/" \
+#        -lnivisa64 \
+#        -lvisa64
+#}
+#INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/include"
 
 DESTDIR = $$_PRO_FILE_PWD_/../bin
 
@@ -36,6 +34,9 @@ TEMPLATE = app
 win32:RC_FILE = main_icon/myapp.rc
 
 CONFIG += c++17
+
+QMAKE_CXXFLAGS -= /std:c++17
+QMAKE_CXXFLAGS += /std:c++latest
 
 
 SOURCES += \
@@ -55,7 +56,7 @@ SOURCES += \
     manmodel.cpp \
     mantableview.cpp \
     measurements.cpp \
-    mydialog.cpp \
+    protodialog.cpp \
     sernummodel.cpp \
     shdocvw.cpp \
     sntableview.cpp \
@@ -82,7 +83,7 @@ HEADERS += \
     manmodel.h \
     mantableview.h \
     measurements.h \
-    mydialog.h \
+    protodialog.h \
     sernummodel.h \
     settings.h \
     shdocvw.h \

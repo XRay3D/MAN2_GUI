@@ -14,8 +14,6 @@ ManTableView::ManTableView(QWidget* parent)
     verticalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
     setSpan(2, 0, 1, 8);
 
-    qDebug() << findChild<QAbstractButton*>();
-
     auto verticalLayout = new QVBoxLayout(findChild<QAbstractButton*>());
     verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
     verticalLayout->setContentsMargins(6, 6, 6, 6);

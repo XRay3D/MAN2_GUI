@@ -90,283 +90,310 @@ bool MAN2::isConnected() const
 bool MAN2::getMeasuredValue(MeasuredValue& value, uint8_t channel, ValueType type)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        if (channel == 0)
-            return result;
-        m_valueMap.clear();
-        emit Write(createParcel(ReadMeasuredValue, static_cast<uint8_t>(type), channel));
-        if (semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delayMs[type])) {
-            result = true;
-            value = lastParcel.value<MeasuredValue>();
-            emit measureCompleted(m_valueMap[channel]);
-        }
+
+    if (!isConnected())
+        return result;
+
+    if (channel == 0)
+        return result;
+    m_valueMap.clear();
+    emit Write(createParcel(ReadMeasuredValue, static_cast<uint8_t>(type), channel));
+    if (semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delayMs[type])) {
+        result = true;
+        crcErrCounter = 0;
+        value = lastParcel.value<MeasuredValue>();
+        emit measureCompleted(m_valueMap[channel]);
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return result;
 }
 
 bool MAN2::getMeasuredValue(QMap<int, MeasuredValue>& value, ValueType type)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        reset();
+    do {
+        if (!isConnected())
+            return result;
         m_valueMap.clear();
         emit Write(createParcel(ReadMeasuredValue, static_cast<uint8_t>(type), 0));
         if (semaphore.tryAcquire(ChannelCount, delayMs[type])) {
             result = true;
+            crcErrCounter = 0;
             value = m_valueMap;
             emit measuresCompleted(m_valueMap);
         }
-    }
+
+        if (crcErrCounter)
+            qDebug() << crcErrCounter << Q_FUNC_INFO;
+    } while (crcErrCounter);
     return result;
 }
 
 void MAN2::startMeasure(ValueType type, uint8_t channel)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        m_valueMap.clear();
-        emit Write(createParcel(ReadMeasuredValue, static_cast<uint8_t>(type), channel));
-        if (semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delayMs[type])) {
-            if (channel && m_valueMap.contains(channel)) {
-                result = true;
-                emit measureCompleted(m_valueMap[channel]);
-            } else {
-                result = true;
-                emit measuresCompleted(m_valueMap);
-            }
+    if (!isConnected())
+        return;
+    m_valueMap.clear();
+    emit Write(createParcel(ReadMeasuredValue, static_cast<uint8_t>(type), channel));
+    if (semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, delayMs[type])) {
+        if (channel && m_valueMap.contains(channel)) {
+            result = true;
+            crcErrCounter = 0;
+            emit measureCompleted(m_valueMap[channel]);
+        } else {
+            result = true;
+            crcErrCounter = 0;
+            emit measuresCompleted(m_valueMap);
         }
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
 }
 
 double MAN2::getRmsValue()
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        emit Write(createParcel(ReadMeasuredValue, 10));
-        if (semaphore.tryAcquire(1, 500)) {
-            if (m_valueMap.contains(10)) {
-                result = true;
-                return m_valueMap[10].valCh1;
-            }
+    if (!isConnected())
+        return result;
+    emit Write(createParcel(ReadMeasuredValue, 10));
+    if (semaphore.tryAcquire(1, 500)) {
+        if (m_valueMap.contains(10)) {
+            result = true;
+            crcErrCounter = 0;
+            return m_valueMap[10].valCh1;
         }
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return 0.0;
 }
 
 bool MAN2::setCurrent(float Current_mA, uint8_t channel)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
+    do {
+        if (!isConnected())
+            return result;
         Current_mA /= 1000.0f;
         emit Write(createParcel(SetCurrent, Current_mA, channel));
-        if (semaphore.tryAcquire(channel ? 1 : ChannelCount, delayMsSm[channel ? 1 : 0]))
+        if (semaphore.tryAcquire(channel ? 1 : ChannelCount, delayMsSm[channel ? 1 : 0])) {
             result = true;
-    }
+            crcErrCounter = 0;
+        }
+        if (crcErrCounter)
+            qDebug() << crcErrCounter << Q_FUNC_INFO;
+    } while (crcErrCounter);
     return result;
 }
 
 bool MAN2::switchCurrent(uint8_t Enable, uint8_t channel)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
+    do {
+        if (!isConnected())
+            return result;
         emit Write(createParcel(SwitchCurrent, Enable, channel));
-        if (semaphore.tryAcquire(channel ? 1 : ChannelCount, delayMsSm[channel ? 1 : 0]))
+        if (semaphore.tryAcquire(channel ? 1 : ChannelCount, delayMsSm[channel ? 1 : 0])) {
             result = true;
-    }
+            crcErrCounter = 0;
+        }
+
+        if (crcErrCounter)
+            qDebug() << crcErrCounter << Q_FUNC_INFO;
+
+    } while (crcErrCounter);
     return result;
 }
 
 bool MAN2::switchShortCircuit(ShortCircuit scType, uint8_t channel)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        emit Write(createParcel(SwitchShortCircuit, static_cast<uint8_t>(scType), channel));
-        if (semaphore.tryAcquire(channel ? 1 : ChannelCount, delayMsSm[channel ? 1 : 0]))
-            result = true;
+    if (!isConnected())
+        return result;
+    emit Write(createParcel(SwitchShortCircuit, static_cast<uint8_t>(scType), channel));
+    if (semaphore.tryAcquire(channel ? 1 : ChannelCount, delayMsSm[channel ? 1 : 0])) {
+        result = true;
+        crcErrCounter = 0;
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return result;
 }
 
 bool MAN2::tripCurrentTest(TripTest tt, uint8_t channel) /*Test*/
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        tt.start /= 1000.0f;
-        tt.step /= 1000.0f;
-        tt.stop /= 1000.0f;
-        emit Write(createParcel(TripCurrentTest, tt, channel));
-        if (semaphore.tryAcquire(1, 60000))
-            result = true;
+    if (!isConnected())
+        return result;
+    tt.start /= 1000.0f;
+    tt.step /= 1000.0f;
+    tt.stop /= 1000.0f;
+    emit Write(createParcel(TripCurrentTest, tt, channel));
+    if (semaphore.tryAcquire(1, 60000)) {
+        result = true;
+        crcErrCounter = 0;
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return result;
 }
 bool MAN2::shortCircuitTest(ShortCircuit scType, uint8_t channel) /*Test*/
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        emit Write(createParcel(ShortCircuitTest, static_cast<uint8_t>(scType), channel));
-        if (semaphore.tryAcquire(1, 2000))
-            result = true;
+    if (!isConnected())
+        return result;
+    emit Write(createParcel(ShortCircuitTest, static_cast<uint8_t>(scType), channel));
+    if (semaphore.tryAcquire(1, 2000)) {
+        result = true;
+        crcErrCounter = 0;
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return result;
 }
 
-//bool MAN2::tripCurrentTest()
-//{
-//    QMutexLocker Locker(&mutex);
-//    if (isConnected()) {
-//        reset();
-//        emit Write(createParcel(TripCurrentTest));
-//        if (semaphore.tryAcquire(1, 500))
-//            result = true;
-//    }
-//    return result;
-//}
-//bool MAN2::shortCircuitTest(uint8_t Enable, uint8_t channel)
-//{
-//    QMutexLocker Locker(&mutex);
-//    if (isConnected()) {
-//        reset();
-//        emit Write(createParcel(ShortCircuitTest, Enable, channel));
-//        if (semaphore.tryAcquire(channel == 0 ? ChannelCount : 1, 500))
-//            result = true;
-//    }
-//    return result;
-//}
-
 bool MAN2::oscilloscope(uint8_t channel, Osc osc)
 {
+    qDebug() << "oscilloscope" << channel << Oscs(osc);
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        reset();
+    do {
+        if (!isConnected())
+            return result;
         emit Write(createParcel(Oscilloscope, static_cast<uint8_t>(osc), channel));
-        if (semaphore.tryAcquire(ChannelCount, 500))
+        if (semaphore.tryAcquire(ChannelCount, 500)) {
             result = true;
-    }
+            crcErrCounter = 0;
+        }
+
+        if (crcErrCounter)
+            qDebug() << crcErrCounter << Q_FUNC_INFO;
+
+    } while (crcErrCounter);
     return result;
 }
 
 bool MAN2::setAddress(uint8_t oldAddress, uint8_t newAddress)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        reset();
-        emit Write(createParcel(SetAddress, oldAddress, newAddress));
-        if (semaphore.tryAcquire(1, 500))
-            result = true;
+    if (!isConnected())
+        return result;
+    emit Write(createParcel(SetAddress, oldAddress, newAddress));
+    if (semaphore.tryAcquire(1, 500)) {
+        result = true;
+        crcErrCounter = 0;
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return result;
 }
 
 bool MAN2::setDefaultCalibrationCoefficients(uint8_t channel)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        emit Write(createParcel(SetDefaultCalibrationCoefficients, channel));
-        if (semaphore.tryAcquire(1, 500)) {
-            result = true;
-        }
+    if (!isConnected())
+        return result;
+    emit Write(createParcel(SetDefaultCalibrationCoefficients, channel));
+    if (semaphore.tryAcquire(1, 500)) {
+        result = true;
+        crcErrCounter = 0;
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return result;
 }
 
 bool MAN2::getCalibrationCoefficients(GradCoeff& gc, uint8_t channel)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        emit Write(createParcel(GetCalibrationCoefficients, channel));
-        if (semaphore.tryAcquire(1, 500)) {
-            gc = lastParcel.value<GradCoeff>();
-            result = true;
-        }
+    if (!isConnected())
+        return result;
+    emit Write(createParcel(GetCalibrationCoefficients, channel));
+    if (semaphore.tryAcquire(1, 500)) {
+        gc = lastParcel.value<GradCoeff>();
+        result = true;
+        crcErrCounter = 0;
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return result;
 }
 
 bool MAN2::setCalibrationCoefficients(const GradCoeff& GradCoeff, uint8_t channel)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        emit Write(createParcel(SetCalibrationCoefficients, GradCoeff, channel));
-        if (semaphore.tryAcquire(1, 500)) {
-            result = true;
-        }
+    if (!isConnected())
+        return result;
+    emit Write(createParcel(SetCalibrationCoefficients, GradCoeff, channel));
+    if (semaphore.tryAcquire(1, 500)) {
+        result = true;
+        crcErrCounter = 0;
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return result;
 }
 
 bool MAN2::saveToEepromCalibrationCoefficients(uint8_t channel)
 {
     QMutexLocker Locker(&mutex);
-    if (isConnected()) {
-        emit Write(createParcel(SaveCalibrationCoefficients, channel));
-        if (semaphore.tryAcquire(1, 500))
-            result = true;
+    if (!isConnected())
+        return result;
+    emit Write(createParcel(SaveCalibrationCoefficients, channel));
+    if (semaphore.tryAcquire(1, 500)) {
+        result = true;
+        crcErrCounter = 0;
     }
+
+    if (crcErrCounter)
+        qDebug() << crcErrCounter << Q_FUNC_INFO;
     return result;
 }
 
 bool MAN2::disableAll()
 {
-    while (isConnected()) {
-        reset();
-        if (!switchShortCircuit(ScOff))
-            break;
-        if (!switchCurrent(Off))
-            break;
-        if (!setCurrent(0.0))
-            break;
-        if (!oscilloscope(Off))
-            break;
-        result = true;
-        break;
-    }
+    if (!isConnected())
+        return result;
+    do {
+        if (switchShortCircuit(ScOff))
+            if (switchCurrent(Off))
+                if (setCurrent(0.0))
+                    if (oscilloscope(Off))
+                        break;
+        if (crcErrCounter)
+            qDebug() << crcErrCounter << Q_FUNC_INFO;
+    } while (crcErrCounter);
     return result;
 }
-
-//bool MAN2::tripCurrentTest(float start, float stop, float step, uint8_t channel)
-//{
-//    QMutexLocker Locker(&mutex);
-//    if (isConnected()) {
-//        reset();
-//        MeasuredValue params;
-//        params.valCh1 = start;
-//        params.valCh2 = step;
-//        params.valCh3 = stop;
-//        tripVal = 0.0;
-//        emit Write(createParcel(TripCurrentTest, params, channel));
-//        if (semaphore.tryAcquire(1, 30000)) {
-//            result = true;
-//            valueMap[channel].valCh3 = tripVal;
-//        }
-//    }
-//    return result;
-//}
-//void MAN2::Init()
-//{
-//    getCalibrationCoefficients(m_rmsCoeff, 9);
-//    qDebug() << m_rmsCoeff.adcCh1.offset; //-46.0562
-//    qDebug() << m_rmsCoeff.adcCh1.scale; //0.402455
-//    //-46.3256
-//    //0.402617
-//}
 
 void MAN2::reset() const
 {
     result = false;
-    crcErrCounter = 0;
+    //    if (crcErrCounter)
+    //        --crcErrCounter;
     semaphore.acquire(semaphore.available());
 }
 
 void MAN2::RxPing(const Parcel& data)
 {
-    qDebug() << "RxPing" << data.addres;
+    //qDebug() << "RxPing" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxReadMeasuredValue(const Parcel& data)
 {
-    //qDebug() << "RxReadMeasuredValue" << data.addres;
+    ////qDebug() << "RxReadMeasuredValue" << data.addres;
     lastParcel = data;
 
     auto value = data.value<MeasuredValue>();
@@ -392,7 +419,7 @@ void MAN2::RxReadMeasuredValue(const Parcel& data)
 }
 void MAN2::RxSetCurrent(const Parcel& data)
 {
-    qDebug() << "RxSetCurrent" << data.addres;
+    //qDebug() << "RxSetCurrent" << data.addres;
     lastParcel = data;
 
     auto value = data.value<MeasuredValue>();
@@ -414,19 +441,19 @@ void MAN2::RxSetCurrent(const Parcel& data)
 }
 void MAN2::RxSwitchCurrent(const Parcel& data)
 {
-    qDebug() << "RxSwitchCurrent" << data.addres;
+    //qDebug() << "RxSwitchCurrent" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxSwitchShortCircuit(const Parcel& data)
 {
-    qDebug() << "RxSwitchShortCircuit" << data.addres;
+    //qDebug() << "RxSwitchShortCircuit" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxTripCurrentTest(const Parcel& data)
 {
-    qDebug() << "RxTripCurrentTest" << data.addres;
+    //qDebug() << "RxTripCurrentTest" << data.addres;
     lastParcel = data;
 
     auto value = data.value<MeasuredValue>();
@@ -450,7 +477,7 @@ void MAN2::RxTripCurrentTest(const Parcel& data)
 }
 void MAN2::RxShortCircuitTest(const Parcel& data)
 {
-    qDebug() << "RxShortCircuitTest" << data.addres;
+    //qDebug() << "RxShortCircuitTest" << data.addres;
     lastParcel = data;
 
     auto value = data.value<MeasuredValue>();
@@ -471,49 +498,49 @@ void MAN2::RxShortCircuitTest(const Parcel& data)
 }
 void MAN2::RxOscilloscope(const Parcel& data)
 {
-    qDebug() << "RxOscilloscope" << data.addres;
+    //qDebug() << "RxOscilloscope" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxGetCalibrationCoefficients(const Parcel& data)
 {
-    qDebug() << "RxGetCalibrationCoefficients" << data.addres;
+    //qDebug() << "RxGetCalibrationCoefficients" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxSetDefaultCalibrationCoefficients(const Parcel& data)
 {
-    qDebug() << "RxSetDefaultCalibrationCoefficients" << data.addres;
+    //qDebug() << "RxSetDefaultCalibrationCoefficients" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxSetCalibrationCoefficients(const Parcel& data)
 {
-    qDebug() << "RxSetCalibrationCoefficients" << data.addres;
+    //qDebug() << "RxSetCalibrationCoefficients" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxSaveCalibrationCoefficients(const Parcel& data)
 {
-    qDebug() << "RxSaveCalibrationCoefficients" << data.addres;
+    //qDebug() << "RxSaveCalibrationCoefficients" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxSetAddress(const Parcel& data)
 {
-    qDebug() << "RxSetAddress" << data.addres;
+    //qDebug() << "RxSetAddress" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxBufferOverflow(const Parcel& data)
 {
-    qDebug() << "RxBufferOverflow" << data.addres;
+    //qDebug() << "RxBufferOverflow" << data.addres;
     lastParcel = data;
     semaphore.release();
 }
 void MAN2::RxWrongCommand(const Parcel& data)
 {
-    qDebug() << "RxWrongCommand" << data.addres;
+    qDebug() << "RxWrongCommand" << data.addres << static_cast<Command>(data.command);
     lastParcel = data;
     semaphore.release();
 }
@@ -525,14 +552,15 @@ void MAN2::RxTextualParcel(const Parcel& data)
 }
 void MAN2::RxCrcError(const Parcel& data)
 {
-    qDebug() << "RxCrcError" << data.addres;
+    qDebug() << "RxCrcError" << data.addres << static_cast<Command>(data.command);
     lastParcel = data;
     ++crcErrCounter;
-    semaphore.release(9);
+    //thread()->sleep(1);
+    //semaphore.release(9);
 }
 void MAN2::RxNullFunction(const Parcel& data)
 {
-    qDebug() << "RxNullFunction" << data.addres;
+    qDebug() << "RxNullFunction" << data.addres << data.command;
     lastParcel = data;
     semaphore.release(9);
 }
@@ -564,14 +592,13 @@ SerialPort::SerialPort(MAN2* manInterface)
     m_f[TextualParcel] = &MAN2::RxTextualParcel;
     m_f[CrcError] = &MAN2::RxCrcError;
 
-    // connect(this, &QSerialPort::breakEnabledChanged, [](bool set) { qDebug() << "breakEnabled" << set; });
-    // connect(this, &QSerialPort::dataTerminalReadyChanged, [](bool set) { qDebug() << "dataTerminalReady" << set; });
-    // connect(this, &QSerialPort::requestToSendChanged, [](bool set) { qDebug() << "requestToSend" << set; });
+    // connect(this, &QSerialPort::breakEnabledChanged, [](bool set) { //qDebug() << "breakEnabled" << set; });
+    // connect(this, &QSerialPort::dataTerminalReadyChanged, [](bool set) { //qDebug() << "dataTerminalReady" << set; });
+    // connect(this, &QSerialPort::requestToSendChanged, [](bool set) { //qDebug() << "requestToSend" << set; });
     // connect(this, &QSerialPort::baudRateChanged, [](qint32 baudRate, QSerialPort::Directions directions) { qDebug() << baudRate << directions; });
     // connect(this, &QSerialPort::dataBitsChanged, [](QSerialPort::DataBits dataBits) { qDebug() << dataBits; });
 
     connect(this, &QSerialPort::errorOccurred, [this](QSerialPort::SerialPortError error) {
-        qDebug() << error;
         switch (error) {
         case NoError:
         case DeviceNotFoundError:
@@ -611,7 +638,7 @@ SerialPort::SerialPort(MAN2* manInterface)
     });
 
     connect(this, &QSerialPort::errorOccurred, [this](QSerialPort::SerialPortError error) {
-        qDebug() << "\n0" << error;
+        //qDebug() << "\n0" << error;
         switch (error) {
         case NoError:
         case DeviceNotFoundError:
@@ -672,7 +699,7 @@ void SerialPort::Close()
 
 void SerialPort::Write(const QByteArray& data)
 {
-    //    qDebug() << "Write" << data.toHex().toUpper();
+    //    //qDebug() << "Write" << data.toHex().toUpper();
     write(data);
 }
 

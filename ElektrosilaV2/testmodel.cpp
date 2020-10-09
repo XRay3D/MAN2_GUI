@@ -6,7 +6,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <devicemodel.h>
-#include <mydialog.h>
+#include <protodialog.h>
 
 const int id4 = qRegisterMetaType<QVector<int>>("QVector<int>");
 
@@ -397,8 +397,9 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
 
     protocol.append(strBot.arg(QDate::currentDate().toString("dd.MM.yyyy"))
                         .arg(DeviceModel::scanSettings().Fio)
-                        .arg(/*!ok ? "; color:red" : */ "")
-                        .arg(/*ok ? "Прибор соответствует требованиям ТУ" : "Прибор не соответствует требованиям ТУ"*/ ""));
+        //.arg(/*!ok ? "; color:red" : */ "")
+        //.arg(/*ok ? "Прибор соответствует требованиям ТУ" : "Прибор не соответствует требованиям ТУ"*/ "")
+    );
 
     QString path = qApp->applicationDirPath()
                        .append("/")
@@ -430,7 +431,7 @@ void TestModel::showProtocol(int num)
     //    }
     if (!m_protocolVisible[num] && !m_serNum[num].isEmpty()) {
         m_protocolVisible[num] = true;
-        MyDialog* Dialog = new MyDialog(reinterpret_cast<QWidget*>(parent()), m_serNum[num]);
+        ProtoDialog* Dialog = new ProtoDialog(reinterpret_cast<QWidget*>(parent()), m_serNum[num]);
         Dialog->LoadFile(m_paths[num]);
         connect(Dialog, &QDialog::destroyed, [this, num] { m_protocolVisible[num] = false; });
     }

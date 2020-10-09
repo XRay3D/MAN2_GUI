@@ -1,6 +1,6 @@
-#include "mydialog.h"
+#include "protodialog.h"
 
-MyDialog::MyDialog(QWidget* parent, QString windowTitle)
+ProtoDialog::ProtoDialog(QWidget* parent, QString windowTitle)
     : QDialog(parent)
 {
     if (objectName().isEmpty()) {
@@ -18,17 +18,13 @@ MyDialog::MyDialog(QWidget* parent, QString windowTitle)
     verticalLayout->addWidget(pushButton);
     setWindowTitle(windowTitle);
     pushButton->setText("Печать");
-    connect(pushButton, &QPushButton::clicked, this, &MyDialog::Print);
+    connect(pushButton, &QPushButton::clicked, this, &ProtoDialog::Print);
     show();
 }
 
-MyDialog::~MyDialog()
-{
-    //delete axWidget;
-    qDebug() << "~MyDialog()";
-}
+ProtoDialog::~ProtoDialog() { }
 
-void MyDialog::LoadFile(const QString& file)
+void ProtoDialog::LoadFile(const QString& file)
 {
     QVariantList params;
     params << file; //.replace('/', '\\');
@@ -45,7 +41,7 @@ void MyDialog::LoadFile(const QString& file)
     //axWidget->dynamicCall("LoadFile(const QString&)", file);
 }
 
-void MyDialog::Print(bool b)
+void ProtoDialog::Print(bool b)
 {
     Q_UNUSED(b)
     QVariantList params;
@@ -54,7 +50,7 @@ void MyDialog::Print(bool b)
     axWidget->dynamicCall("ExecWB(OLECMDID, OLECMDEXECOPT, QVariant&, QVariant&)", params);
 }
 
-void MyDialog::hideEvent(QHideEvent* event)
+void ProtoDialog::hideEvent(QHideEvent* event)
 {
     //verticalLayout->removeWidget(axWidget);
     qDebug() << "hideEvent()";

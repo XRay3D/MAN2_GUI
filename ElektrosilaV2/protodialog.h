@@ -8,11 +8,11 @@
 #include <QHideEvent>
 #include <QDebug>
 
-class MyDialog : public QDialog {
+class ProtoDialog : public QDialog {
     Q_OBJECT
 public:
-    MyDialog(QWidget* parent = nullptr, QString windowTitle = "");
-    virtual ~MyDialog();
+    ProtoDialog(QWidget* parent = nullptr, QString windowTitle = "");
+    virtual ~ProtoDialog();
     void LoadFile(const QString& file);
     QVBoxLayout* verticalLayout;
     //    SHDocVw::WebBrowser* axWidget;

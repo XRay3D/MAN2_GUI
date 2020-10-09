@@ -48,7 +48,7 @@ public:
     void pbStartStopClicked(bool checked);
 
 signals:
-    void CurrentTabIndex(int);
+    void currentTabIndex(int);
     void ScanSettingsSignal(const ScanSettings*);
     void SerialNumberChanged(const QString&, int);
     void startMeasure(ValueType type = CurrentMeasuredValue, uint8_t channel = 0);

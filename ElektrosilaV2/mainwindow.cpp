@@ -26,8 +26,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     connect(tabCommunications, &Communications::currentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
     connect(tabCommunications, &Communications::setTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
-    connect(tabInputParameters, &PrepareForm::CurrentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
-    //    connect(tabAutomaticMeasurements, &AutoMeasure::SetTabBarEnabled, tabWidget->tabBar(), &QTabBar::setEnabled);
+    connect(tabInputParameters, &PrepareForm::currentTabIndex, tabWidget, &QTabWidget::setCurrentIndex);
 
     readSettings();
 
@@ -36,7 +35,6 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
-    qDebug() << "~MainWindow()";
     writeSettings();
     m_manThread.quit();
     m_manThread.wait();

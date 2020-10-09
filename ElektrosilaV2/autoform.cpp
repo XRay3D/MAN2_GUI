@@ -231,7 +231,7 @@ void PrepareForm::showEvent(QShowEvent* event)
         setEnabled(true);
     } else {
         setEnabled(false);
-        emit CurrentTabIndex(2);
+        emit currentTabIndex(2);
     }
 }
 
