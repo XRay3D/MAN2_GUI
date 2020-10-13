@@ -9,8 +9,8 @@
 enum {
     SkipRms = 1,
     SkipRmsMsg = 1,
-    DelayBeforeMeasure1 = 0,
-    DelayBeforeMeasure2 = 100,
+    DelayBeforeMeasure1 = 1000,
+    DelayBeforeMeasure2 = 1000,
 };
 
 Tester::Tester(bool* doNotSkip, QObject* parent)
@@ -25,17 +25,9 @@ Tester::~Tester()
     semaphore.acquire(semaphore.available());
 }
 
-void Tester::Continue()
-{
-    semaphore.release(1);
-}
+void Tester::continueTests() { semaphore.release(1); }
 
-void Tester::finishMeasurements()
-{
-    mi::man->ping();
-    mi::man->disableAll();
-    semaphore.release(2);
-}
+void Tester::finishTests() { semaphore.release(2); }
 
 void Tester::run()
 {
@@ -45,44 +37,62 @@ void Tester::run()
     try {
         while (!mi::man->disableAll())
             waitAnswerManConnErr();
-        do {
-            while (!mi::man->switchCurrent(On))
-                waitAnswerManConnErr();
 
-            if (TestModel::instance()->dontSkip(TestModel::Test4)) {
-                setVoltage(SetInputVoltageUpper);
-                test4(); // Измерение выходного напряжения под номинальной нагрузкой Максимальное (249) Да
-            }
-            if (TestModel::instance()->dontSkip(TestModel::Test7)) {
-                setVoltage(SetInputVoltageNormal);
-                test7(); // Тест К.З. - восстановление напряжения при подключенной нагрузке Номинальное (220) Да
-            }
-            if (TestModel::instance()->dontSkip(TestModel::Test6)) {
-                setVoltage(SetInputVoltageNormal);
-                test6(); // Поиск точки срабатывания защиты Номинальное (220) Плавное нарастание
-            }
-            if (TestModel::instance()->dontSkip(TestModel::Test1)) {
-                setVoltage(SetInputVoltageNormal);
-                test1(); // Измерение выходного напряжения под номинальной нагрузкой Номинальное (220) Да
-            }
-            if (TestModel::instance()->dontSkip(TestModel::Test5)) {
-                setVoltage(SetInputVoltageNormal);
-                test5(); // Измерение выходного напряжения без нагрузки Номинальное (220) Нет
-            }
-            if (TestModel::instance()->dontSkip(TestModel::Test3)) {
-                setVoltage(SetInputVoltageLower);
-                test3(); // Измерение выходного напряжения под номинальной нагрузкой Минимальное (130) Да
-            }
-            if (TestModel::instance()->dontSkip(TestModel::Test2)) {
-                setVoltage(SetInputVoltageLower);
-                test2(); // Измерение Пульсации выходного напряжения под номинальной нагрузкой Минимальное (130) Да
-            }
+        while (!mi::man->switchCurrent(On))
+            waitAnswerManConnErr();
 
-            TestModel::instance()->setCurrentTest(TestModel::None);
+        if (mi::osc->isConnected()) {
+            const double rc = DeviceModel::scanSettings().RatedCurrent / 6;
+            qDebug() << "RatedCurrent" << rc;
+            /*  */ if (rc < 10) {
+                mi::osc->wrRdData(":CH1:SCALe 5mv");
+            } else if (rc < 100) {
+                mi::osc->wrRdData(":CH1:SCALe 50mv");
+            } else if (rc < 1000) {
+                mi::osc->wrRdData(":CH1:SCALe 500mv");
+            } else {
+                mi::osc->wrRdData(":CH1:SCALe 5v");
+            }
+            mi::osc->wrRdData(":CH1:COUPling DC");
+            mi::osc->wrRdData(":CH1:OFFSet -3");
+        }
 
-            while (!mi::man->disableAll())
-                waitAnswerManConnErr();
-        } while (1);
+        if (TestModel::instance()->dontSkip(TestModel::Test4)) {
+            setVoltage(SetInputVoltageUpper);
+            test4(); // Измерение выходного напряжения под номинальной нагрузкой Максимальное (249) Да
+        }
+        if (TestModel::instance()->dontSkip(TestModel::Test7)) {
+            setVoltage(SetInputVoltageNormal);
+            test7(); // Тест К.З. - восстановление напряжения при подключенной нагрузке Номинальное (220) Да
+        }
+        if (TestModel::instance()->dontSkip(TestModel::Test6)) {
+            setVoltage(SetInputVoltageNormal);
+            test6(); // Поиск точки срабатывания защиты Номинальное (220) Плавное нарастание
+        }
+        if (TestModel::instance()->dontSkip(TestModel::Test1)) {
+            setVoltage(SetInputVoltageNormal);
+            test1(); // Измерение выходного напряжения под номинальной нагрузкой Номинальное (220) Да
+        }
+        if (TestModel::instance()->dontSkip(TestModel::Test5)) {
+            setVoltage(SetInputVoltageNormal);
+            test5(); // Измерение выходного напряжения без нагрузки Номинальное (220) Нет
+        }
+        if (TestModel::instance()->dontSkip(TestModel::Test3)) {
+            setVoltage(SetInputVoltageLower);
+            test3(); // Измерение выходного напряжения под номинальной нагрузкой Минимальное (130) Да
+        }
+        if (TestModel::instance()->dontSkip(TestModel::Test2)) {
+            setVoltage(SetInputVoltageLower);
+            test2(); // Измерение Пульсации выходного напряжения под номинальной нагрузкой Минимальное (130) Да
+        }
+
+        if (mi::osc->isConnected())
+            mi::osc->wrRdData(":CH1:SCALe 500mv");
+
+        TestModel::instance()->setCurrentTest(TestModel::None);
+
+        while (!mi::man->disableAll())
+            waitAnswerManConnErr();
     } catch (int i) {
         Q_UNUSED(i)
         semaphore.acquire(semaphore.available());
@@ -93,32 +103,34 @@ void Tester::run()
 void Tester::waitAnswer(int question)
 {
     emit showMessage(question);
-    while (!semaphore.tryAcquire(1, 100))
+    while (!semaphore.tryAcquire(1, 200)) {
         if (question != NoConnectionWithMan)
             mi::man->getMeasuredValue(list);
+    }
     checkFinished();
 }
 
 void Tester::waitAnswerManConnErr()
 {
     emit showMessage(NoConnectionWithMan);
-    while (!semaphore.tryAcquire(1, 100))
-        continue;
+    semaphore.acquire();
     checkFinished();
 }
 
 void Tester::checkFinished()
 {
-    if (semaphore.available()) {
-        mi::man->disableAll();
-        throw int(1);
-    }
+    if (!semaphore.available())
+        return;
+    semaphore.acquire(semaphore.available());
+    mi::man->Write(mi::man->createParcel(Ping));
+    mi::man->disableAll();
+    throw int(1);
 }
 
 void Tester::setVoltage(int voltage)
 {
-    if constexpr (SkipRmsMsg)
-        return;
+    //    if constexpr (SkipRmsMsg)
+    //        return;
 
     static int lastVoltage = -1;
     switch (voltage) {
@@ -151,16 +163,18 @@ void Tester::test1()
 
     TestModel::instance()->setCurrentTest(TestModel::Test1);
 
-    Msleep(DelayBeforeMeasure1);
+    waitAndMeasure(DelayBeforeMeasure1);
 
     if (mi::osc->isConnected()) {
-        list.clear();
         configCh2();
+        list.clear();
         for (int i = 1; i < 9; ++i) {
             if (!doNotSkip[i - 1])
                 continue;
             mi::man->oscilloscope(i);
-            Msleep(DelayBeforeMeasure2);
+
+            waitAndMeasure(DelayBeforeMeasure2);
+
             list[i].valCh1 = mi::osc->AVERage(2);
             TestModel::instance()->setTest1(list);
             checkFinished();
@@ -184,8 +198,6 @@ void Tester::test2()
     while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         waitAnswerManConnErr();
 
-    Msleep(DelayBeforeMeasure1);
-
     if (mi::osc->isConnected()) {
         list.clear();
         mi::osc->wrRdData(":CH2:COUPling AC");
@@ -197,11 +209,14 @@ void Tester::test2()
 
         mi::osc->wrRdData(":HORIzontal:SCALe 1.0ms");
 
+        waitAndMeasure(DelayBeforeMeasure1);
+
         for (int i = 1; i < 9; ++i) {
             if (!doNotSkip[i - 1])
                 continue;
             mi::man->oscilloscope(i);
-            Msleep(DelayBeforeMeasure2);
+
+            waitAndMeasure(DelayBeforeMeasure2);
             TestModel::instance()->setTest2(i - 1, DeviceModel::scanSettings().VisualControl > abs(mi::osc->AVERage(2)) * 1000.0);
             checkFinished();
             emit updateProgresBar();
@@ -231,7 +246,7 @@ void Tester::test3()
     while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         waitAnswerManConnErr();
 
-    Msleep(DelayBeforeMeasure1);
+    waitAndMeasure(DelayBeforeMeasure1);
 
     if (mi::osc->isConnected()) {
         list.clear();
@@ -240,7 +255,9 @@ void Tester::test3()
             if (!doNotSkip[i - 1])
                 continue;
             mi::man->oscilloscope(i);
-            Msleep(DelayBeforeMeasure2);
+
+            waitAndMeasure(DelayBeforeMeasure2);
+
             list[i].valCh1 = mi::osc->AVERage(2);
             TestModel::instance()->setTest3(list);
             checkFinished();
@@ -265,7 +282,7 @@ void Tester::test4()
     while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         waitAnswerManConnErr();
 
-    Msleep(DelayBeforeMeasure1);
+    waitAndMeasure(DelayBeforeMeasure1);
 
     if (mi::osc->isConnected()) {
         list.clear();
@@ -274,7 +291,9 @@ void Tester::test4()
             if (!doNotSkip[i - 1])
                 continue;
             mi::man->oscilloscope(i);
-            Msleep(DelayBeforeMeasure2);
+
+            waitAndMeasure(DelayBeforeMeasure2);
+
             list[i].valCh1 = mi::osc->AVERage(2);
             TestModel::instance()->setTest4(list);
             checkFinished();
@@ -299,7 +318,7 @@ void Tester::test5()
     while (!mi::man->setCurrent(0))
         waitAnswerManConnErr();
 
-    Msleep(DelayBeforeMeasure1);
+    waitAndMeasure(DelayBeforeMeasure1);
 
     if (mi::osc->isConnected()) {
         list.clear();
@@ -308,7 +327,9 @@ void Tester::test5()
             if (!doNotSkip[i - 1])
                 continue;
             mi::man->oscilloscope(i);
-            Msleep(DelayBeforeMeasure2);
+
+            waitAndMeasure(DelayBeforeMeasure2);
+
             list[i].valCh1 = mi::osc->AVERage(2);
             TestModel::instance()->setTest5(list);
             checkFinished();
@@ -339,17 +360,17 @@ void Tester::test6()
                 emit updateProgresBar();
                 continue;
             }
-            if (mi::osc->isConnected()) {
-                mi::osc->wrRdData(":CH1:COUPling DC");
-                mi::osc->wrRdData(":CH1:SCALe 100mv");
-                mi::osc->wrRdData(":CH1:OFFSet -3");
 
-                configCh2();
-            }
             while (!mi::man->setCurrent(DeviceModel::scanSettings().RestrictionsTest7Min, ch))
                 waitAnswerManConnErr();
+
             mi::man->oscilloscope(ch);
-            Msleep(DelayBeforeMeasure2);
+
+            if (mi::osc->isConnected()) {
+                configCh2();
+            }
+
+            waitAndMeasure(DelayBeforeMeasure2);
             //            double step = DeviceModel::scanSettings().RestrictionsTest7Max - DeviceModel::scanSettings().RestrictionsTest7Min;
             // Всё в амперах
 
@@ -375,7 +396,7 @@ void Tester::test7()
     while (!mi::man->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         waitAnswerManConnErr();
 
-    Msleep(DelayBeforeMeasure1);
+    waitAndMeasure(DelayBeforeMeasure1);
 
     list.clear();
 
@@ -384,9 +405,12 @@ void Tester::test7()
         for (uint8_t ch = 1; ch < 9; ++ch) {
             if (!doNotSkip[ch - 1])
                 continue;
-            mi::osc->wrRdData(":HORIzontal:SCALe 0.5s");
+
             mi::man->oscilloscope(ch);
-            Msleep(DelayBeforeMeasure2);
+            mi::osc->wrRdData(":HORIzontal:SCALe 0.5s");
+
+            waitAndMeasure(DelayBeforeMeasure2);
+
             while (!mi::man->shortCircuitTest(ScShunt, ch)) //вкл
                 waitAnswerManConnErr();
             list[ch].valCh1 = mi::osc->MIN(2);
@@ -421,7 +445,7 @@ void Tester::configCh2(bool slow)
         mi::osc->wrRdData(":HORIzontal:SCALe 1.0us");
 }
 
-void Tester::Msleep(unsigned long time)
+void Tester::waitAndMeasure(unsigned long time)
 {
     QElapsedTimer timer;
     timer.start();

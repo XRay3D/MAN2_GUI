@@ -5,6 +5,8 @@ CONFIG -= qt
 
 DESTDIR = $$_PRO_FILE_PWD_/../bin
 
+TARGET = ADS_6142H
+
 contains(QT_ARCH, i386) {
     TARGET = $$TARGET"_x32"
     LIBS += \

@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
     DigitalOsc osc;
-    string str(osc.wrRdData("*IDN?"));
+    string str(osc.wrRdData("*IDN?\r\n"));
     if (str.substr(0, 10) != ",ADS-6142H")
         return -1;
 

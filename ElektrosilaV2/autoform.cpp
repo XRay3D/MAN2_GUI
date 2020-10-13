@@ -61,7 +61,7 @@ void PrepareForm::showMessage(int num)
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
             pbStartStopClicked(false);
         else
-            m_worker->Continue();
+            m_worker->continueTests();
         return;
     case SetInputVoltageLower:
         stage = num;
@@ -72,7 +72,7 @@ void PrepareForm::showMessage(int num)
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
             pbStartStopClicked(false);
         else
-            m_worker->Continue();
+            m_worker->continueTests();
         return;
     case SetInputVoltageNormal:
         stage = num;
@@ -81,21 +81,21 @@ void PrepareForm::showMessage(int num)
             pbStartStopClicked(false);
 
         else
-            m_worker->Continue();
+            m_worker->continueTests();
         return;
     case NoConnectionWithMan:
         messageText = "Нет связи с МАНом 2!";
         if (QMessageBox::critical(this, "", messageText, "Повторить", "Остановить измерения"))
             pbStartStopClicked(false);
         else
-            m_worker->Continue();
+            m_worker->continueTests();
         return;
     case RestoreTheOperationOfChannels:
         messageText = "Восстановите работу каналов блока питания";
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
             pbStartStopClicked(false);
         else
-            m_worker->Continue();
+            m_worker->continueTests();
         return;
     case PulsationsOnTheChannel_1:
     case PulsationsOnTheChannel_2:
@@ -113,12 +113,12 @@ void PrepareForm::showMessage(int num)
         case 0:
             TestModel::instance()->setTest2(num - PulsationsOnTheChannel_1, true);
             //m_result[num - PULSATIONS_ON_THE_CHANNEL_1].test2 = 1.0;
-            m_worker->Continue();
+            m_worker->continueTests();
             return;
         case 1:
             TestModel::instance()->setTest2(num - PulsationsOnTheChannel_1, false);
             //m_result[num - PULSATIONS_ON_THE_CHANNEL_1].test2 = -1.0;
-            m_worker->Continue();
+            m_worker->continueTests();
             return;
         case 2:
             pbStartStopClicked(false);
@@ -135,7 +135,7 @@ void PrepareForm::showMessage(int num)
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
                 pbStartStopClicked(false);
             else
-                m_worker->Continue();
+                m_worker->continueTests();
             return;
         case SetInputVoltageLower:
             messageText = QString("Установите входное напряжение %1±%2В")
@@ -145,14 +145,14 @@ void PrepareForm::showMessage(int num)
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
                 pbStartStopClicked(false);
             else
-                m_worker->Continue();
+                m_worker->continueTests();
             return;
         case SetInputVoltageNormal:
             messageText = "Установите входное напряжение 220±4,4В";
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
                 pbStartStopClicked(false);
             else
-                m_worker->Continue();
+                m_worker->continueTests();
             return;
         }
     }
@@ -212,7 +212,7 @@ void PrepareForm::pbStartStopClicked(bool checked)
         pbStartStop->setText("Начать измерения");
 
         if (m_worker)
-            m_worker->finishMeasurements();
+            m_worker->finishTests();
 
         progressBar->setValue(0);
 

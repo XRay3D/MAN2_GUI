@@ -33,9 +33,9 @@ TEMPLATE = app
 
 win32:RC_FILE = main_icon/myapp.rc
 
-CONFIG += c++17
+#CONFIG += c++17
 
-QMAKE_CXXFLAGS -= /std:c++17
+QMAKE_CXXFLAGS -= /std:c++11
 QMAKE_CXXFLAGS += /std:c++latest
 
 

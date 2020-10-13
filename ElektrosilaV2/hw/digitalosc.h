@@ -5,6 +5,7 @@
 #include <QSemaphore>
 
 class QProcess;
+class QThread;
 
 class DigitalOsc : public QObject {
     Q_OBJECT
@@ -13,8 +14,10 @@ class DigitalOsc : public QObject {
     void operator=(const DigitalOsc&) = delete;
 
     QString m_conected;
-    QProcess* process;
+    QProcess* proc = nullptr;
+    QThread* thread;
     QSemaphore semaphore;
+    QByteArray data;
 
 public:
     explicit DigitalOsc(QObject* parent = nullptr);

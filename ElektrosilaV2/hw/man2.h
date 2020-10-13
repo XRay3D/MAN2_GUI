@@ -142,7 +142,7 @@ struct CallBack {
     virtual void RxNullFunction(const Parcel& data) = 0;
 };
 
-class MAN2 final : public QObject, private MyProtokol, public CommonInterfaces, private CallBack {
+class MAN2 final : public QObject, public MyProtokol, public CommonInterfaces, private CallBack {
     Q_OBJECT
     friend class SerialPort;
 

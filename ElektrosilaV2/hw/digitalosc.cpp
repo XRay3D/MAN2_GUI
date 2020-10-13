@@ -1,96 +1,104 @@
 #include "digitalosc.h"
+#include <QApplication>
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QMutex>
 #include <QProcess>
 #include <QThread>
 #include <qt_windows.h>
 
+int taskkill() { return ::system("taskkill /F /T /IM ADS_6142H_x32.exe"); };
+
 DigitalOsc::DigitalOsc(QObject* parent)
     : QObject(parent)
-    , process(new QProcess(/*this*/))
+    , proc(new QProcess)
+//    , thread(new QThread)
 {
-    connect(process, &QProcess::errorOccurred, [](QProcess::ProcessError error) {
-        qDebug() << "errorOccurred" << error;
-    });
-    connect(process, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), [](int exitCode, QProcess::ExitStatus exitStatus) {
+    connect(proc, &QProcess::errorOccurred, [/*this*/](QProcess::ProcessError error) { qDebug() << "errorOccurred" << error; });
+    connect(proc, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), [/*this*/](int exitCode, QProcess::ExitStatus exitStatus) {
         qDebug() << "finished" << exitCode << exitStatus;
         if (exitCode == -1)
-            ::system("taskkill /F /T /IM Osc_ADS_6142H_x32.exe");
+            qDebug() << taskkill();
     });
 
-    connect(process, &QProcess::readyReadStandardError, []() { qDebug() << "readyReadStandardError"; });
-    connect(process, &QProcess::readyReadStandardOutput, [this]() { semaphore.release(); });
-    connect(process, &QProcess::started, []() { qDebug() << "started"; });
-    connect(process, &QProcess::stateChanged, [](QProcess::ProcessState newState) { qDebug() << "stateChanged" << newState; });
+    connect(proc, &QProcess::readyReadStandardError, []() { qDebug() << "readyReadStandardError"; });
+    connect(proc, &QProcess::readyReadStandardOutput, [this]() { data = proc->readAllStandardOutput(); semaphore.release(); });
+    connect(proc, &QProcess::started, [this]() {  semaphore.release(); qDebug() << "started"; });
+    connect(proc, &QProcess::stateChanged, [](QProcess::ProcessState newState) { qDebug() << "stateChanged" << newState; });
+
+    //    proc->moveToThread(thread);
+    //    connect(thread, &QThread::finished, proc, &QObject::deleteLater);
+    //    thread->start();
 }
 
-DigitalOsc::~DigitalOsc() { close(); }
+DigitalOsc::~DigitalOsc()
+{
+    taskkill();
+    //    thread->quit(), thread->wait();
+}
 
 void DigitalOsc::ping()
 {
-    qDebug() << "DigitalOsc::ping()";
-
     close();
 
-    process->start("Osc_ADS_6142H_x32.exe");
-    process->waitForStarted();
+    if (proc->state() != QProcess::Running) {
+        proc->start("ADS_6142H_x32.exe");
+        if (!proc->waitForStarted()) {
+            m_conected.clear();
+            qDebug() << __FUNCTION__ << "!!!!!!!!!!";
+        }
+    }
+    semaphore.acquire(semaphore.available());
 
-    thread()->sleep(1);
-    process->write("*IDN?\n");
-    process->waitForBytesWritten(1000);
-    int ctr = 0;
-    while (!process->canReadLine() && ++ctr < 10)
-        process->waitForReadyRead(100);
+    proc->write("*IDN?\r\n");
+    proc->waitForBytesWritten();
 
-    qDebug() << "ping" << (m_conected = process->readAll());
-    //    process->write("*IDN?");
-    //    process->waitForBytesWritten(1000);
+    semaphore.tryAcquire(1, 1000);
+
+    proc->waitForReadyRead(100);
+
+    m_conected = data;
 }
 
 void DigitalOsc::close()
 {
-    //int retval = ::system("taskkill /F /T /IM Osc_ADS_6142H_x32.exe");
-    //qDebug() << "close" << retval;
-    m_conected.clear();
-    if (process->state() == QProcess::Running) {
-        process->write("exit");
-        process->waitForBytesWritten(1000);
-        process->terminate();
-    }
+    //qDebug() << __FUNCTION__ << taskkill();
+    //    if (proc && proc->state() == QProcess::Running) {
+    //        proc->terminate();
+    //        proc->waitForFinished(3000);
+    //    }
+    //    delete proc;
+    //    proc = nullptr;
 }
 
 QByteArray DigitalOsc::wrRdData(QByteArray wrData)
 {
+    semaphore.acquire(semaphore.available());
     const bool skipRead = !wrData.endsWith('?');
-    QByteArray rdData;
+    data.clear();
     do {
-
-        while (!process->isOpen()) {
+        while (proc->state() != QProcess::Running)
             ping();
-        }
 
-        if (0 && skipRead)
-            qDebug() << "WR<<" << wrData;
+        QElapsedTimer t;
+        t.start();
+        proc->write(wrData + "\r\n");
+        proc->waitForBytesWritten(1000);
 
-        process->write(wrData + "\r\n");
-        process->waitForBytesWritten(1000);
-        if (skipRead) {
-            thread()->msleep(100);
+        if (skipRead)
             return {};
-        }
+
         semaphore.tryAcquire(1, 10000);
-        rdData = process->readAll();
 
-        if (0 && !skipRead)
-            qDebug() << QString("WR<<").append(wrData).append(" RD>>").append(rdData).toLocal8Bit().data();
+        qDebug() << t.elapsed() << "RD >>" << data.data();
 
-        qDebug() << QString("RD >> ").append(rdData).toLocal8Bit().data();
-
-        if (rdData.startsWith("Code 0x"))
+        if (data.startsWith("Code 0x")) {
+            proc->terminate();
             ping();
+        }
 
-    } while (rdData.startsWith("Code 0x") || rdData.isEmpty());
-    return rdData;
+    } while (data.startsWith("Code 0x") || data.isEmpty());
+    return data;
 }
 
 double DigitalOsc::PKPK(int ch)

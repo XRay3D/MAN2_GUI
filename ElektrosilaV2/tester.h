@@ -9,8 +9,8 @@ class Tester : public QThread {
 public:
     Tester(bool* doNotSkip, QObject* parent = nullptr);
     ~Tester() override;
-    void Continue();
-    void finishMeasurements();
+    void continueTests();
+    void finishTests();
     void run() override;
 
 signals:
@@ -32,7 +32,7 @@ private:
 
     void configCh2(bool slow = false);
 
-    void Msleep(unsigned long time);
+    void waitAndMeasure(unsigned long time);
 
     QMap<int, MeasuredValue> list;
     double acVoltage;
