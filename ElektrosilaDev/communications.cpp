@@ -65,11 +65,6 @@ void Communications::CheckConnection()
     //emit SetTabBarEnabled(false);
 }
 
-void Communications::on_pushButton_clicked()
-{
-    //    mi::man->setAddress(spinBox->value(), comboBox->currentText().toInt());
-}
-
 void Communications::showEvent(QShowEvent* event)
 {
     //    QSettings settings("Settings.ini", QSettings::IniFormat);

@@ -92,6 +92,12 @@ void DigitalOsc::ping()
     }
 }
 
+void DigitalOsc::restart()
+{
+    close();
+    ping();
+}
+
 void DigitalOsc::close()
 {
     if (vi)

@@ -4,8 +4,9 @@ F#-------------------------------------------------
 #
 #-------------------------------------------------
 
-QT += core gui widgets serialport printsupport axcontainer
+QT += core gui widgets serialport printsupport axcontainer network
 QT += charts
+#CONFIG += console
 
 #FQMAKE_CXXFLAGS += vms
 

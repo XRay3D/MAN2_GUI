@@ -20,9 +20,11 @@ enum StateEnum {
     On
 };
 
-enum { AdcCount = 1 };
-enum { ManCount = 8 };
-enum { ChannelCount = ManCount + AdcCount };
+enum {
+    AdcCount = 1,
+    ManCount = 8,
+    ChannelCount = ManCount + AdcCount
+};
 
 enum Command {
     /*00*/ Ping,
@@ -122,24 +124,24 @@ class SerialPort;
 struct CallBack {
     virtual ~CallBack() = default;
 
-    /*00*/ virtual void RxPing(const Parcel& data) = 0;
-    /*01*/ virtual void RxReadMeasuredValue(const Parcel& data) = 0;
-    /*02*/ virtual void RxSetCurrent(const Parcel& data) = 0;
-    /*03*/ virtual void RxSwitchCurrent(const Parcel& data) = 0;
-    /*04*/ virtual void RxSwitchShortCircuit(const Parcel& data) = 0;
-    /*05*/ virtual void RxTripCurrentTest(const Parcel& data) = 0;
-    /*06*/ virtual void RxShortCircuitTest(const Parcel& data) = 0;
-    /*07*/ virtual void RxOscilloscope(const Parcel& data) = 0;
-    /*08*/ virtual void RxGetCalibrationCoefficients(const Parcel& data) = 0;
-    /*09*/ virtual void RxSetDefaultCalibrationCoefficients(const Parcel& data) = 0;
-    /*10*/ virtual void RxSetCalibrationCoefficients(const Parcel& data) = 0;
-    /*11*/ virtual void RxSaveCalibrationCoefficients(const Parcel& data) = 0;
-    /*12*/ virtual void RxSetAddress(const Parcel& data) = 0;
-    virtual void RxBufferOverflow(const Parcel& data) = 0;
-    virtual void RxWrongCommand(const Parcel& data) = 0;
-    virtual void RxTextualParcel(const Parcel& data) = 0;
-    virtual void RxCrcError(const Parcel& data) = 0;
-    virtual void RxNullFunction(const Parcel& data) = 0;
+    /*00*/ virtual void RxPing(Parcel data) = 0;
+    /*01*/ virtual void RxReadMeasuredValue(Parcel data) = 0;
+    /*02*/ virtual void RxSetCurrent(Parcel data) = 0;
+    /*03*/ virtual void RxSwitchCurrent(Parcel data) = 0;
+    /*04*/ virtual void RxSwitchShortCircuit(Parcel data) = 0;
+    /*05*/ virtual void RxTripCurrentTest(Parcel data) = 0;
+    /*06*/ virtual void RxShortCircuitTest(Parcel data) = 0;
+    /*07*/ virtual void RxOscilloscope(Parcel data) = 0;
+    /*08*/ virtual void RxGetCalibrationCoefficients(Parcel data) = 0;
+    /*09*/ virtual void RxSetDefaultCalibrationCoefficients(Parcel data) = 0;
+    /*10*/ virtual void RxSetCalibrationCoefficients(Parcel data) = 0;
+    /*11*/ virtual void RxSaveCalibrationCoefficients(Parcel data) = 0;
+    /*12*/ virtual void RxSetAddress(Parcel data) = 0;
+    virtual void RxBufferOverflow(Parcel data) = 0;
+    virtual void RxWrongCommand(Parcel data) = 0;
+    virtual void RxTextualParcel(Parcel data) = 0;
+    virtual void RxCrcError(Parcel data) = 0;
+    virtual void RxNullFunction(Parcel data) = 0;
 };
 
 class MAN2 final : public QObject, public MyProtokol, public CommonInterfaces, private CallBack {
@@ -208,24 +210,24 @@ private:
 
     // CallBack interface
 
-    void RxPing(const Parcel& data) override;
-    void RxReadMeasuredValue(const Parcel& data) override;
-    void RxSetCurrent(const Parcel& data) override;
-    void RxSwitchCurrent(const Parcel& data) override;
-    void RxSwitchShortCircuit(const Parcel& data) override;
-    void RxTripCurrentTest(const Parcel& data) override;
-    void RxShortCircuitTest(const Parcel& data) override;
-    void RxOscilloscope(const Parcel& data) override;
-    void RxGetCalibrationCoefficients(const Parcel& data) override;
-    void RxSetDefaultCalibrationCoefficients(const Parcel& data) override;
-    void RxSetCalibrationCoefficients(const Parcel& data) override;
-    void RxSaveCalibrationCoefficients(const Parcel& data) override;
-    void RxSetAddress(const Parcel& data) override;
-    void RxBufferOverflow(const Parcel& data) override;
-    void RxWrongCommand(const Parcel& data) override;
-    void RxTextualParcel(const Parcel& data) override;
-    void RxCrcError(const Parcel& data) override;
-    void RxNullFunction(const Parcel& data) override;
+    void RxPing(Parcel data) override;
+    void RxReadMeasuredValue(Parcel data) override;
+    void RxSetCurrent(Parcel data) override;
+    void RxSwitchCurrent(Parcel data) override;
+    void RxSwitchShortCircuit(Parcel data) override;
+    void RxTripCurrentTest(Parcel data) override;
+    void RxShortCircuitTest(Parcel data) override;
+    void RxOscilloscope(Parcel data) override;
+    void RxGetCalibrationCoefficients(Parcel data) override;
+    void RxSetDefaultCalibrationCoefficients(Parcel data) override;
+    void RxSetCalibrationCoefficients(Parcel data) override;
+    void RxSaveCalibrationCoefficients(Parcel data) override;
+    void RxSetAddress(Parcel data) override;
+    void RxBufferOverflow(Parcel data) override;
+    void RxWrongCommand(Parcel data) override;
+    void RxTextualParcel(Parcel data) override;
+    void RxCrcError(Parcel data) override;
+    void RxNullFunction(Parcel data) override;
 };
 
 #endif // MY_PROTOCOL_H

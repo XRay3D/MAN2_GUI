@@ -21,6 +21,8 @@ private:
     // QObject interface
 protected:
     void timerEvent(QTimerEvent* event) override;
+private slots:
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW2_H

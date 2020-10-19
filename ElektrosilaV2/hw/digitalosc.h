@@ -3,9 +3,7 @@
 
 #include <QObject>
 #include <QSemaphore>
-
-class QProcess;
-class QThread;
+#include <QTcpSocket>
 
 class DigitalOsc : public QObject {
     Q_OBJECT
@@ -14,8 +12,8 @@ class DigitalOsc : public QObject {
     void operator=(const DigitalOsc&) = delete;
 
     QString m_conected;
-    QProcess* proc = nullptr;
-    QThread* thread;
+    QThread* thrd;
+    QTcpSocket* socket;
     QSemaphore semaphore;
     QByteArray data;
 
@@ -26,8 +24,6 @@ public:
     void ping();
     void close();
 
-    //    ViStatus SetChannel(int chNum, const QString& s);
-    //    ViStatus SetComand(const QString& s);
     QByteArray wrRdData(QByteArray wrData);
 
     bool isConnected() const { return !m_conected.isEmpty(); }
@@ -40,9 +36,9 @@ public:
     double CYCRms(int ch);
 
 signals:
-    //    void wavData(const QVector<QPointF>& ch1, const QVector<QPointF>& ch2, const QVector<double>& scale);
-    //    void peakData(double u, double i);
+
     void errStr(const QString&);
+    void Write(const QByteArray&);
 };
 
 #endif // rigolOsc_H

@@ -226,9 +226,9 @@ void Measurements::obOscClicked(int channel)
 {
     QPushButton* btn = m_listPbOsc[channel];
     if (btn->isChecked())
-        cbOsc->setCurrentIndex(channel + 1); //   on_cbOsc_currentIndexChanged(channel + 1);
+        cbOsc->setCurrentIndex(channel + 1);
     else
-        cbOsc->setCurrentIndex(0); //        on_cbOsc_currentIndexChanged(0);
+        cbOsc->setCurrentIndex(0);
 }
 
 void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& valMap)
@@ -238,16 +238,11 @@ void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& valMap)
     if (m_minX == m_keyX)
         m_minX = m_keyX = QDateTime::currentDateTime();
 
-    //    QElapsedTimer timer;
-    //    timer.start();
-
     QMapIterator<int, MeasuredValue> iterator(valMap);
     double minY = +std::numeric_limits<double>::max();
     double maxY = -std::numeric_limits<double>::max();
     bool flag = false;
 
-    //    double rms = mi::man->getRmsValue();
-    //    dsbVoltage_9->setValue(rms);
     while (iterator.hasNext()) {
         iterator.next();
         if (iterator.key() == 10) {

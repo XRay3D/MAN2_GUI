@@ -87,3 +87,8 @@ void MainWindow::writeSettings()
     settings.setValue("cbManPort", tabCommunications->cbManPort->currentIndex());
     settings.endGroup();
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    mi::man->setAddress(cbxAddress->currentText().toInt(), spinBox->value());
+}

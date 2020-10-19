@@ -20,6 +20,7 @@ public:
 
     void close();
     void ping();
+    void restart();
 
     string wrRdData(string data, int len = 128, bool exception = false);
 };

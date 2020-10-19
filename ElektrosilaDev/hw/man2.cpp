@@ -72,9 +72,9 @@ bool MAN2::ping(const QString& PortName)
         if (!semaphore.tryAcquire(1, 1000))
             break;
         emit Write(createParcel(Ping, 0));
-        if (!semaphore.tryAcquire(ChannelCount, 2000)) {
-            emit Close();
-            break;
+        if (!semaphore.tryAcquire(ChannelCount, 1000)) {
+            //            emit Close();
+            //            break;
         }
         m_connected = true;
     } while (0);
@@ -251,7 +251,7 @@ bool MAN2::setAddress(uint8_t oldAddress, uint8_t newAddress)
     QMutexLocker Locker(&mutex);
     if (isConnected()) {
         reset();
-        emit Write(createParcel(SetAddress, oldAddress, newAddress));
+        emit Write(createParcel(SetAddress, newAddress, oldAddress));
         if (semaphore.tryAcquire(1, 500))
             result = true;
     }

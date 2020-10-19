@@ -1,5 +1,6 @@
 #include "digitalosc.h"
 #include <QApplication>
+#include <QAuthenticator>
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QMutex>
@@ -7,68 +8,56 @@
 #include <QThread>
 #include <qt_windows.h>
 
-int taskkill() { return ::system("taskkill /F /T /IM ADS_6142H_x32.exe"); };
-
 DigitalOsc::DigitalOsc(QObject* parent)
     : QObject(parent)
-    , proc(new QProcess)
-//    , thread(new QThread)
+    , thrd(new QThread)
+    , socket(new QTcpSocket(thrd))
 {
-    connect(proc, &QProcess::errorOccurred, [/*this*/](QProcess::ProcessError error) { qDebug() << "errorOccurred" << error; });
-    connect(proc, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), [/*this*/](int exitCode, QProcess::ExitStatus exitStatus) {
-        qDebug() << "finished" << exitCode << exitStatus;
-        if (exitCode == -1)
-            qDebug() << taskkill();
+
+    connect(socket, &QAbstractSocket::hostFound, [] { qDebug("hostFound"); });
+    connect(socket, &QAbstractSocket::connected, [] { qDebug("connected"); });
+    connect(socket, &QAbstractSocket::disconnected, [] { qDebug("disconnected"); });
+    //    connect(socket, &QAbstractSocket::stateChanged, [](QAbstractSocket::SocketState state) { qDebug() << "stateChanged" << state; });
+    //    connect(socket, qOverload<QAbstractSocket::SocketError>(&QAbstractSocket::error), [](QAbstractSocket::SocketError error) {
+    //        qDebug() << "error" << error;
+    //    });
+    //    connect(socket, &QAbstractSocket::proxyAuthenticationRequired, [](const QNetworkProxy& proxy, QAuthenticator* authenticator) {
+    //        qDebug() << "proxyAuthenticationRequired" << &proxy << authenticator;
+    //    });
+
+    connect(this, &DigitalOsc::Write, socket, qOverload<const QByteArray&>(&QIODevice::write), Qt::QueuedConnection);
+    connect(socket, &QIODevice::readyRead, [this] {
+        data = socket->readAll();
+        semaphore.release();
     });
 
-    connect(proc, &QProcess::readyReadStandardError, []() { qDebug() << "readyReadStandardError"; });
-    connect(proc, &QProcess::readyReadStandardOutput, [this]() { data = proc->readAllStandardOutput(); semaphore.release(); });
-    connect(proc, &QProcess::started, [this]() {  semaphore.release(); qDebug() << "started"; });
-    connect(proc, &QProcess::stateChanged, [](QProcess::ProcessState newState) { qDebug() << "stateChanged" << newState; });
-
-    //    proc->moveToThread(thread);
-    //    connect(thread, &QThread::finished, proc, &QObject::deleteLater);
-    //    thread->start();
+    connect(thrd, &QThread::finished, socket, &QObject::deleteLater);
+    thrd->start();
+    qDebug() << __FUNCTION__ << thrd;
 }
 
 DigitalOsc::~DigitalOsc()
 {
-    taskkill();
-    //    thread->quit(), thread->wait();
+    thrd->quit();
+    thrd->wait();
 }
 
 void DigitalOsc::ping()
 {
-    close();
-
-    if (proc->state() != QProcess::Running) {
-        proc->start("ADS_6142H_x32.exe");
-        if (!proc->waitForStarted()) {
-            m_conected.clear();
-            qDebug() << __FUNCTION__ << "!!!!!!!!!!";
-        }
+    socket->connectToHost("192.168.1.72", 3000);
+    socket->write("*IDN?");
+    int ctr = 10;
+    while (data.isEmpty() && ctr--) {
+        socket->waitForReadyRead(100);
+        qDebug() << ctr;
     }
-    semaphore.acquire(semaphore.available());
-
-    proc->write("*IDN?\r\n");
-    proc->waitForBytesWritten();
-
-    semaphore.tryAcquire(1, 1000);
-
-    proc->waitForReadyRead(100);
-
     m_conected = data;
+    qDebug() << m_conected;
 }
 
 void DigitalOsc::close()
 {
-    //qDebug() << __FUNCTION__ << taskkill();
-    //    if (proc && proc->state() == QProcess::Running) {
-    //        proc->terminate();
-    //        proc->waitForFinished(3000);
-    //    }
-    //    delete proc;
-    //    proc = nullptr;
+    socket->disconnectFromHost();
 }
 
 QByteArray DigitalOsc::wrRdData(QByteArray wrData)
@@ -76,27 +65,17 @@ QByteArray DigitalOsc::wrRdData(QByteArray wrData)
     semaphore.acquire(semaphore.available());
     const bool skipRead = !wrData.endsWith('?');
     data.clear();
+    QElapsedTimer t;
+    t.start();
     do {
-        while (proc->state() != QProcess::Running)
-            ping();
-
-        QElapsedTimer t;
-        t.start();
-        proc->write(wrData + "\r\n");
-        proc->waitForBytesWritten(1000);
-
-        if (skipRead)
+        qDebug() << t.elapsed() << "WR <<" << wrData.data();
+        emit Write(wrData);
+        if (skipRead) {
+            thread()->msleep(250);
             return {};
-
-        semaphore.tryAcquire(1, 10000);
-
-        qDebug() << t.elapsed() << "RD >>" << data.data();
-
-        if (data.startsWith("Code 0x")) {
-            proc->terminate();
-            ping();
         }
-
+        semaphore.tryAcquire(1, 10000);
+        qDebug() << t.elapsed() << "ms RD >>" << data.data();
     } while (data.startsWith("Code 0x") || data.isEmpty());
     return data;
 }

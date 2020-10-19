@@ -20,7 +20,6 @@ signals:
 
 private slots:
     void on_pbManCheckConnection_clicked();
-    void on_pushButton_clicked();
 
     // QWidget interface
 protected:

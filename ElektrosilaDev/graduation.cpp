@@ -143,6 +143,7 @@ void Graduation::gradU()
 
     mi::man->getCalibrationCoefficients(gradCoeff, mi::man->address());
     setGradDsbxs();
+    //mi::man->setDefaultCalibrationCoefficients(mi::man->address());
 
     m_chbxs[0]->setChecked(true);
     m_chbxs[1]->setChecked(true);
@@ -174,10 +175,12 @@ void Graduation::gradU()
     qDebug() << gradCoeff.adcCh1.scale;
     qDebug() << gradCoeff.adcCh2.scale;
 
-    if ((0.04f < gradCoeff.adcCh1.scale) && (gradCoeff.adcCh1.scale < 0.06f) && (0.04f < gradCoeff.adcCh2.scale) && (gradCoeff.adcCh2.scale < 0.06f))
-        mi::man->setCalibrationCoefficients(gradCoeff, mi::man->address());
-    else
-        QMessageBox::critical(this, "", "Коэффициенты выходят за пределы!");
+    //if ((0.04f < gradCoeff.adcCh1.scale) && (gradCoeff.adcCh1.scale < 0.06f) && (0.04f < gradCoeff.adcCh2.scale) && (gradCoeff.adcCh2.scale < 0.06f))
+    mi::man->setCalibrationCoefficients(gradCoeff, mi::man->address());
+    //else
+    //    QMessageBox::critical(this, "", "Коэффициенты выходят за пределы!");
+
+    setGradDsbxs();
 
     m_chbxs[5]->setChecked(true);
 }

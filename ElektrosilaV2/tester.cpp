@@ -383,8 +383,9 @@ void Tester::test6()
             TestModel::instance()->setTest6(ch, mi::man->valueMap()[ch].valCh3);
         }
     }
-    if constexpr (!SkipRmsMsg)
-        waitAnswer(RestoreTheOperationOfChannels);
+    //if constexpr (!SkipRmsMsg)
+    mi::man->setCurrent(0.0);
+    waitAnswer(RestoreTheOperationOfChannels);
     emit updateProgresBar();
 }
 
@@ -413,8 +414,9 @@ void Tester::test7()
 
             while (!mi::man->shortCircuitTest(ScShunt, ch)) //вкл
                 waitAnswerManConnErr();
-            list[ch].valCh1 = mi::osc->MIN(2);
-            TestModel::instance()->setTest7(list);
+            //list[ch].valCh1 = mi::osc->MIN(2);
+            //TestModel::instance()->setTest7(list);
+            TestModel::instance()->setTest7({ { ch, mi::man->valueMap()[ch] } });
             mi::osc->wrRdData(":HORIzontal:SCALe 100us");
         }
     } else {
@@ -428,9 +430,10 @@ void Tester::test7()
             TestModel::instance()->setTest7(mi::man->valueMap());
         }
     }
+    mi::man->setCurrent(0.0);
     checkFinished();
-    if constexpr (!SkipRmsMsg)
-        waitAnswer(RestoreTheOperationOfChannels);
+    //if constexpr (!SkipRmsMsg)
+    waitAnswer(RestoreTheOperationOfChannels);
     emit updateProgresBar();
 }
 
