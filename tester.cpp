@@ -7,6 +7,11 @@
 #include "testmodel.h"
 
 enum {
+    ChI = 1,
+    ChU,
+};
+
+enum {
     SkipRms = 1,
     SkipRmsMsg = 1,
     DelayBeforeMeasure1 = 1000,
@@ -174,7 +179,7 @@ void Tester::test1()
 
             waitAndMeasure(DelayBeforeMeasure2);
 
-            list[i].valCh1 = mi::osc->AVERage(2);
+            list[i].valCh1 = mi::osc->AVERage(ChU);
             TestModel::instance()->setTest1(list);
             checkFinished();
         }
@@ -216,7 +221,7 @@ void Tester::test2()
             mi::man->oscilloscope(i);
 
             waitAndMeasure(DelayBeforeMeasure2);
-            TestModel::instance()->setTest2(i - 1, DeviceModel::scanSettings().VisualControl > abs(mi::osc->AVERage(2)) * 1000.0);
+            TestModel::instance()->setTest2(i - 1, DeviceModel::scanSettings().VisualControl > abs(mi::osc->AVERage(ChU)) * 1000.0);
             checkFinished();
             emit updateProgresBar();
         }
@@ -257,7 +262,7 @@ void Tester::test3()
 
             waitAndMeasure(DelayBeforeMeasure2);
 
-            list[i].valCh1 = mi::osc->AVERage(2);
+            list[i].valCh1 = mi::osc->AVERage(ChU);
             TestModel::instance()->setTest3(list);
             checkFinished();
         }
@@ -293,7 +298,7 @@ void Tester::test4()
 
             waitAndMeasure(DelayBeforeMeasure2);
 
-            list[i].valCh1 = mi::osc->AVERage(2);
+            list[i].valCh1 = mi::osc->AVERage(ChU);
             TestModel::instance()->setTest4(list);
             checkFinished();
         }
@@ -329,7 +334,7 @@ void Tester::test5()
 
             waitAndMeasure(DelayBeforeMeasure2);
 
-            list[i].valCh1 = mi::osc->AVERage(2);
+            list[i].valCh1 = mi::osc->AVERage(ChU);
             TestModel::instance()->setTest5(list);
             checkFinished();
         }
@@ -416,14 +421,13 @@ void Tester::test7()
                 waitAnswerManConnErr();
             std::vector<double> vals;
             uint ctr {};
-            do {
+            while (mi::osc->MIN(ChI) > 0.001 && ++ctr < 40)
                 msleep(100);
-                MeasuredValue val { static_cast<float>(mi::osc->MIN(2)) };
-                TestModel::instance()->setTest7({ { ch, val } });
-            } while (mi::osc->MIN(1) > 0.5 && ++ctr < 10);
+            MeasuredValue val { static_cast<float>(mi::osc->MIN(ChU)) };
+            TestModel::instance()->setTest7({ { ch, val } });
             //            while (!mi::man->shortCircuitTest(ScShunt, ch)) //вкл
             //                waitAnswerManConnErr();
-            //list[ch].valCh1 = mi::osc->MIN(2);
+            //list[ch].valCh1 = mi::osc->MIN(ChU);
             //TestModel::instance()->setTest7(list);
             //            TestModel::instance()->setTest7({ { ch, mi::man->valueMap()[ch] } });
             mi::osc->wrRdData(":HORIzontal:SCALe 100us");
