@@ -57,9 +57,9 @@ void Tester::run()
             mi::osc->wrRdData(":CH1:OFFSet -3");
         }
 
-        if (TestModel::instance()->dontSkip(TestModel::Test4)) {
-            setVoltage(SetInputVoltageUpper);
-            test4(); // Измерение выходного напряжения под номинальной нагрузкой Максимальное (249) Да
+        if (TestModel::instance()->dontSkip(TestModel::Test1)) {
+            setVoltage(SetInputVoltageNormal);
+            test1(); // Измерение выходного напряжения под номинальной нагрузкой Номинальное (220) Да
         }
         if (TestModel::instance()->dontSkip(TestModel::Test7)) {
             setVoltage(SetInputVoltageNormal);
@@ -68,10 +68,6 @@ void Tester::run()
         if (TestModel::instance()->dontSkip(TestModel::Test6)) {
             setVoltage(SetInputVoltageNormal);
             test6(); // Поиск точки срабатывания защиты Номинальное (220) Плавное нарастание
-        }
-        if (TestModel::instance()->dontSkip(TestModel::Test1)) {
-            setVoltage(SetInputVoltageNormal);
-            test1(); // Измерение выходного напряжения под номинальной нагрузкой Номинальное (220) Да
         }
         if (TestModel::instance()->dontSkip(TestModel::Test5)) {
             setVoltage(SetInputVoltageNormal);
@@ -85,7 +81,10 @@ void Tester::run()
             setVoltage(SetInputVoltageLower);
             test2(); // Измерение Пульсации выходного напряжения под номинальной нагрузкой Минимальное (130) Да
         }
-
+        if (TestModel::instance()->dontSkip(TestModel::Test4)) {
+            setVoltage(SetInputVoltageUpper);
+            test4(); // Измерение выходного напряжения под номинальной нагрузкой Максимальное (249) Да
+        }
         if (mi::osc->isConnected())
             mi::osc->wrRdData(":CH1:SCALe 500mv");
 
@@ -411,14 +410,26 @@ void Tester::test7()
             mi::osc->wrRdData(":HORIzontal:SCALe 0.5s");
 
             waitAndMeasure(DelayBeforeMeasure2);
-
-            while (!mi::man->shortCircuitTest(ScShunt, ch)) //вкл
+            while (!mi::man->switchShortCircuit(ScOff))
                 waitAnswerManConnErr();
+            while (!mi::man->switchShortCircuit(ScShunt, ch))
+                waitAnswerManConnErr();
+            std::vector<double> vals;
+            uint ctr {};
+            do {
+                msleep(100);
+                MeasuredValue val { static_cast<float>(mi::osc->MIN(2)) };
+                TestModel::instance()->setTest7({ { ch, val } });
+            } while (mi::osc->MIN(1) > 0.5 && ++ctr < 10);
+            //            while (!mi::man->shortCircuitTest(ScShunt, ch)) //вкл
+            //                waitAnswerManConnErr();
             //list[ch].valCh1 = mi::osc->MIN(2);
             //TestModel::instance()->setTest7(list);
-            TestModel::instance()->setTest7({ { ch, mi::man->valueMap()[ch] } });
+            //            TestModel::instance()->setTest7({ { ch, mi::man->valueMap()[ch] } });
             mi::osc->wrRdData(":HORIzontal:SCALe 100us");
         }
+        while (!mi::man->switchShortCircuit(ScOff))
+            waitAnswerManConnErr();
     } else {
         for (uint8_t ch = 1; ch < 9; ++ch) {
             if (!doNotSkip[ch - 1])

@@ -118,9 +118,9 @@ private:
     const QVector<bool>* m_vChecked;
 
     int m_currentTest = -1;
-    QVector<TestData> m_data;
-    QVector<QString> m_paths;
-    QVector<QString> m_serNum;
+    TestData m_data[ManCount];
+    QString m_paths[ManCount];
+    QString m_serNum[ManCount];
     bool m_protocolVisible[ManCount] = { 0 };
 };
 

@@ -21,17 +21,17 @@ TestModel::TestModel(QObject* parent, const QVector<bool>* hChecked, const QVect
     : QAbstractTableModel(parent)
     , m_hChecked(hChecked)
     , m_vChecked(vChecked)
-    , m_data(ManCount)
-    , m_paths(ManCount)
-    , m_serNum(ManCount)
 {
     reset();
     QFile file("TestModel.dat");
     if (file.open(QIODevice::ReadOnly)) {
         QDataStream in(&file); // read the data serialized from the file
-        in >> m_data;
-        in >> m_paths;
-        in >> m_serNum;
+        for (auto& data : m_data)
+            in >> data;
+        for (auto& paths : m_paths)
+            in >> paths;
+        for (auto& serNum : m_serNum)
+            in >> serNum;
     }
     m_instance = this;
 }
@@ -42,9 +42,12 @@ TestModel::~TestModel()
     QFile file("TestModel.dat");
     if (file.open(QIODevice::WriteOnly)) {
         QDataStream out(&file); // we will serialize the data into the file
-        out << m_data;
-        out << m_paths;
-        out << m_serNum;
+        for (auto& data : m_data)
+            out << data;
+        for (auto& paths : m_paths)
+            out << paths;
+        for (auto& serNum : m_serNum)
+            out << serNum;
     }
 }
 
@@ -155,7 +158,7 @@ QVariant TestModel::headerData(int section, Qt::Orientation orientation, int rol
 
 Qt::ItemFlags TestModel::flags(const QModelIndex& index) const
 {
-    Qt::ItemFlags flags{}; // = Qt::ItemIsEditable;
+    Qt::ItemFlags flags {}; // = Qt::ItemIsEditable;
     bool enabled = false;
     if (m_hChecked && m_vChecked)
         enabled = m_hChecked->value(index.column()) & m_vChecked->value(index.row());
@@ -304,7 +307,7 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
 
     bool allOk = true;
     for (int row = 0; row < rowCount; ++row) {
-        bool flags[]{ false, false, false, false, false, false, false };
+        bool flags[] { false, false, false, false, false, false, false };
         QString str;
         QStringList m_list;
         m_list.clear();

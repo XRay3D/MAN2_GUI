@@ -88,6 +88,53 @@ QVariant DeviceModel::data(const QModelIndex& index, int role) const
         return QVariant();
     case Qt::TextAlignmentRole:
         return Qt::AlignCenter;
+    case Qt::ToolTipRole:
+        if (!index.column()) {
+            switch (index.row()) {
+            case 0:
+                return "Type";
+            case 1:
+                return "Cipher";
+            case 2:
+                return "RatedVoltage";
+            case 3:
+                return "NumberOfChannels";
+            case 4:
+                return "RatedCurrent";
+            case 5:
+                return "RestrictionTest2";
+            case 6:
+                return "VisualControl";
+            case 7:
+                return "LimitationsTest4_5";
+            case 8:
+                return "LimitTest6";
+            case 9:
+                return "RestrictionsTest7Min";
+            case 10:
+                return "Voltageerrortest5U1";
+            case 11:
+                return "Voltageerrortest3_4U1";
+            case 12:
+                return "VoltageErrorTest7";
+            case 13:
+                return "ParameterDLTest7";
+            default:
+                return QVariant();
+            }
+        } else {
+            switch (index.row()) {
+            case 9:
+                return "RestrictionsTest7Max";
+            case 10:
+                return "Voltageerrortest5U2";
+            case 11:
+                return "Voltageerrortest3_4U2";
+            default:
+                return QVariant();
+            }
+        }
+
     default:
         return QVariant();
     }
