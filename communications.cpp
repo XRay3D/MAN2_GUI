@@ -20,11 +20,11 @@ Communications::Communications(QWidget* parent)
 
 void Communications::checkConnection()
 {
-    mi::man->ping(cbManPort->currentText());
-    if (mi::man->isConnected()) {
-        mi::osc->ping();
-        if (mi::osc->isConnected()) {
-            leOscIdn->setText(mi::osc->idn());
+    mi::man()->ping(cbManPort->currentText());
+    if (mi::man()->isConnected()) {
+        mi::osc()->ping();
+        if (mi::osc()->isConnected()) {
+            leOscIdn->setText(mi::osc()->idn());
             emit setTabBarEnabled(true);
             emit currentTabIndex(0);
             return;

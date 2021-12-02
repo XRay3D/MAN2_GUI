@@ -19,7 +19,7 @@ QVariant ManModel::data(const QModelIndex& index, int role) const
         case 1: // I
             return QString("%1мА").arg(m_i[index.column()], 0, 'f', 2);
         case 2: // AC U
-            return QString("~%1B").arg(m_acU, 0, 'f', 1);
+            return QString("~%1B").arg(lround(m_acU));//.arg(m_acU, 0, 'f', 1);
         }
     case Qt::TextAlignmentRole:
         return Qt::AlignCenter;

@@ -13,123 +13,177 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,10" columnstretch="1,10">
-   <item row="0" column="1">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Данные МАН</string>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="QSplitter" name="splitter_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="ManTableView" name="tvMeasure">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string>Серийные номера</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <property name="leftMargin">
+        <number>6</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>6</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item row="3" column="0" colspan="2">
+        <widget class="SnTableView" name="tvSerNum">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="leFio"/>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QPushButton" name="pbClearSerNum">
+         <property name="text">
+          <string>Очистить серийные номера</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="cbxDevice"/>
+       </item>
+       <item row="6" column="0" colspan="2">
+        <widget class="QPushButton" name="pbStartStop">
+         <property name="text">
+          <string>Начать измерения</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" colspan="2">
+        <widget class="QProgressBar" name="progressBar">
+         <property name="value">
+          <number>0</number>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Просмотр/Редактирование</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Модификация:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Представитель ОТК:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QPushButton" name="pbProto">
+         <property name="text">
+          <string>Протоколы</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>Данные МАН</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="leftMargin">
+         <number>6</number>
         </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBox_4">
-     <property name="title">
-      <string>Измеренные значения</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="TestsTableView" name="tvTest"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pbClear">
-        <property name="text">
-         <string>Сброс</string>
+        <property name="topMargin">
+         <number>6</number>
         </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="0" rowspan="2">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Серийные номера</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="3" column="0" colspan="2">
-       <widget class="SnTableView" name="tvSerNum">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="rightMargin">
+         <number>6</number>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="leFio"/>
-      </item>
-      <item row="4" column="0" colspan="2">
-       <widget class="QPushButton" name="pbClearSerNum">
-        <property name="text">
-         <string>Очистить серийные номера</string>
+        <property name="bottomMargin">
+         <number>6</number>
         </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="cbxDevice"/>
-      </item>
-      <item row="6" column="0" colspan="2">
-       <widget class="QPushButton" name="pbStartStop">
-        <property name="text">
-         <string>Начать измерения</string>
+        <item>
+         <widget class="ManTableView" name="tvMeasure">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_4">
+       <property name="title">
+        <string>Измеренные значения</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="leftMargin">
+         <number>6</number>
         </property>
-        <property name="checkable">
-         <bool>true</bool>
+        <property name="topMargin">
+         <number>6</number>
         </property>
-       </widget>
-      </item>
-      <item row="7" column="0" colspan="2">
-       <widget class="QProgressBar" name="progressBar">
-        <property name="value">
-         <number>0</number>
+        <property name="rightMargin">
+         <number>6</number>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+        <property name="bottomMargin">
+         <number>6</number>
         </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Просмотр/Редактирование</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Модификация:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Представитель ОТК:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="QPushButton" name="pbProto">
-        <property name="text">
-         <string>Протоколы</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+        <item>
+         <widget class="TestsTableView" name="tvTest"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pbClear">
+          <property name="text">
+           <string>Сброс</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </widget>
    </item>
   </layout>

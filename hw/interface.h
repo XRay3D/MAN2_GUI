@@ -1,15 +1,15 @@
-#ifndef MEASURINGINTERFACE_H
-#define MEASURINGINTERFACE_H
+#pragma once
 
 #include "digitalosc.h"
 #include "man2.h"
 
 class mi {
+    inline static MAN2* man_;
+    inline static DigitalOsc* osc_;
+
 public:
     mi();
     ~mi();
-    inline static MAN2* man;
-    inline static DigitalOsc* osc;
+    static MAN2* man() { return man_; }
+    static DigitalOsc* osc() { return osc_; }
 };
-
-#endif // MEASURINGINTERFACE_H

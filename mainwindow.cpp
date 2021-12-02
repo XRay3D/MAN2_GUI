@@ -54,6 +54,8 @@ void MainWindow::readSettings()
 
     settings.beginGroup("MainWindow");
     settings.getValueGs(this);
+    settings.getValueGs(tabInputParameters->splitter);
+    settings.getValueGs(tabInputParameters->splitter_2);
     settings.endGroup();
 
     settings.beginGroup("InputParameters");
@@ -74,6 +76,8 @@ void MainWindow::writeSettings()
 
     settings.beginGroup("MainWindow");
     settings.setValueGs(this);
+    settings.setValueGs(tabInputParameters->splitter);
+    settings.setValueGs(tabInputParameters->splitter_2);
     settings.endGroup();
 
     settings.beginGroup("InputParameters");

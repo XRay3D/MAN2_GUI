@@ -61,7 +61,7 @@ void PrepareForm::showMessage(int num)
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
             pbStartStopClicked(false);
         else
-            m_worker->continueTests();
+            tester_->continueTests();
         return;
     case SetInputVoltageLower:
         stage = num;
@@ -72,7 +72,7 @@ void PrepareForm::showMessage(int num)
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
             pbStartStopClicked(false);
         else
-            m_worker->continueTests();
+            tester_->continueTests();
         return;
     case SetInputVoltageNormal:
         stage = num;
@@ -81,21 +81,21 @@ void PrepareForm::showMessage(int num)
             pbStartStopClicked(false);
 
         else
-            m_worker->continueTests();
+            tester_->continueTests();
         return;
     case NoConnectionWithMan:
         messageText = "Нет связи с МАНом 2!";
         if (QMessageBox::critical(this, "", messageText, "Повторить", "Остановить измерения"))
             pbStartStopClicked(false);
         else
-            m_worker->continueTests();
+            tester_->continueTests();
         return;
     case RestoreTheOperationOfChannels:
         messageText = "Восстановите работу каналов блока питания";
         if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
             pbStartStopClicked(false);
         else
-            m_worker->continueTests();
+            tester_->continueTests();
         return;
     case PulsationsOnTheChannel_1:
     case PulsationsOnTheChannel_2:
@@ -113,12 +113,12 @@ void PrepareForm::showMessage(int num)
         case 0:
             TestModel::instance()->setTest2(num - PulsationsOnTheChannel_1, true);
             //m_result[num - PULSATIONS_ON_THE_CHANNEL_1].test2 = 1.0;
-            m_worker->continueTests();
+            tester_->continueTests();
             return;
         case 1:
             TestModel::instance()->setTest2(num - PulsationsOnTheChannel_1, false);
             //m_result[num - PULSATIONS_ON_THE_CHANNEL_1].test2 = -1.0;
-            m_worker->continueTests();
+            tester_->continueTests();
             return;
         case 2:
             pbStartStopClicked(false);
@@ -135,7 +135,7 @@ void PrepareForm::showMessage(int num)
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
                 pbStartStopClicked(false);
             else
-                m_worker->continueTests();
+                tester_->continueTests();
             return;
         case SetInputVoltageLower:
             messageText = QString("Установите входное напряжение %1±%2В")
@@ -145,14 +145,14 @@ void PrepareForm::showMessage(int num)
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
                 pbStartStopClicked(false);
             else
-                m_worker->continueTests();
+                tester_->continueTests();
             return;
         case SetInputVoltageNormal:
             messageText = "Установите входное напряжение 220±4,4В";
             if (QMessageBox::information(this, "", messageText, "Ок", "Остановить измерения"))
                 pbStartStopClicked(false);
             else
-                m_worker->continueTests();
+                tester_->continueTests();
             return;
         }
     }
@@ -198,21 +198,21 @@ void PrepareForm::pbStartStopClicked(bool checked)
         for (bool& val : m_doNotSkip)
             val = i-- > 0;
 
-        m_worker = new Tester(m_doNotSkip);
-        connect(m_worker, &QThread::finished, this, &PrepareForm::endSlot);
-        connect(m_worker, &QThread::finished, m_worker, &QObject::deleteLater);
-        connect(m_worker, &Tester::showMessage, this, &PrepareForm::showMessage);
-        connect(m_worker, &Tester::updateProgresBar, this, &PrepareForm::updateProgresBar);
+        tester_ = new Tester(m_doNotSkip);
+        connect(tester_, &QThread::finished, this, &PrepareForm::endSlot);
+        connect(tester_, &QThread::finished, tester_, &QObject::deleteLater);
+        connect(tester_, &Tester::showMessage, this, &PrepareForm::showMessage);
+        connect(tester_, &Tester::updateProgresBar, this, &PrepareForm::updateProgresBar);
 
         progressBar->setValue(0);
         progressBar->setMaximum(7 + SerNumModel::instance()->serNumCount() * DeviceModel::scanSettings().NumberOfChannels * 2);
 
-        m_worker->start();
+        tester_->start();
     } else {
         pbStartStop->setText("Начать измерения");
 
-        if (m_worker)
-            m_worker->finishTests();
+        if (tester_)
+            tester_->finishTests();
 
         progressBar->setValue(0);
 
@@ -224,9 +224,9 @@ void PrepareForm::pbStartStopClicked(bool checked)
 void PrepareForm::showEvent(QShowEvent* event)
 {
     QWidget::showEvent(event);
-    connect(mi::man, &MAN2::measuresCompleted, static_cast<ManModel*>(tvMeasure->model()), &ManModel::setMeasuredValues);
-    connect(this, &PrepareForm::startMeasure, mi::man, &MAN2::startMeasure);
-    if (mi::man->isConnected()) {
+    connect(mi::man(), &MAN2::measuresCompleted, static_cast<ManModel*>(tvMeasure->model()), &ManModel::setMeasuredValues);
+    connect(this, &PrepareForm::startMeasure, mi::man(), &MAN2::startMeasure);
+    if (mi::man()->isConnected()) {
         measureTimerId = startTimer(500);
         setEnabled(true);
     } else {
@@ -238,8 +238,8 @@ void PrepareForm::showEvent(QShowEvent* event)
 void PrepareForm::hideEvent(QHideEvent* event)
 {
     QWidget::hideEvent(event);
-    disconnect(mi::man, &MAN2::measuresCompleted, static_cast<ManModel*>(tvMeasure->model()), &ManModel::setMeasuredValues);
-    disconnect(this, &PrepareForm::startMeasure, mi::man, &MAN2::startMeasure);
+    disconnect(mi::man(), &MAN2::measuresCompleted, static_cast<ManModel*>(tvMeasure->model()), &ManModel::setMeasuredValues);
+    disconnect(this, &PrepareForm::startMeasure, mi::man(), &MAN2::startMeasure);
     if (measureTimerId) {
         killTimer(measureTimerId);
         measureTimerId = 0;

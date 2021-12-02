@@ -289,12 +289,8 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
 
     protocol.append(strTop.arg(DeviceModel::scanSettings().Cipher)
                         .arg(serialNumber)
-                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage
-                            - DeviceModel::scanSettings().RestrictionTest2)
-                                 .replace('.', ','))
-                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage
-                            + DeviceModel::scanSettings().RestrictionTest2)
-                                 .replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage - DeviceModel::scanSettings().RestrictionTest2).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().RatedVoltage + DeviceModel::scanSettings().RestrictionTest2).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().VisualControl).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().LimitationsTest4_5).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().LimitationsTest4_5).replace('.', ','))
@@ -350,7 +346,7 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
             case 5:
                 val = m_data[row + number * rowCount].test1 - m_data[row + number * rowCount].test5;
                 str = QString::number(val, 'f', 4).replace('.', ',');
-                if (qAbs(val) > DeviceModel::scanSettings().LimitationsTest4_5) {
+                if (qAbs(val) > DeviceModel::scanSettings().LimitTest6) {
                     flags[col - 1] = true;
                 }
                 break;

@@ -83,7 +83,7 @@ QByteArray DigitalOsc::wrRdData(QByteArray wrData)
 bool DigitalOsc::isConnected() const
 {
     if (EMU)
-        return  true;
+        return true;
     return !m_conected.isEmpty();
 }
 

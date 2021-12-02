@@ -33,7 +33,7 @@ class PrepareForm : public QWidget, public Ui::PrepareForm {
     friend class MainWindow;
 
     int measureTimerId = 0;
-    Tester* m_worker = nullptr;
+    Tester* tester_ = nullptr;
     bool m_doNotSkip[8];
 
 public:
