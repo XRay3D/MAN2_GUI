@@ -10,8 +10,9 @@
 const int id1 = qRegisterMetaType<MeasuredValue>("MeasuredValue");
 const int id2 = qRegisterMetaType<ValueType>("ValueType");
 const int id3 = qRegisterMetaType<uint8_t>("uint8_t");
-const int id5 = qRegisterMetaType<QMap<int, MeasuredValue>>("QMap<int, MeasuredValue>");
-const int id6 = qRegisterMetaType<MeasuredValue>("MeasuredValue");
+const int id5 = qRegisterMetaType<std::map<int, MeasuredValue>>("std::map<int, MeasuredValue>");
+const int id6 = qRegisterMetaType<MeasureMap>("MeasureMap");
+const int id7 = qRegisterMetaType<MeasuredValue>("MeasuredValue");
 
 static const QStringList cmdList {
     /*00*/ "Ping",
@@ -127,7 +128,7 @@ bool MAN2::getMeasuredValue(MeasuredValue& value, uint8_t channel, ValueType typ
     return result;
 }
 
-bool MAN2::getMeasuredValue(QMap<int, MeasuredValue>& value, ValueType type)
+bool MAN2::getMeasuredValue(MeasureMap& value, ValueType type)
 {
     QMutexLocker Locker(&mutex);
     do {

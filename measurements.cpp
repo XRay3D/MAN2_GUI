@@ -231,33 +231,31 @@ void Measurements::obOscClicked(int channel)
         cbOsc->setCurrentIndex(0);
 }
 
-void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& valMap)
+void Measurements::measuredValueSlot(const MeasureMap& valMap)
 {
     QMutexLocker locker(&m_mutex);
     enum { MaxCount = 500 };
     if (m_minX == m_keyX)
         m_minX = m_keyX = QDateTime::currentDateTime();
 
-    QMapIterator<int, MeasuredValue> iterator(valMap);
     double minY = +std::numeric_limits<double>::max();
     double maxY = -std::numeric_limits<double>::max();
     bool flag = false;
 
-    while (iterator.hasNext()) {
-        iterator.next();
-        if (iterator.key() == 10) {
-            dsbVoltage_9->setValue(iterator.value().valCh1);
+    for (auto [key, value] : valMap) {
+        if (key == 10) {
+            dsbVoltage_9->setValue(value.valCh1);
             continue;
         }
-        if (iterator.key() > ManCount) {
+        if (key > ManCount) {
             continue;
         }
-        int i = iterator.key() - 1;
+        int i = key - 1;
 
-        m_listDsbVoltage[i]->setValue(iterator.value().valCh1);
-        m_listDsbCurrent[i]->setValue(iterator.value().valCh2);
+        m_listDsbVoltage[i]->setValue(value.valCh1);
+        m_listDsbCurrent[i]->setValue(value.valCh2);
 
-        m_series[i]->append(m_keyX.toMSecsSinceEpoch(), iterator.value().valCh1);
+        m_series[i]->append(m_keyX.toMSecsSinceEpoch(), value.valCh1);
 
         if (m_series[i]->count() > MaxCount)
             m_series[i]->remove(0);
@@ -284,7 +282,7 @@ void Measurements::measuredValueSlot(const QMap<int, MeasuredValue>& valMap)
 void Measurements::showEvent(QShowEvent* /*event*/)
 {
     if (mi::man()->isConnected()) {
-        QMap<int, MeasuredValue> list;
+        MeasureMap list;
         qWarning("Fix i");
         if (mi::man()->getMeasuredValue(list)) {
             m_disableSlots = true;

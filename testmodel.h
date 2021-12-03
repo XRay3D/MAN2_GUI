@@ -2,21 +2,22 @@
 #define MESUREMODEL_H
 
 #include "hw/man2.h"
+#include "magicgetruntime.h"
 #include <QAbstractTableModel>
 
 struct TestData {
-    enum Val {
-        Undefined,
+    enum Val : int64_t {
+        Undefined = -1,
+        False,
         True,
-        False
     };
     double test1 = 0.0;
+    Val test2 = Undefined;
     double test3 = 0.0;
     double test4 = 0.0;
     double test5 = 0.0;
     double test6 = 0.0;
     double test7 = 0.0;
-    Val test2 = Undefined;
 
     void reset()
     {
@@ -32,20 +33,14 @@ struct TestData {
     {
         if (!flags || (flags && flags->isEmpty()))
             return;
-        if (flags->at(0))
-            test1 = 0.0;
-        if (flags->at(1))
-            test2 = Undefined;
-        if (flags->at(2))
-            test3 = 0.0;
-        if (flags->at(3))
-            test4 = 0.0;
-        if (flags->at(4))
-            test5 = 0.0;
-        if (flags->at(5))
-            test6 = 0.0;
-        if (flags->at(6))
-            test7 = 0.0;
+        for (auto var : *flags) {
+            visit_at(*this, var, []<class T>(T& arg) {
+                if constexpr (std::is_same_v<T, double>)
+                    arg = T {};
+                else
+                    arg = Undefined;
+            });
+        }
     }
 
     friend inline QDataStream& operator>>(QDataStream& s, TestData& set)
@@ -70,7 +65,7 @@ public:
         const QVector<bool>* vChecked = nullptr);
     ~TestModel() override;
 
-    enum {
+    enum Columns {
         Test1,
         Test2,
         Test3,
@@ -91,14 +86,15 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     void setCurrentTest(int val);
+    void setTestData(const MeasureMap& data);
 
-    void setTest1(const QMap<int, MeasuredValue>& data);
-    void setTest2(int ch, bool result);
-    void setTest3(const QMap<int, MeasuredValue>& data);
-    void setTest4(const QMap<int, MeasuredValue>& data);
-    void setTest5(const QMap<int, MeasuredValue>& data);
-    void setTest6(int ch, double value);
-    void setTest7(const QMap<int, MeasuredValue>& data);
+    //    void setTest1(const MeasureMap& data);
+    //    void setTest2(int ch, bool result);
+    //    void setTest3(const MeasureMap& data);
+    //    void setTest4(const MeasureMap& data);
+    //    void setTest5(const MeasureMap& data);
+    //    void setTest6(int ch, double value);
+    //    void setTest7(const MeasureMap& data);
 
     void saveProtokol(const QString& serialNumber, int number);
     void showProtocol(int num);

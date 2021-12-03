@@ -18,7 +18,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
-    void setMeasuredValues(const QMap<int, MeasuredValue>&);
+    void setMeasuredValues(const MeasureMap&);
 
 private:
     double m_u[ManCount] = { 0.0 };

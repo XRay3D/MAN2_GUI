@@ -26,6 +26,8 @@ DEFINES += \
 #}
 #INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/include"
 
+INCLUDEPATH += $$_PRO_FILE_PWD_/pfr_non_boost/include
+
 DESTDIR = $$_PRO_FILE_PWD_/../bin
 
 TEMPLATE = app

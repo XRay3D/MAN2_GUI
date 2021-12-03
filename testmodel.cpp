@@ -189,7 +189,39 @@ void TestModel::setCurrentTest(int val)
     dataChanged(createIndex(Test1, 0), createIndex(Test7, ManCount));
 }
 
-void TestModel::setTest1(const QMap<int, MeasuredValue>& data)
+void TestModel::setTestData(const MeasureMap& data)
+{
+
+    for (auto [key, value] : data) {
+        if (key > ManCount)
+            continue;
+        visit_at(m_data[key - 1], m_currentTest, [value = value]<class T>(T& arg) {
+            if constexpr (std::is_same_v<T, double>)
+                arg = value.valCh1;
+            else
+                arg = T(value.valCh1);
+        });
+    }
+    dataChanged(createIndex(m_currentTest, 0), createIndex(m_currentTest, 7), { Qt::DisplayRole });
+    //    switch (m_currentTest) {
+    //    case TestModel::Test1:
+    //        break;
+    //    case TestModel::Test2:
+    //        break;
+    //    case TestModel::Test3:
+    //        break;
+    //    case TestModel::Test4:
+    //        break;
+    //    case TestModel::Test5:
+    //        break;
+    //    case TestModel::Test6:
+    //        break;
+    //    case TestModel::Test7:
+    //        break;
+    //    default:;}
+}
+/*
+void TestModel::setTest1(const MeasureMap& data)
 {
     QMapIterator i(data);
     while (i.hasNext()) {
@@ -209,7 +241,7 @@ void TestModel::setTest2(int ch, bool result)
     dataChanged(createIndex(Test2, ch), createIndex(Test2, ch), { Qt::DisplayRole });
 }
 
-void TestModel::setTest3(const QMap<int, MeasuredValue>& data)
+void TestModel::setTest3(const MeasureMap& data)
 {
     QMapIterator i(data);
     while (i.hasNext()) {
@@ -221,7 +253,7 @@ void TestModel::setTest3(const QMap<int, MeasuredValue>& data)
     dataChanged(createIndex(Test3, 0), createIndex(Test3, 7), { Qt::DisplayRole });
 }
 
-void TestModel::setTest4(const QMap<int, MeasuredValue>& data)
+void TestModel::setTest4(const MeasureMap& data)
 {
     QMapIterator i(data);
     while (i.hasNext()) {
@@ -233,7 +265,7 @@ void TestModel::setTest4(const QMap<int, MeasuredValue>& data)
     dataChanged(createIndex(Test4, 0), createIndex(Test4, 7), { Qt::DisplayRole });
 }
 
-void TestModel::setTest5(const QMap<int, MeasuredValue>& data)
+void TestModel::setTest5(const MeasureMap& data)
 {
     QMapIterator i(data);
     while (i.hasNext()) {
@@ -252,7 +284,7 @@ void TestModel::setTest6(int ch, double value)
     dataChanged(createIndex(Test6, ch), createIndex(Test6, ch), { Qt::DisplayRole });
 }
 
-void TestModel::setTest7(const QMap<int, MeasuredValue>& data)
+void TestModel::setTest7(const MeasureMap& data)
 {
     QMapIterator i(data);
     while (i.hasNext()) {
@@ -262,6 +294,7 @@ void TestModel::setTest7(const QMap<int, MeasuredValue>& data)
     }
     dataChanged(createIndex(Test7, 0), createIndex(Test7, ManCount), { Qt::DisplayRole });
 }
+*/
 
 void TestModel::saveProtokol(const QString& serialNumber, int number)
 {
@@ -293,7 +326,7 @@ void TestModel::saveProtokol(const QString& serialNumber, int number)
                         .arg(QString::number(DeviceModel::scanSettings().RatedVoltage + DeviceModel::scanSettings().RestrictionTest2).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().VisualControl).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().LimitationsTest4_5).replace('.', ','))
-                        .arg(QString::number(DeviceModel::scanSettings().LimitationsTest4_5).replace('.', ','))
+                        .arg(QString::number(DeviceModel::scanSettings().LimitTest6).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().RestrictionsTest7Min).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().RestrictionsTest7Max).replace('.', ','))
                         .arg(QString::number(DeviceModel::scanSettings().Voltageerrortest3_4U1).replace('.', ','))

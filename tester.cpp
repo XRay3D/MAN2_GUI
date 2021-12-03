@@ -106,6 +106,7 @@ void Tester::run()
 
 void Tester::waitAnswer(int question)
 {
+    MeasureMap list;
     emit showMessage(question);
     while (!semaphore.tryAcquire(1, 200)) {
         if (question != NoConnectionWithMan)
@@ -133,8 +134,8 @@ void Tester::checkFinished()
 
 void Tester::setVoltage(int voltage)
 {
-    //    if constexpr (SkipRmsMsg)
-    //        return;
+    // if constexpr (SkipRmsMsg)
+    // return;
 
     static int lastVoltage = -1;
     switch (voltage) {
@@ -164,37 +165,8 @@ void Tester::setVoltage(int voltage)
 void Tester::test1()
 {
     qDebug() << "Test1";
-
     TestModel::instance()->setCurrentTest(TestModel::Test1);
-
-    while (!mi::man()->setCurrent(DeviceModel::scanSettings().RatedCurrent))
-        waitAnswerManConnErr();
-
-    waitAndMeasure(DelayBeforeMeasure1);
-
-    if (mi::osc()->isConnected()) {
-        configCh2();
-        list.clear();
-        for (int i = 1; i < 9; ++i) {
-            if (!doNotSkip[i - 1])
-                continue;
-            mi::man()->oscilloscope(i);
-
-            waitAndMeasure(DelayBeforeMeasure2);
-
-            list[i].valCh1 = mi::osc()->AVERage(ChU) - 0.25;
-            mi::man()->getMeasuredValue(list[i], i);
-            TestModel::instance()->setTest1(list);
-            checkFinished();
-        }
-    } else {
-        do {
-            while (!mi::man()->getMeasuredValue(list))
-                waitAnswerManConnErr();
-            TestModel::instance()->setTest1(list);
-            checkFinished();
-        } while (list.size() < 9);
-    }
+    measureWithoutRatedLoad();
     emit updateProgresBar();
 }
 
@@ -203,11 +175,13 @@ void Tester::test2()
     qDebug() << "Test2";
     TestModel::instance()->setCurrentTest(TestModel::Test2);
 
+    while (!mi::man()->switchCurrent(true))
+        waitAnswerManConnErr();
     while (!mi::man()->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         waitAnswerManConnErr();
+    MeasureMap list;
 
     if (mi::osc()->isConnected()) {
-        list.clear();
         mi::osc()->wrRdData(":CH2:COUPling AC");
         mi::osc()->wrRdData(":CH2:SCALe 100mv");
         mi::osc()->wrRdData(":CH2:OFFSet 0");
@@ -225,7 +199,8 @@ void Tester::test2()
             mi::man()->oscilloscope(i);
 
             waitAndMeasure(DelayBeforeMeasure2);
-            TestModel::instance()->setTest2(i - 1, DeviceModel::scanSettings().VisualControl > abs(mi::osc()->AVERage(ChU)) * 1000.0);
+            //TestModel::instance()->setTest2(i - 1, DeviceModel::scanSettings().VisualControl > abs(mi::osc()->AVERage(ChU)) * 1000.0);
+            TestModel::instance()->setTestData({ { i, { static_cast<float>(DeviceModel::scanSettings().VisualControl > (abs(mi::osc()->AVERage(ChU) * 1000.0))) } } });
             checkFinished();
             emit updateProgresBar();
         }
@@ -250,36 +225,7 @@ void Tester::test3()
 {
     qDebug() << "Test3";
     TestModel::instance()->setCurrentTest(TestModel::Test3);
-
-    while (!mi::man()->setCurrent(DeviceModel::scanSettings().RatedCurrent))
-        waitAnswerManConnErr();
-
-    waitAndMeasure(DelayBeforeMeasure1);
-
-    if (mi::osc()->isConnected()) {
-        list.clear();
-        configCh2();
-        for (int i = 1; i < 9; ++i) {
-            if (!doNotSkip[i - 1])
-                continue;
-            mi::man()->oscilloscope(i);
-
-            waitAndMeasure(DelayBeforeMeasure2);
-
-            list[i].valCh1 = mi::osc()->AVERage(ChU) - 0.25;
-            mi::man()->getMeasuredValue(list[i], i);
-            TestModel::instance()->setTest3(list);
-            checkFinished();
-        }
-    } else {
-        do {
-            while (!mi::man()->getMeasuredValue(list))
-                waitAnswerManConnErr();
-            TestModel::instance()->setTest3(list);
-            checkFinished();
-        } while (list.size() < 9);
-    }
-
+    measureWithoutRatedLoad();
     emit updateProgresBar();
 }
 
@@ -287,36 +233,7 @@ void Tester::test4()
 {
     qDebug() << "Test4";
     TestModel::instance()->setCurrentTest(TestModel::Test4);
-
-    while (!mi::man()->setCurrent(DeviceModel::scanSettings().RatedCurrent))
-        waitAnswerManConnErr();
-
-    waitAndMeasure(DelayBeforeMeasure1);
-
-    if (mi::osc()->isConnected()) {
-        list.clear();
-        configCh2();
-        for (int i = 1; i < 9; ++i) {
-            if (!doNotSkip[i - 1])
-                continue;
-            mi::man()->oscilloscope(i);
-
-            waitAndMeasure(DelayBeforeMeasure2);
-
-            list[i].valCh1 = mi::osc()->AVERage(ChU) - 0.25;
-            mi::man()->getMeasuredValue(list[i], i);
-            TestModel::instance()->setTest4(list);
-            checkFinished();
-        }
-    } else {
-        do {
-            while (!mi::man()->getMeasuredValue(list))
-                waitAnswerManConnErr();
-            TestModel::instance()->setTest4(list);
-            checkFinished();
-        } while (list.size() < 9);
-    }
-
+    measureWithoutRatedLoad();
     emit updateProgresBar();
 }
 
@@ -325,13 +242,15 @@ void Tester::test5()
     qDebug() << "Test5";
     TestModel::instance()->setCurrentTest(TestModel::Test5);
 
-    while (!mi::man()->setCurrent(0))
+    while (!mi::man()->switchCurrent(true))
+        waitAnswerManConnErr();
+    while (!mi::man()->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         waitAnswerManConnErr();
 
     waitAndMeasure(DelayBeforeMeasure1);
 
     if (mi::osc()->isConnected()) {
-        list.clear();
+        MeasureMap list;
         configCh2();
         for (int i = 1; i < 9; ++i) {
             if (!doNotSkip[i - 1])
@@ -342,14 +261,15 @@ void Tester::test5()
 
             list[i].valCh1 = mi::osc()->AVERage(ChU) - 0.25;
             mi::man()->getMeasuredValue(list[i], i);
-            TestModel::instance()->setTest5(list);
+            TestModel::instance()->setTestData(list); // TestModel::instance()->setTest5(list);
             checkFinished();
         }
     } else {
+        MeasureMap list;
         do {
             while (!mi::man()->getMeasuredValue(list))
                 waitAnswerManConnErr();
-            TestModel::instance()->setTest5(list);
+            TestModel::instance()->setTestData(list); // TestModel::instance()->setTest5(list);
             checkFinished();
         } while (list.size() < 9);
     }
@@ -382,7 +302,7 @@ void Tester::test6()
             }
 
             waitAndMeasure(DelayBeforeMeasure2);
-            //            double step = DeviceModel::scanSettings().RestrictionsTest7Max - DeviceModel::scanSettings().RestrictionsTest7Min;
+            // double step = DeviceModel::scanSettings().RestrictionsTest7Max - DeviceModel::scanSettings().RestrictionsTest7Min;
             // Всё в амперах
 
             while (!mi::man()->tripCurrentTest(
@@ -391,7 +311,7 @@ void Tester::test6()
                     static_cast<float>(DeviceModel::scanSettings().RestrictionsTest7Max - DeviceModel::scanSettings().RestrictionsTest7Min) / 100.f }, // mA
                 ch))
                 waitAnswerManConnErr();
-            TestModel::instance()->setTest6(ch, mi::man()->valueMap()[ch].valCh3);
+            TestModel::instance()->setTestData({ { ch, { mi::man()->valueMap().at(ch).valCh3 } } }); // TestModel::instance()->setTest6(ch, mi::man()->valueMap()[ch].valCh3);
         }
     }
     //if constexpr (!SkipRmsMsg)
@@ -405,12 +325,12 @@ void Tester::test7()
     qDebug() << "Test7";
     TestModel::instance()->setCurrentTest(TestModel::Test7);
 
+    while (!mi::man()->switchCurrent(true))
+        waitAnswerManConnErr();
     while (!mi::man()->setCurrent(DeviceModel::scanSettings().RatedCurrent))
         waitAnswerManConnErr();
 
     waitAndMeasure(DelayBeforeMeasure1);
-
-    list.clear();
 
     if (mi::osc()->isConnected()) {
         configCh2();
@@ -431,17 +351,13 @@ void Tester::test7()
             while (mi::osc()->MIN(ChI) > 0.001 && ++ctr < 40)
                 msleep(100);
             MeasuredValue val { static_cast<float>(mi::osc()->MIN(ChU)) };
-            TestModel::instance()->setTest7({ { ch, val } });
-            //            while (!mi::man->shortCircuitTest(ScShunt, ch)) //вкл
-            //                waitAnswerManConnErr();
-            //list[ch].valCh1 = mi::osc->MIN(ChU);
-            //TestModel::instance()->setTest7(list);
-            //            TestModel::instance()->setTest7({ { ch, mi::man->valueMap()[ch] } });
+            TestModel::instance()->setTestData({ { ch, val } });
             mi::osc()->wrRdData(":HORIzontal:SCALe 100us");
         }
         while (!mi::man()->switchShortCircuit(ScOff))
             waitAnswerManConnErr();
     } else {
+        MeasureMap list;
         for (uint8_t ch = 1; ch < 9; ++ch) {
             if (!doNotSkip[ch - 1])
                 continue;
@@ -449,7 +365,7 @@ void Tester::test7()
                 waitAnswerManConnErr();
             while (!mi::man()->getMeasuredValue(list[ch], ch, RawData)) //измерение
                 waitAnswerManConnErr();
-            TestModel::instance()->setTest7(mi::man()->valueMap());
+            TestModel::instance()->setTestData(list); // TestModel::instance()->setTest7(mi::man()->valueMap());
         }
     }
     mi::man()->setCurrent(0.0);
@@ -457,6 +373,39 @@ void Tester::test7()
     //if constexpr (!SkipRmsMsg)
     waitAnswer(RestoreTheOperationOfChannels);
     emit updateProgresBar();
+}
+
+void Tester::measureWithoutRatedLoad()
+{
+    while (!mi::man()->switchCurrent(false))
+        waitAnswerManConnErr();
+
+    waitAndMeasure(DelayBeforeMeasure1);
+
+    MeasureMap list;
+    if (mi::osc()->isConnected()) {
+        configCh2();
+        MeasureMap list;
+        for (int i = 1; i < 9; ++i) {
+            if (!doNotSkip[i - 1])
+                continue;
+            mi::man()->oscilloscope(i);
+
+            waitAndMeasure(DelayBeforeMeasure2);
+
+            list[i].valCh1 = mi::osc()->AVERage(ChU) - 0.25;
+            mi::man()->getMeasuredValue(list[i], i);
+            TestModel::instance()->setTestData(list); // TestModel::instance()->setTest1(list);
+            checkFinished();
+        }
+    } else {
+        do {
+            while (!mi::man()->getMeasuredValue(list))
+                waitAnswerManConnErr();
+            TestModel::instance()->setTestData(list); // TestModel::instance()->setTest1(list);
+            checkFinished();
+        } while (list.size() < 9);
+    }
 }
 
 void Tester::configCh2(bool slow)
@@ -474,7 +423,7 @@ void Tester::waitAndMeasure(unsigned long time)
 {
     QElapsedTimer timer;
     timer.start();
-    QMap<int, MeasuredValue> list;
+    MeasureMap list;
 
     while (timer.elapsed() < time) {
         msleep(50);

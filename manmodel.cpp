@@ -19,7 +19,7 @@ QVariant ManModel::data(const QModelIndex& index, int role) const
         case 1: // I
             return QString("%1мА").arg(m_i[index.column()], 0, 'f', 2);
         case 2: // AC U
-            return QString("~%1B").arg(lround(m_acU));//.arg(m_acU, 0, 'f', 1);
+            return QString("~%1B").arg(lround(m_acU)); //.arg(m_acU, 0, 'f', 1);
         }
     case Qt::TextAlignmentRole:
         return Qt::AlignCenter;
@@ -38,18 +38,17 @@ QVariant ManModel::data(const QModelIndex& index, int role) const
 
 Qt::ItemFlags ManModel::flags(const QModelIndex& /*index*/) const { return Qt::ItemIsEnabled; }
 
-void ManModel::setMeasuredValues(const QMap<int, MeasuredValue>& data)
+void ManModel::setMeasuredValues(const MeasureMap& data)
 {
-    QMapIterator<int, MeasuredValue> it(data);
-    while (it.hasNext()) {
-        it.next();
-        if (it.key() == 10) {
-            m_acU = it.value().valCh1;
-        } else if (it.key() <= ManCount) {
-            m_u[it.key() - 1] = it.value().valCh1;
-            m_i[it.key() - 1] = it.value().valCh2;
+    for (auto [key, value] : data) {
+        if (key == 10) {
+            m_acU = value.valCh1;
+        } else if (key <= ManCount) {
+            m_u[key - 1] = value.valCh1;
+            m_i[key - 1] = value.valCh2;
         }
     }
+
     dataChanged(createIndex(0, 0), createIndex(2, ManCount - 1), { Qt::DisplayRole });
 }
 

@@ -111,12 +111,12 @@ void PrepareForm::showMessage(int num)
                           .replace('.', ',');
         switch (QMessageBox::question(this, "", messageText, "Да", "Нет", "Остановить измерения")) {
         case 0:
-            TestModel::instance()->setTest2(num - PulsationsOnTheChannel_1, true);
+            TestModel::instance()->setTestData({ { num - PulsationsOnTheChannel_1, { true } } }); //            TestModel::instance()->setTest2(num - PulsationsOnTheChannel_1, true);
             //m_result[num - PULSATIONS_ON_THE_CHANNEL_1].test2 = 1.0;
             tester_->continueTests();
             return;
         case 1:
-            TestModel::instance()->setTest2(num - PulsationsOnTheChannel_1, false);
+            TestModel::instance()->setTestData({ { num - PulsationsOnTheChannel_1, { false } } }); //            TestModel::instance()->setTest2(num - PulsationsOnTheChannel_1, false);
             //m_result[num - PULSATIONS_ON_THE_CHANNEL_1].test2 = -1.0;
             tester_->continueTests();
             return;
@@ -200,7 +200,7 @@ void PrepareForm::pbStartStopClicked(bool checked)
 
         tester_ = new Tester(m_doNotSkip);
         connect(tester_, &QThread::finished, this, &PrepareForm::endSlot);
-        connect(tester_, &QThread::finished, tester_, &QObject::deleteLater);
+        connect(tester_, &QThread::finished, tester_, &QObject::deleteLater); // NOTE destroy here
         connect(tester_, &Tester::showMessage, this, &PrepareForm::showMessage);
         connect(tester_, &Tester::updateProgresBar, this, &PrepareForm::updateProgresBar);
 

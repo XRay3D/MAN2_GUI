@@ -1,10 +1,10 @@
 #pragma once
 
-#include "pfr.hpp"
+#include <pfr.hpp>
 #include <QDebug>
 #include <QVariant>
 
-using index_t = uchar;
+using index_t = uint8_t;
 
 template <typename T>
 inline constexpr index_t pod_size_v = pfr::tuple_size<std::decay_t<T>>::value;
@@ -143,7 +143,7 @@ struct getter_i {
 
 template <typename Rt, typename T, index_t I>
 struct getter final : getter_i<Rt, T> {
-    Rt get(T&& pod) override { return /*R::fromValue*/ (pfr::get<I>(pod)); }
+    Rt get(T&& pod) override { return /*R::fromValue*/ (pfr::get<I>(std::forward<T>(pod))); }
 };
 
 template <typename Rt, typename T, index_t... Is>
@@ -157,14 +157,14 @@ template <typename Rt, typename T, index_t... Is>
 auto get_impl(T&& pod, const index_t idx, std::index_sequence<Is...>)
 {
     assert(idx < sizeof...(Is));
-    return array<Rt, T, Is...>::funcs[idx]->get(pod);
+    return array<Rt, T, Is...>::funcs[idx]->get(std::forward<T>(pod));
 }
 
 template <typename T, typename F, index_t... Is>
 void visit_impl(T&& pod, const index_t idx, F fun, std::index_sequence<Is...>)
 {
     assert(idx < sizeof...(Is));
-    ((Is == idx ? fun(pfr::get<Is>(pod)) : void()), ...);
+    ((Is == idx ? fun(pfr::get<Is>(std::forward<T>(pod))) : void()), ...);
 }
 
 } // namespace detail
@@ -172,8 +172,9 @@ void visit_impl(T&& pod, const index_t idx, F fun, std::index_sequence<Is...>)
 template <typename F, typename T, typename Indices = std::make_index_sequence<pod_size_v<T>>>
 constexpr void visit_at(T&& pod, const index_t idx, F fun)
 {
-    detail::visit_impl(pod, idx, fun, Indices {});
+    detail::visit_impl(std::forward<T>(pod), idx, fun, Indices {});
 }
+
 template <typename F, typename T, typename Indices = std::make_index_sequence<pod_size_v<T>>>
 constexpr void visit_at(const T& pod, const index_t idx, F fun)
 {
@@ -183,8 +184,9 @@ constexpr void visit_at(const T& pod, const index_t idx, F fun)
 template <typename Rt = QVariant, typename T, typename Indices = std::make_index_sequence<pod_size_v<T>>>
 constexpr auto get_at(T&& pod, const index_t idx)
 {
-    return detail::get_impl<Rt>(pod, idx, Indices {});
+    return detail::get_impl<Rt>(std::forward<T>(pod), idx, Indices {});
 }
+
 template <typename Rt = QVariant, typename T, typename Indices = std::make_index_sequence<pod_size_v<T>>>
 constexpr auto get_at(const T& pod, const index_t idx)
 {

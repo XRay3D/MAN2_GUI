@@ -2,8 +2,8 @@
 #define MY_PROTOCOL_H
 
 #include "common_interfaces.h"
-#include "myprotokol.h"
 #include "config.h"
+#include "myprotokol.h"
 #include <QComboBox>
 #include <QDebug>
 #include <QElapsedTimer>
@@ -122,6 +122,8 @@ struct MeasuredValue {
 class MAN2;
 class SerialPort;
 
+using MeasureMap = std::map<int, MeasuredValue>;
+
 struct CallBack {
     virtual ~CallBack() = default;
 
@@ -157,7 +159,7 @@ public:
     bool isConnected() const override;
 
     bool getMeasuredValue(MeasuredValue& value, uint8_t channel, ValueType type = CurrentMeasuredValue);
-    bool getMeasuredValue(QMap<int, MeasuredValue>& value, ValueType type = CurrentMeasuredValue);
+    bool getMeasuredValue(MeasureMap& value, ValueType type = CurrentMeasuredValue);
     void startMeasure(ValueType type = CurrentMeasuredValue, uint8_t channel = 0);
     double getRmsValue();
 
@@ -180,19 +182,19 @@ public:
 
     bool disableAll();
 
-    const QMap<int, MeasuredValue>& valueMap() const { return m_valueMap; }
+    const MeasureMap& valueMap() const { return m_valueMap; }
 
 signals:
     void Open();
     void Close();
     void Write(const QByteArray& data);
     void measureCompleted(const MeasuredValue&);
-    void measuresCompleted(const QMap<int, MeasuredValue>& data);
+    void measuresCompleted(const MeasureMap& data);
 
 private:
     SerialPort* m_port;
 
-    QMap<int, MeasuredValue> m_valueMap;
+    MeasureMap m_valueMap;
 
     QMutex mutex;
     QThread portThread;

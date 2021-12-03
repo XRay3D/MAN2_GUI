@@ -33,7 +33,7 @@ private slots:
     void pbShortClicked(int channel);
     void obOscClicked(int channel);
 
-    void measuredValueSlot(const QMap<int, MeasuredValue>& valMap);
+    void measuredValueSlot(const MeasureMap& valMap);
 
     void gbChanneClicked(int channel);
 

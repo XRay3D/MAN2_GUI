@@ -30,11 +30,13 @@ private:
     void test6();
     void test7();
 
+    void measureWithoutRatedLoad(); // NOTE test1 test3 test4
+
     void configCh2(bool slow = false);
 
     void waitAndMeasure(unsigned long time);
 
-    QMap<int, MeasuredValue> list;
+    //    MeasureMap list;
     double acVoltage;
     double minAcVoltage;
     double maxAcVoltage;
