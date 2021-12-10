@@ -31,7 +31,7 @@
         <string>Автоматическая проверка</string>
        </attribute>
       </widget>
-      <widget class="Measurements" name="tabMeasurements">
+      <widget class="ManualControl" name="tabManualControl">
        <attribute name="title">
         <string>Ручное управление</string>
        </attribute>
@@ -65,7 +65,7 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Measurements</class>
+   <class>ManualControl</class>
    <extends>QWidget</extends>
    <header>manualcontrol.h</header>
    <container>1</container>
