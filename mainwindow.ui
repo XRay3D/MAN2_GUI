@@ -67,7 +67,7 @@
   <customwidget>
    <class>Measurements</class>
    <extends>QWidget</extends>
-   <header>measurements.h</header>
+   <header>manualcontrol.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

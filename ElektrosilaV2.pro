@@ -52,7 +52,7 @@ SOURCES += \
     mainwindow.cpp \
     manmodel.cpp \
     mantableview.cpp \
-    measurements.cpp \
+    manualcontrol.cpp \
     protodialog.cpp \
     sernummodel.cpp \
     shdocvw.cpp \
@@ -80,7 +80,7 @@ HEADERS += \
     mainwindow.h \
     manmodel.h \
     mantableview.h \
-    measurements.h \
+    manualcontrol.h \
     protodialog.h \
     sernummodel.h \
     settings.h \
@@ -96,7 +96,7 @@ FORMS += \
     dialogeditbp.ui \
     formchannel.ui \
     mainwindow.ui \
-    measurements.ui \
+    manualcontrol.ui \
 
 DISTFILES += \
     modify.txt \
