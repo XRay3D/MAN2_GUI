@@ -33,13 +33,14 @@ struct TestData {
     {
         if (!flags || (flags && flags->isEmpty()))
             return;
-        for (auto var : *flags) {
-            visit_at(*this, var, []<class T>(T& arg) {
-                if constexpr (std::is_same_v<T, double>)
-                    arg = T {};
-                else
-                    arg = Undefined;
-            });
+        for (int ctr {}; auto var : *flags) {
+            if (var)
+                visit_at(*this, ctr++, []<class T>(T& arg) {
+                    if constexpr (std::is_same_v<T, double>)
+                        arg = T {};
+                    else
+                        arg = Undefined;
+                });
         }
     }
 
