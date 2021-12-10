@@ -25,12 +25,12 @@ void Communications::checkConnection()
         mi::osc()->ping();
         if (mi::osc()->isConnected()) {
             leOscIdn->setText(mi::osc()->idn());
-            emit setTabBarEnabled(true);
-            emit currentTabIndex(0);
-            return;
         } else {
             QMessageBox::critical(0, "", "Не удалось установить связь с Digital Osc!");
         }
+        emit setTabBarEnabled(true);
+        emit currentTabIndex(0);
+        return;
     } else {
         QMessageBox::critical(0, "", "Не удалось установить связь с МАН-2!");
     }

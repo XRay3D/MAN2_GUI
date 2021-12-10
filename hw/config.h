@@ -1,6 +1,6 @@
 #pragma once
 #ifdef _DEBUG
-constexpr bool EMU = true;
+constexpr bool EMU = false;
 #else
 constexpr bool EMU = false;
 #endif

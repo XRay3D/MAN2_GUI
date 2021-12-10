@@ -15,8 +15,13 @@ enum {
 struct Parcel {
     uint16_t start;
     uint8_t length;
+#ifdef _DEBUG
+    uint8_t command;
+    uint8_t addres;
+#else
     uint8_t addres;
     uint8_t command;
+#endif
     uint8_t data[64];
     uint8_t crc() const { return data[length - MIN_LEN]; }
     template <typename T>
