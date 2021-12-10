@@ -61,12 +61,6 @@ signals:
 
 private:
     std::array<FormChannel*, CHCNT> m_listGroupBox;
-    std::array<QDoubleSpinBox*, CHCNT> m_listDsbCurrent;
-    std::array<QDoubleSpinBox*, CHCNT> m_listDsbSetCurrent;
-    std::array<QDoubleSpinBox*, CHCNT> m_listDsbVoltage;
-    std::array<QPushButton*, CHCNT> m_listPbCurrent;
-    std::array<QPushButton*, CHCNT> m_listPbOsc;
-    std::array<QPushButton*, CHCNT> m_listPbShort;
 
     std::array<QtCharts::QLineSeries*, CHCNT> m_series;
 
