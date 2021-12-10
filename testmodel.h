@@ -79,7 +79,6 @@ public:
     };
 
     // QAbstractItemModel interface
-public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -88,14 +87,6 @@ public:
 
     void setCurrentTest(int val);
     void setTestData(const MeasureMap& data);
-
-    //    void setTest1(const MeasureMap& data);
-    //    void setTest2(int ch, bool result);
-    //    void setTest3(const MeasureMap& data);
-    //    void setTest4(const MeasureMap& data);
-    //    void setTest5(const MeasureMap& data);
-    //    void setTest6(int ch, double value);
-    //    void setTest7(const MeasureMap& data);
 
     void saveProtokol(const QString& serialNumber, int number);
     void showProtocol(int num);
