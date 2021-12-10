@@ -19,11 +19,12 @@ MainWindow::MainWindow(QWidget* parent)
     setupUi(this);
     foreach (QLayout* layout, findChildren<QLayout*>()) {
         QMargins margin = layout->contentsMargins();
-        margin.setBottom(margin.bottom()  ? 6 : 0);
-        margin.setTop(margin.top()  ? 6 : 0);
-        margin.setLeft(margin.left()  ? 6 : 0);
-        margin.setRight(margin.right()  ? 6 : 0);
+        margin.setTop(margin.top() ? 6 : 0);
+        margin.setBottom(margin.bottom() ? 6 : 0);
+        margin.setLeft(margin.left() ? 6 : 0);
+        margin.setRight(margin.right() ? 6 : 0);
         layout->setContentsMargins(margin);
+        layout->setSpacing(6);
     }
 
     statusBarTime->setObjectName(QStringLiteral("statusBarTime"));
