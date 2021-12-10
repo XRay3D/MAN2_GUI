@@ -60,7 +60,7 @@ signals:
     void startMeasure(ValueType type = CurrentMeasuredValue, uint8_t channel = 0);
 
 private:
-    std::array<FormChannel*, CHCNT> m_listGroupBox;
+    std::array<FormChannel*, CHCNT> grbxChannels;
 
     std::array<QtCharts::QLineSeries*, CHCNT> m_series;
 
