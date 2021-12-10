@@ -72,8 +72,6 @@ private:
 
     QtCharts::QChartView* graphicsView;
 
-    //    QSemaphore m_semaphore;
-
 protected:
     // QWidget interface
     void showEvent(QShowEvent* event) override;

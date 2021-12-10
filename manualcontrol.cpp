@@ -53,14 +53,14 @@ ManualControl::ManualControl(QWidget* parent)
         m_series[i] = series;
         QPen pen(QBrush(), 2.0);
         pen.setColor(QColor::fromHsv((360.0 / 8.0) * i, 255, 255));
-        //        QPen pen(QBrush(color[i]), 0.0);
+
         series->setPen(pen);
         series->setName(QString("Канал %1, В.").arg(i + 1));
         chart->addSeries(series);
         series->attachAxis(axisY);
         series->attachAxis(axisX);
     }
-    //    chart->createDefaultAxes();
+
     chart->legend()->setAlignment(Qt::AlignRight);
     chart->setMargins(QMargins(3, 3, 3, 3));
     chart->setBackgroundBrush(Qt::darkGray);
@@ -77,8 +77,6 @@ ManualControl::ManualControl(QWidget* parent)
     settings.endGroup();
 
     connect(&m_timerMeasure, &QTimer::timeout, [this] {
-        //        if (m_semaphore.tryAcquire()) {
-        //            m_semaphore.acquire(m_semaphore.available());
         startMeasure();
         //        }
     });
@@ -115,7 +113,7 @@ void ManualControl::on_pbStart_clicked(bool checked)
     if (checked) {
         m_timerMeasure.start(sbTimeout->value());
         pbStart->setText("Стоп");
-        //        m_semaphore.release();
+
         rangeX.reset();
         for (auto& range : rangeY)
             range.reset();
